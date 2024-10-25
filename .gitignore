@@ -1,0 +1,47 @@
+# System plików specyficznych dla systemu operacyjnego
+.DS_Store
+Thumbs.db
+
+# Ignorowanie plików konfiguracyjnych środowiska
+.env
+
+# Ignorowanie katalogu z logami
+logs/
+*.log
+*.log.*
+
+# Ignorowanie plików wygenerowanych przez IDE
+.idea/
+*.iml
+*.iws
+.vscode/
+*.classpath
+*.project
+*.settings/
+out/
+bin/
+
+# Ignorowanie plików konfiguracyjnych systemu build
+target/
+build/
+
+# Ignorowanie zależności pobranych lokalnie
+.mvn/
+!**/src/main/**/mvnw
+!**/src/main/**/mvnw.cmd
+!**/src/main/**/.mvn/
+
+# Ignorowanie plików JAR/WAR
+*.jar
+*.war
+*.ear
+
+# Ignorowanie ustawień testowych
+test-output/
+surefire-reports/
+test-results/
+
+# Ignorowanie ustawień specyficznych dla OS
+# Windows OS
+*.db
+*.log
