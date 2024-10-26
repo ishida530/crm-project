@@ -6,11 +6,14 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 
+
 public class EncryptionUtil {
     private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES";
 
-    private static final String SECRET_KEY = dotenv.get("SECRET_KEY");
+
+//    private static final String SECRET_KEY = dotenv.get("SECRET_KEY");
+private static final String SECRET_KEY = "1234567890123456";
 
     public static String encrypt(String data) throws Exception {
         SecretKey secretKey = new SecretKeySpec(SECRET_KEY.getBytes(), ALGORITHM);
