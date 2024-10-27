@@ -1,7 +1,8 @@
 package com.elemer.crm.controller;
 
+import com.elemer.crm.dto.LoginReqRes;
 import com.elemer.crm.dto.ReqRes;
-import com.elemer.crm.entity.OurUsers;
+import com.elemer.crm.entity.User;
 import com.elemer.crm.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<ReqRes> login(@RequestBody ReqRes request) {
+    public ResponseEntity<ReqRes> login(@RequestBody LoginReqRes request) {
         return ResponseEntity.ok(usersService.login(request));
     }
 
@@ -42,7 +43,7 @@ public class UserController {
     }
 
     @PutMapping("/admin/update/{userId}")
-    public ResponseEntity<ReqRes> updateUser(@PathVariable Integer userId,@RequestBody OurUsers request) {
+    public ResponseEntity<ReqRes> updateUser(@PathVariable Integer userId,@RequestBody User request) {
         return ResponseEntity.ok(usersService.updateUser(userId,request));
     }
 

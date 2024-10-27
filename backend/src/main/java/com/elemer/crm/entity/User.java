@@ -10,9 +10,9 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "ourusers")
+@Table(name = "users")
 @Data
-public class OurUsers implements UserDetails {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +20,8 @@ public class OurUsers implements UserDetails {
     private String email;
     private String name;
     private String password;
-    private String city;
     private String role;
+    private String phoneNumber;
 
 
     @Override
@@ -53,4 +53,5 @@ public class OurUsers implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
