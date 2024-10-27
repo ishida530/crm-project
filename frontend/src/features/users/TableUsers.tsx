@@ -44,7 +44,7 @@ const TableUsers = ({ onEditUser, onDeleteUser }: TableUsers) => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {users?.map((user) => (
+                    {users?.map((user: User) => (
                         <TableRow key={user.id}>
                             <TableCell>{user.id}</TableCell>
                             <TableCell>{user.email}</TableCell>

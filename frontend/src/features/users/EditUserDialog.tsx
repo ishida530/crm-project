@@ -1,4 +1,3 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -14,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { formSchema } from './validate';
 import { User } from './types';
+import { z } from 'zod';
 
 interface EditUserDialogProps {
     initialValues?: User;
@@ -22,36 +22,52 @@ interface EditUserDialogProps {
     onClose: () => void;
 }
 
-const EditUserDialog = ({ initialValues = { email: "", name: "", phoneNumber: "", role: "USER", id: 0 }, onSave, isOpen, onClose }: EditUserDialogProps) => {
-    const form = useForm({
+const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDialogProps) => {
+
+
+ 
+    
+    const form = useForm<User>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialValues,
+        defaultValues: initialValues || { name: 'asd', email: 'asa@wp.pl', phoneNumber: '443', role: 'USER' },
     });
 
-    const onSubmit = (data: User) => {
+    const onSubmit = (data: {
+        email: string;
+        name: string;
+        phoneNumber: string;
+        role: string;
+    }) => {
+        console.log('onSubmit został wywołany z danymi:', data);
+        console.log('Błędy formularza:', form.formState.errors);
+
+        if (Object.keys(form.formState.errors).length > 0) {
+            console.error('Błędy formularza:', form.formState.errors);
+            return;
+        }
+        console.log(data)
         onSave(data);
         onClose();
     };
-
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Edit Profile</DialogTitle>
+                    <DialogTitle>{initialValues ? "Edytuj Użytkownika" : "Utwórz Użytkownika"}</DialogTitle>
                     <DialogDescription>
-                        Make changes to your profile here. Click save when you're done.
+                        {initialValues ? "Wprowadź zmiany w profilu użytkownika." : "Wypełnij dane, aby utworzyć nowego użytkownika."}
                     </DialogDescription>
                 </DialogHeader>
-                <Form {...form} >
+                <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField
                             control={form.control}
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Name</FormLabel>
+                                    <FormLabel>Imię i Nazwisko</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Name" {...field} />
+                                        <Input placeholder="Imię i Nazwisko" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -75,9 +91,9 @@ const EditUserDialog = ({ initialValues = { email: "", name: "", phoneNumber: ""
                             name="phoneNumber"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Phone Number</FormLabel>
+                                    <FormLabel>Numer Telefonu</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Phone Number" {...field} />
+                                        <Input placeholder="Numer Telefonu" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -88,21 +104,17 @@ const EditUserDialog = ({ initialValues = { email: "", name: "", phoneNumber: ""
                             name="role"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Role</FormLabel>
+                                    <FormLabel>Rola</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Role" {...field} />
+                                        <Input placeholder="Rola" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
                         <DialogFooter>
-
-                            <Button type="submit" className="w-full"
-                            // disabled={isPending}
-                            >
-                                {/* {isPending ? 'Save changing...' : 'Save changes'} */}
-                                Save changes
+                            <Button type="submit" className="w-full">
+                                Zapisz zmiany
                             </Button>
                         </DialogFooter>
                     </form>
@@ -110,5 +122,6 @@ const EditUserDialog = ({ initialValues = { email: "", name: "", phoneNumber: ""
             </DialogContent>
         </Dialog>
     );
-}
+};
+
 export default EditUserDialog;

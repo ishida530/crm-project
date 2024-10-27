@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import TableUsers from './TableUsers';
 import { User } from './types';
 import EditUserDialog from './EditUserDialog';
@@ -6,13 +6,13 @@ import { useUpdateUser } from './hooks/useUpdateUser';
 import DeleteUserAlertDialog from './DeleteUserAlertDialog';
 import { useDeleteUser } from './hooks/useDeleteUser';
 import { Button } from '@/components/ui/button';
-import useCreateUser from './hooks/useCreateUser';
+import { useCreateUser } from './hooks/useCreateUser';
 
 const UsersPage = () => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
-    const [selectedUser, setSelectedUser] = useState<User>();
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [userId, setUserId] = useState<number>();
 
     const { mutate: updateUser } = useUpdateUser();
@@ -20,43 +20,50 @@ const UsersPage = () => {
     const { mutate: createUser } = useCreateUser();
 
     const handleEditUser = (user: User) => {
-        setIsEdit(true)
+        setIsEdit(true);
         setSelectedUser(user);
         setIsOpenEditModal(true);
     };
+
     const handleUpdate = (updatedProfile: User) => {
-
-        if (isEdit && selectedUser) return updateUser({ userId: selectedUser.id, userData: updatedProfile });
-        if (!isEdit && !selectedUser) return createUser();
-
+        if (isEdit && selectedUser) {
+            updateUser({ userId: selectedUser.id, userData: updatedProfile });
+        } else {
+            createUser({
+                name: updatedProfile.name,
+                phoneNumber: updatedProfile.phoneNumber,
+                role: updatedProfile.role,
+                email: updatedProfile.email,
+            });
+        }
         setIsOpenEditModal(false);
-        setIsEdit(false)
+        setIsEdit(false);
+        setSelectedUser(null);
     };
 
     const handleDeleteUser = (userId: number) => {
         setUserId(userId);
         setIsOpenDeleteModal(true);
-
     };
+
     const handleDelete = () => {
-        console.log(userId)
-        if (userId) return deleteUser(userId);
+        if (userId) deleteUser(userId);
         setIsOpenDeleteModal(false);
     };
 
     const handleCreateUser = () => {
-        setIsEdit(false)
-        setIsOpenEditModal(true)
-    }
+        setIsEdit(false);
+        setSelectedUser(null); // Upewnij się, że selectedUser jest null przy tworzeniu nowego użytkownika
+        setIsOpenEditModal(true);
+    };
+
     return (
         <div>
-            <Button onClick={handleCreateUser}>
-                Dodaj Uzytkownika
-            </Button>
+            <Button onClick={handleCreateUser}>Dodaj Użytkownika</Button>
             <TableUsers onEditUser={handleEditUser} onDeleteUser={handleDeleteUser} />
             {isOpenEditModal && (
                 <EditUserDialog
-                    initialValues={selectedUser}
+                    initialValues={isEdit ? selectedUser : undefined}
                     onSave={handleUpdate}
                     isOpen={isOpenEditModal}
                     onClose={() => setIsOpenEditModal(false)}
@@ -71,5 +78,6 @@ const UsersPage = () => {
             )}
         </div>
     );
-}
+};
+
 export default UsersPage;

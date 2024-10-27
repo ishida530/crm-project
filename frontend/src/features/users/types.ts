@@ -6,18 +6,13 @@ export interface User {
     phoneNumber: string;
     role: string;
 };
-
-export type ResponseGetAllUsers = {
-    statusCode: number;
-    message: string;
-    userList: User[];
-};
+export type RegisterUser = Omit<User, "id">
 
 interface Authority {
     authority: string;
 }
 
-type ResponseUser = {
+export type ResponseRegisterUser = {
     password: string;
     phoneNumber: string | null;
     enabled: boolean;
@@ -31,7 +26,7 @@ type ResponseUser = {
 export type UpdateUserResponse = {
     statusCode: number;
     message: string;
-    user: ResponseUser;
+    user: ResponseRegisterUser;
 }
 
 

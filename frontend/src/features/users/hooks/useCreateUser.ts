@@ -1,18 +1,18 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-import { UpdateUserResponse, User } from './types'; // Importuj odpowiednie typy
+import axiosInstance from '@/api/api';
+import { RegisterUser, UpdateUserResponse } from '../types';
 
 
 export const useCreateUser = () => {
 
 
-    const createUser = async (userData: User): Promise<UpdateUserResponse> => {
-        const response = await axios.post('/api/users', userData); // Upewnij się, że endpoint jest poprawny
+    const createUser = async (userData: RegisterUser): Promise<UpdateUserResponse> => {
+        const response = await axiosInstance.post('/auth/register', userData);
         return response.data;
     };
 
 
-    return useMutation<UpdateUserResponse, Error, User>({
+    return useMutation<UpdateUserResponse, Error, RegisterUser>({
         mutationFn: createUser,
         onSuccess: (data) => {
             console.log('User created successfully:', data);
