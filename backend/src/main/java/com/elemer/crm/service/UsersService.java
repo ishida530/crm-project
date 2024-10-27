@@ -64,6 +64,7 @@ public class UsersService {
             var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
             response.setStatusCode(200);
             response.setToken(jwt);
+            response.setRole(user.getRole());
             response.setRefreshToken(refreshToken);
             response.setExpirationTime("24Hrs");
             response.setMessage("Succesfully logged In");
@@ -166,9 +167,7 @@ System.out.println("service");
                 existingUser.setCity(updatedUser.getCity());
                 existingUser.setRole(updatedUser.getRole());
 
-                // Check if password is present in the request
                 if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
-                    // Encode the password and update it
                     existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
                 }
 
