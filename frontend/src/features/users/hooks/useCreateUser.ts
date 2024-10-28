@@ -1,10 +1,10 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axiosInstance from '@/api/api';
 import { RegisterUser, UpdateUserResponse } from '../types';
 
 
 export const useCreateUser = () => {
-
+    const queryClient = useQueryClient()
 
     const createUser = async (userData: RegisterUser): Promise<UpdateUserResponse> => {
         const response = await axiosInstance.post('/auth/register', userData);
@@ -16,7 +16,8 @@ export const useCreateUser = () => {
         mutationFn: createUser,
         onSuccess: (data) => {
             console.log('User created successfully:', data);
-            // Możesz tu dodać logikę, np. odświeżenie listy użytkowników
+            queryClient.invalidateQueries({ queryKey: ['getAllUsers'] })
+
         },
         onError: (error) => {
             console.error('Error creating user:', error);

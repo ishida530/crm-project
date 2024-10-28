@@ -53,7 +53,7 @@ const UsersPage = () => {
 
     const handleCreateUser = () => {
         setIsEdit(false);
-        setSelectedUser(null); // Upewnij się, że selectedUser jest null przy tworzeniu nowego użytkownika
+        setSelectedUser(null);
         setIsOpenEditModal(true);
     };
 

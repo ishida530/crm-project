@@ -4,7 +4,7 @@ import App from '../App';
 import LoginPage from '@/features/auth/LoginPage';
 import PrivateRoute from '@/features/auth/PrivateRoute';
 
-import UsersPage from '@/features/users/UsersPage'; // Strona z użytkownikami
+import UsersPage from '@/features/users/UsersPage';
 import Dashboard from '@/features/dashboard/Dashboard';
 import CustomersPage from '@/features/customers/CustomersPage';
 import SalesPage from '@/features/sales/SalesPage';
@@ -17,7 +17,7 @@ const router = createBrowserRouter([
         element: <App />,
         children: [
             {
-                path: '/', // Domyślna ścieżka, przekierowująca do Dashboardu
+                path: '/', 
                 element: (
                     <PrivateRoute>
                         <Dashboard />

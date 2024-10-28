@@ -1,7 +1,7 @@
 package com.elemer.crm.service;
 
-import com.elemer.crm.dto.LoginReqRes;
-import com.elemer.crm.dto.ReqRes;
+import com.elemer.crm.dto.LoginRequest;
+import com.elemer.crm.dto.HttpResponse;
 import com.elemer.crm.entity.User;
 import com.elemer.crm.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +28,10 @@ public class UsersService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public ReqRes register(ReqRes registrationRequest) {
-        ReqRes response = new ReqRes();
+    @Autowired
+    private EmailService emailService;
+    public HttpResponse register(HttpResponse registrationRequest) {
+        HttpResponse response = new HttpResponse();
         try {
             User user = new User();
             user.setEmail(registrationRequest.getEmail());
@@ -39,6 +41,14 @@ public class UsersService {
             user.setName(registrationRequest.getName());
             String generatedPassword = generateRandomPassword(); 
             user.setPassword(passwordEncoder.encode(generatedPassword));
+
+            String emailContent = "Hello " + registrationRequest.getName() + ",\n\n"
+                    + "Your account has been created successfully.\n\n"
+                    + "Login: " + registrationRequest.getEmail() + "\n"
+                    + "Password: " + generatedPassword + "\n\n"
+                    + "Please change your password after logging in.";
+
+            emailService.sendSimpleEmail(registrationRequest.getEmail(), "Welcome to CRM", emailContent);
 
 
             User userResult = usersRepository.save(user);
@@ -57,8 +67,8 @@ public class UsersService {
     }
 
     private String generateRandomPassword() {
-        int length = 10; // Długość hasła
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+        int length = 10;
+        String chars = System.getenv("STRING_PASSWORD");
         StringBuilder password = new StringBuilder();
         for (int i = 0; i < length; i++) {
             int index = (int) (Math.random() * chars.length());
@@ -67,8 +77,8 @@ public class UsersService {
         return password.toString();
     }
 
-    public ReqRes login(LoginReqRes loginRequest) {
-        ReqRes response = new ReqRes();
+    public HttpResponse login(LoginRequest loginRequest) {
+        HttpResponse response = new HttpResponse();
         try {
             authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
@@ -90,8 +100,8 @@ public class UsersService {
         return response;
     }
 
-    public ReqRes refreshToken(ReqRes refreshTokenReqiest){
-        ReqRes response = new ReqRes();
+    public HttpResponse refreshToken(HttpResponse refreshTokenReqiest){
+        HttpResponse response = new HttpResponse();
         try{
             String ourEmail = jwtUtils.extractUsername(refreshTokenReqiest.getToken());
             User users = usersRepository.findByEmail(ourEmail).orElseThrow();
@@ -114,64 +124,64 @@ public class UsersService {
     }
 
 
-    public ReqRes getAllUsers() {
-        ReqRes reqRes = new ReqRes();
+    public HttpResponse getAllUsers() {
+        HttpResponse httpResponse = new HttpResponse();
 System.out.println("service");
         try {
             List<User> result = usersRepository.findAll();
             if (!result.isEmpty()) {
-                reqRes.setUserList(result);
-                reqRes.setStatusCode(200);
-                reqRes.setMessage("Successful");
+                httpResponse.setUserList(result);
+                httpResponse.setStatusCode(200);
+                httpResponse.setMessage("Successful");
             } else {
-                reqRes.setStatusCode(404);
-                reqRes.setMessage("No users found");
+                httpResponse.setStatusCode(404);
+                httpResponse.setMessage("No users found");
             }
-            return reqRes;
+            return httpResponse;
         } catch (Exception e) {
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred: " + e.getMessage());
-            return reqRes;
+            httpResponse.setStatusCode(500);
+            httpResponse.setMessage("Error occurred: " + e.getMessage());
+            return httpResponse;
         }
     }
 
 
-    public ReqRes getUsersById(Integer id) {
-        ReqRes reqRes = new ReqRes();
+    public HttpResponse getUsersById(Integer id) {
+        HttpResponse httpResponse = new HttpResponse();
         try {
             User usersById = usersRepository.findById(id).orElseThrow(() -> new RuntimeException("User Not found"));
-            reqRes.setUser(usersById);
-            reqRes.setStatusCode(200);
-            reqRes.setMessage("Users with id '" + id + "' found successfully");
+            httpResponse.setUser(usersById);
+            httpResponse.setStatusCode(200);
+            httpResponse.setMessage("Users with id '" + id + "' found successfully");
         } catch (Exception e) {
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred: " + e.getMessage());
+            httpResponse.setStatusCode(500);
+            httpResponse.setMessage("Error occurred: " + e.getMessage());
         }
-        return reqRes;
+        return httpResponse;
     }
 
 
-    public ReqRes deleteUser(Integer userId) {
-        ReqRes reqRes = new ReqRes();
+    public HttpResponse deleteUser(Integer userId) {
+        HttpResponse httpResponse = new HttpResponse();
         try {
             Optional<User> userOptional = usersRepository.findById(userId);
             if (userOptional.isPresent()) {
                 usersRepository.deleteById(userId);
-                reqRes.setStatusCode(200);
-                reqRes.setMessage("User deleted successfully");
+                httpResponse.setStatusCode(200);
+                httpResponse.setMessage("User deleted successfully");
             } else {
-                reqRes.setStatusCode(404);
-                reqRes.setMessage("User not found for deletion");
+                httpResponse.setStatusCode(404);
+                httpResponse.setMessage("User not found for deletion");
             }
         } catch (Exception e) {
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred while deleting user: " + e.getMessage());
+            httpResponse.setStatusCode(500);
+            httpResponse.setMessage("Error occurred while deleting user: " + e.getMessage());
         }
-        return reqRes;
+        return httpResponse;
     }
 
-    public ReqRes updateUser(Integer userId, User updatedUser) {
-        ReqRes reqRes = new ReqRes();
+    public HttpResponse updateUser(Integer userId, User updatedUser) {
+        HttpResponse httpResponse = new HttpResponse();
         try {
             Optional<User> userOptional = usersRepository.findById(userId);
             if (userOptional.isPresent()) {
@@ -186,39 +196,39 @@ System.out.println("service");
                 }
 
                 User savedUser = usersRepository.save(existingUser);
-                reqRes.setUser(savedUser);
-                reqRes.setStatusCode(200);
-                reqRes.setMessage("User updated successfully");
+                httpResponse.setUser(savedUser);
+                httpResponse.setStatusCode(200);
+                httpResponse.setMessage("User updated successfully");
             } else {
-                reqRes.setStatusCode(404);
-                reqRes.setMessage("User not found for update");
+                httpResponse.setStatusCode(404);
+                httpResponse.setMessage("User not found for update");
             }
         } catch (Exception e) {
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred while updating user: " + e.getMessage());
+            httpResponse.setStatusCode(500);
+            httpResponse.setMessage("Error occurred while updating user: " + e.getMessage());
         }
-        return reqRes;
+        return httpResponse;
     }
 
 
-    public ReqRes getMyInfo(String email){
-        ReqRes reqRes = new ReqRes();
+    public HttpResponse getMyInfo(String email){
+        HttpResponse httpResponse = new HttpResponse();
         try {
             Optional<User> userOptional = usersRepository.findByEmail(email);
             if (userOptional.isPresent()) {
-                reqRes.setUser(userOptional.get());
-                reqRes.setStatusCode(200);
-                reqRes.setMessage("successful");
+                httpResponse.setUser(userOptional.get());
+                httpResponse.setStatusCode(200);
+                httpResponse.setMessage("successful");
             } else {
-                reqRes.setStatusCode(404);
-                reqRes.setMessage("User not found for update");
+                httpResponse.setStatusCode(404);
+                httpResponse.setMessage("User not found for update");
             }
 
         }catch (Exception e){
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred while getting user info: " + e.getMessage());
+            httpResponse.setStatusCode(500);
+            httpResponse.setMessage("Error occurred while getting user info: " + e.getMessage());
         }
-        return reqRes;
+        return httpResponse;
 
     }
 

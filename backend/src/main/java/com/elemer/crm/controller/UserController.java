@@ -1,7 +1,7 @@
 package com.elemer.crm.controller;
 
-import com.elemer.crm.dto.LoginReqRes;
-import com.elemer.crm.dto.ReqRes;
+import com.elemer.crm.dto.LoginRequest;
+import com.elemer.crm.dto.HttpResponse;
 import com.elemer.crm.entity.User;
 import com.elemer.crm.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,46 +17,46 @@ public class UserController {
     private UsersService usersService;
 
     @PostMapping("/auth/register")
-    public ResponseEntity<ReqRes> register(@RequestBody ReqRes registration) {
+    public ResponseEntity<HttpResponse> register(@RequestBody HttpResponse registration) {
         return ResponseEntity.ok(usersService.register(registration));
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<ReqRes> login(@RequestBody LoginReqRes request) {
+    public ResponseEntity<HttpResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(usersService.login(request));
     }
 
     @PostMapping("/auth/refresh")
-    public ResponseEntity<ReqRes> refreshToken(@RequestBody ReqRes request) {
+    public ResponseEntity<HttpResponse> refreshToken(@RequestBody HttpResponse request) {
         return ResponseEntity.ok(usersService.refreshToken(request));
     }
 
     @GetMapping("/admin/get-all-users")
-    public ResponseEntity<ReqRes> getAllUsers(){
+    public ResponseEntity<HttpResponse> getAllUsers(){
         System.out.println("jestem");
         return ResponseEntity.ok(usersService.getAllUsers());
     }
 
     @GetMapping("/admin/get-users/{userId}")
-    public ResponseEntity<ReqRes> getUserByID(@PathVariable Integer userId) {
+    public ResponseEntity<HttpResponse> getUserByID(@PathVariable Integer userId) {
         return ResponseEntity.ok(usersService.getUsersById(userId));
     }
 
     @PutMapping("/admin/update/{userId}")
-    public ResponseEntity<ReqRes> updateUser(@PathVariable Integer userId,@RequestBody User request) {
+    public ResponseEntity<HttpResponse> updateUser(@PathVariable Integer userId, @RequestBody User request) {
         return ResponseEntity.ok(usersService.updateUser(userId,request));
     }
 
     @GetMapping("/adminuser/get-profile")
-    public ResponseEntity<ReqRes> getProfile() {
+    public ResponseEntity<HttpResponse> getProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        ReqRes response = usersService.getMyInfo(email);
+        HttpResponse response = usersService.getMyInfo(email);
         return ResponseEntity.status(response.getStatusCode()).body((response));
     }
 
     @DeleteMapping("/admin/delete/{userId}")
-    public ResponseEntity<ReqRes> deleteUser(@PathVariable Integer userId) {
+    public ResponseEntity<HttpResponse> deleteUser(@PathVariable Integer userId) {
         return ResponseEntity.ok(usersService.deleteUser(userId));
     }
 }

@@ -12,6 +12,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.function.Function;
+import io.github.cdimascio.dotenv.Dotenv;
 
 
 @Component
@@ -19,8 +20,11 @@ public class JWTUtils {
     private SecretKey Key;
     private static final long EXPIRATION_TIME = 86400000; //24hours
 
+    Dotenv dotenv = Dotenv.load();
+
     public JWTUtils() {
-        String secretString = "9834578943534895734895734895734895734851243242342342343266777434334534";
+        String secretString = dotenv.get("SECRET_STRING");
+
         byte[] keyBytes = Base64.getDecoder().decode(secretString.getBytes(StandardCharsets.UTF_8));
         this.Key = new SecretKeySpec(keyBytes, "HmacSHA256");
 

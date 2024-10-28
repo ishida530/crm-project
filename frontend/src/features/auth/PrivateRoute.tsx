@@ -1,4 +1,3 @@
-// src/features/auth/PrivateRoute.tsx
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from './AuthProvier';
