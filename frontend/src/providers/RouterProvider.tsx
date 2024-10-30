@@ -10,6 +10,7 @@ import CustomersPage from '@/features/customers/CustomersPage';
 import SalesPage from '@/features/sales/SalesPage';
 import ProductsPage from '@/features/products/ProductsPage';
 import InventoryPage from '@/features/inventory/InventoryPage';
+import ProjectsPage from '@/features/projects/ProjectsPage';
 
 const router = createBrowserRouter([
     {
@@ -65,6 +66,14 @@ const router = createBrowserRouter([
                 element: (
                     <PrivateRoute>
                         <UsersPage />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: 'projects',
+                element: (
+                    <PrivateRoute>
+                        <ProjectsPage />
                     </PrivateRoute>
                 ),
             },

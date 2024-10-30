@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings, } from "lucide-react";
+import { Calendar, Home, Inbox, Search, Settings, Projector } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   Sidebar,
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useTheme } from "@/context/ThemeContext";
 import { Button } from "../ui/button";
+import ProjectsPage from "@/features/projects/ProjectsPage";
 
 const items = [
   {
@@ -38,6 +39,11 @@ const items = [
     title: "Użytkownicy",
     url: "/users",
     icon: Settings,
+  },
+  {
+    title: "Projekty",
+    url: "/projects",
+    icon: Projector,
   },
 ];
 
