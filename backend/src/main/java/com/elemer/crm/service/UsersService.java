@@ -126,7 +126,6 @@ public class UsersService {
 
     public HttpResponse getAllUsers() {
         HttpResponse httpResponse = new HttpResponse();
-System.out.println("service");
         try {
             List<User> result = usersRepository.findAll();
             if (!result.isEmpty()) {

@@ -1,5 +1,6 @@
 package com.elemer.crm.dto;
 
+import com.elemer.crm.entity.Project;
 import com.elemer.crm.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -23,4 +24,7 @@ public class HttpResponse {
     private String email;
     private User user;
     private List<User> userList;
+    private List<Project> projects;
+    private Project project;
+
 }
