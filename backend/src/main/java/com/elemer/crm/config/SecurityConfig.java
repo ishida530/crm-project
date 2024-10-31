@@ -31,15 +31,18 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(request -> request.requestMatchers("/auth/login", "/public/**").permitAll()
-                        .requestMatchers("/admin/**","auth/register").hasAnyAuthority("ADMIN")
-                        .requestMatchers("/user/**").hasAnyAuthority("USER")
-                        .requestMatchers("/adminuser/**").hasAnyAuthority("ADMIN", "USER")
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("/auth/login", "/public/**").permitAll()
+                        .requestMatchers("/users/**").hasAuthority("ADMIN")
+                        .requestMatchers("/clients/**").hasAnyAuthority("ADMIN", "INVOICE_CLERK")
+                        .requestMatchers("/warehouse/**").hasAnyAuthority("ADMIN", "MANAGER")
+                        .requestMatchers("/sales/**").hasAnyAuthority("ADMIN", "INVOICE_CLERK")
+                        .requestMatchers("/projects/**").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
+                        .requestMatchers("/products/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider()).addFilterBefore(
-                        jWTAuthFilter, UsernamePasswordAuthenticationFilter.class
-                );
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jWTAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 

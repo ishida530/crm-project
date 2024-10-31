@@ -32,6 +32,7 @@ public class UsersService {
     private EmailService emailService;
     public HttpResponse register(HttpResponse registrationRequest) {
         HttpResponse response = new HttpResponse();
+
         try {
             User user = new User();
             user.setEmail(registrationRequest.getEmail());
