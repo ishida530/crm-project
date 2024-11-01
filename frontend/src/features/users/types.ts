@@ -29,9 +29,20 @@ export type UpdateUserResponse = {
     user: ResponseRegisterUser;
 }
 
-
-
 export type DeleteUserResponse = {
     statusCode: number,
     message: string
 }
+
+export enum UserRole {
+    ADMIN = "ADMIN",
+    MANAGER = "MANAGER",
+    EMPLOYEE = "EMPLOYEE",
+    INVOICE_CLERK = "INVOICE_CLERK",
+}
+export const userRoles = [
+    { role: UserRole.ADMIN, title: "Administrator" },
+    { role: UserRole.MANAGER, title: "Menadżer" },
+    { role: UserRole.EMPLOYEE, title: "Pracownik" },
+    { role: UserRole.INVOICE_CLERK, title: "Księgowy" },
+];

@@ -1,87 +1,58 @@
-import { Calendar, Home, Inbox, Search, Settings, Projector } from "lucide-react";
-import { Link } from "react-router-dom";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import { useTheme } from "@/context/ThemeContext";
-import { Button } from "../ui/button";
-import ProjectsPage from "@/features/projects/ProjectsPage";
-
-const items = [
-  {
-    title: "Klienci",
-    url: "/clients",
-    icon: Home,
-  },
-  {
-    title: "Sprzedaż",
-    url: "/sales",
-    icon: Inbox,
-  },
-  {
-    title: "Produkty",
-    url: "/products",
-    icon: Calendar,
-  },
-  {
-    title: "Magazyn",
-    url: "/inventory",
-    icon: Search,
-  },
-  {
-    title: "Użytkownicy",
-    url: "/users",
-    icon: Settings,
-  },
-  {
-    title: "Projekty",
-    url: "/projects",
-    icon: Projector,
-  },
-];
+import { Menu } from "@/components/common/Menu";
+import { SidebarToggle } from "@/components/common/SidebarToggle"; 
+import { Button } from "@/components/ui/button"; 
+import cn from "classnames";
+import { PanelsTopLeft } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { useStore } from "@/hooks/use-store";
+import { useSidebar } from "@/hooks/use-sidebar";
 
 export function AppSidebar() {
-  const { isDarkMode, toggleDarkMode } = useTheme();
+  const sidebar = useStore(useSidebar, (x) => x);
+  const location = useLocation();
 
+  if (!sidebar) return null; 
+
+  const { isOpen, toggleOpen, getOpenState, setIsHover, settings } = sidebar;
 
   return (
-    <div className="flex flex-col">
-
-      <Sidebar className={`bg-white shadow-lg transition-transform duration-300 md:translate-x-0`}>
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel className="p-4 text-lg font-semibold">Nawigacja CRM</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <Link to={item.url} className="flex items-center p-2 rounded hover:bg-gray-200 transition-colors">
-                        <item.icon className="mr-2" /> {/* Icon with margin */}
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-
-              <Button
-                onClick={toggleDarkMode}
-                className="text-sm text-blue-500 hover:underline mt-4"
-              >
-                Toggle Dark Mode
-              </Button>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </Sidebar>
-    </div>
+    <aside
+      className={cn(
+        "fixed top-0 left-0 z-20 h-screen -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-300",
+        !getOpenState() ? "w-[90px]" : "w-72",
+        settings.disabled && "hidden"
+      )}
+    >
+      <SidebarToggle isOpen={isOpen} setIsOpen={toggleOpen} />
+      <div
+        onMouseEnter={() => setIsHover(true)}
+        onMouseLeave={() => setIsHover(false)}
+        className="relative h-full flex flex-col px-3 py-4 overflow-y-auto shadow-md dark:shadow-zinc-800"
+      >
+        <Button
+          className={cn(
+            "transition-transform ease-in-out duration-300 mb-1",
+            !getOpenState() ? "translate-x-1" : "translate-x-0"
+          )}
+          variant="link"
+          asChild
+        >
+          <Link to="/" className="flex items-center gap-2">
+            <PanelsTopLeft className="w-6 h-6 mr-1" />
+            <h1
+              className={cn(
+                "font-bold text-lg whitespace-nowrap transition-[transform,opacity,display] ease-in-out duration-300",
+                !getOpenState()
+                  ? "-translate-x-96 opacity-0 hidden"
+                  : "translate-x-0 opacity-100"
+              )}
+            >
+              Brand
+            </h1>
+          </Link>
+        </Button>
+        <Menu isOpen={getOpenState()} currentPath={location.pathname} onSignOut={() => { console.log('wylogowanie') }} />
+      </div>
+    </aside>
   );
 }

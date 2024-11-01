@@ -12,8 +12,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { formSchema } from './validate';
-import { User } from './types';
-import { z } from 'zod';
+import { User,  UserRole,  userRoles } from './types'; 
+
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface EditUserDialogProps {
     initialValues?: User;
@@ -24,20 +25,12 @@ interface EditUserDialogProps {
 
 const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDialogProps) => {
 
-
- 
-    
     const form = useForm<User>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialValues || { name: 'asd', email: 'asa@wp.pl', phoneNumber: '443', role: 'USER' },
+        defaultValues: initialValues || { name: '', email: '', phoneNumber: '', role: UserRole.EMPLOYEE },
     });
 
-    const onSubmit = (data: {
-        email: string;
-        name: string;
-        phoneNumber: string;
-        role: string;
-    }) => {
+    const onSubmit = (data: User) => {
         console.log('onSubmit został wywołany z danymi:', data);
         console.log('Błędy formularza:', form.formState.errors);
 
@@ -45,10 +38,10 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
             console.error('Błędy formularza:', form.formState.errors);
             return;
         }
-        console.log(data)
         onSave(data);
         onClose();
     };
+
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
             <DialogContent className="sm:max-w-[425px]">
@@ -106,7 +99,18 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
                                 <FormItem>
                                     <FormLabel>Rola</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Rola" {...field} />
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Wybierz rolę" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {userRoles.map(({ role,title }) => (
+                                                    <SelectItem defaultValue={title} key={role} value={role}>
+                                                        {title}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

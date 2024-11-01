@@ -31,7 +31,7 @@ const LoginPage: React.FC = () => {
     };
 
     return (
-        <div className={`min-h-screen flex items-center justify-center  transition-all`}>
+        <div className={`grow w-100 flex items-center justify-center  transition-all `}>
             <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full dark:bg-gray-800">
                 <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-gray-200">Log in</h2>
 
