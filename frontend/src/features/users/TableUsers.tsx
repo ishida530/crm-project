@@ -31,7 +31,7 @@ const TableUsers = ({ onEditUser, onDeleteUser }: TableUsers) => {
 
     return (
         <div className="overflow-x-auto">
-            <Table className="min-w-full">
+            <Table className="min-w-full rounded-md border">
                 <TableCaption>A list of your users with details.</TableCaption>
                 <TableHeader>
                     <TableRow>
