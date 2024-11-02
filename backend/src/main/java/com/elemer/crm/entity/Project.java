@@ -31,12 +31,4 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks;
 
-//    public static Project fromDTO(ProjectDTO projectRequest) {
-//        Project newProject = new Project();
-//        newProject.setName(projectRequest.getName());
-//        newProject.setProjectManager(projectRequest.getProjectManager());
-//        newProject.setDeadline(projectRequest.getDeadline());
-//        newProject.setInvestorRepresentative(projectRequest.getInvestorRepresentative());
-//        return newProject;
-//    }
 }

@@ -37,7 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/clients/**").hasAnyAuthority("ADMIN", "INVOICE_CLERK")
                         .requestMatchers("/warehouse/**").hasAnyAuthority("ADMIN", "MANAGER")
                         .requestMatchers("/sales/**").hasAnyAuthority("ADMIN", "INVOICE_CLERK")
-                        .requestMatchers("/projects/**").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
+                        .requestMatchers("/projects/**","/projects/tasks/**").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
                         .requestMatchers("/products/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

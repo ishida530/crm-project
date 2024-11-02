@@ -1,5 +1,6 @@
 package com.elemer.crm.entity;
 
+import com.elemer.crm.enums.TaskStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -14,15 +15,15 @@ public class Task {
     private int id;
 
     @NotNull
-    private String text;
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
     @JsonIgnore
     private Project project;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
+
     private String author;
-
-
 }

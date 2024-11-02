@@ -4,18 +4,23 @@ import com.elemer.crm.dto.LoginRequest;
 import com.elemer.crm.dto.HttpResponse;
 import com.elemer.crm.entity.User;
 import com.elemer.crm.repository.UsersRepository;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
 public class UsersService {
+    Dotenv dotenv = Dotenv.load();
+
     @Autowired
     private UsersRepository usersRepository;
 
@@ -32,7 +37,6 @@ public class UsersService {
     private EmailService emailService;
     public HttpResponse register(HttpResponse registrationRequest) {
         HttpResponse response = new HttpResponse();
-
         try {
             User user = new User();
             user.setEmail(registrationRequest.getEmail());
@@ -40,7 +44,7 @@ public class UsersService {
             user.setRole(registrationRequest.getRole());
             user.setEmail(registrationRequest.getEmail());
             user.setName(registrationRequest.getName());
-            String generatedPassword = generateRandomPassword(); 
+            String generatedPassword = generateRandomPassword();
             user.setPassword(passwordEncoder.encode(generatedPassword));
 
             String emailContent = "Hello " + registrationRequest.getName() + ",\n\n"
@@ -50,9 +54,10 @@ public class UsersService {
                     + "Please change your password after logging in.";
 
             emailService.sendSimpleEmail(registrationRequest.getEmail(), "Welcome to CRM", emailContent);
-
+            System.out.println(user);
 
             User userResult = usersRepository.save(user);
+            System.out.println(userResult);
 
             if (userResult.getId() > 0) {
                 response.setUser((userResult));
@@ -69,37 +74,60 @@ public class UsersService {
 
     private String generateRandomPassword() {
         int length = 10;
-        String chars = System.getenv("STRING_PASSWORD");
+
+        String chars = dotenv.get("STRING_PASSWORD");
+        System.out.println("Wygenerowane hasło: " +chars);
+
         StringBuilder password = new StringBuilder();
         for (int i = 0; i < length; i++) {
             int index = (int) (Math.random() * chars.length());
             password.append(chars.charAt(index));
         }
+        System.out.println("Wygenerowane hasło: " + password.toString());
         return password.toString();
     }
 
     public HttpResponse login(LoginRequest loginRequest) {
         HttpResponse response = new HttpResponse();
+
         try {
-            authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
-                            loginRequest.getPassword()));
-            var user = usersRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getEmail(),
+                            loginRequest.getPassword()
+                    )
+            );
+
+            var user = usersRepository.findByEmail(loginRequest.getEmail())
+                    .orElseThrow(() -> new NoSuchElementException("User not found"));
+
             var jwt = jwtUtils.generateToken(user);
             var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+
             response.setStatusCode(200);
             response.setToken(jwt);
             response.setRole(user.getRole());
             response.setRefreshToken(refreshToken);
             response.setExpirationTime("24Hrs");
-            response.setMessage("Succesfully logged In");
+            response.setMessage("Successfully logged in");
 
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setError(e.getMessage());
+            if (e instanceof NoSuchElementException) {
+                response.setStatusCode(404);
+                response.setError("User not found");
+            } else if (e instanceof BadCredentialsException) {
+                response.setStatusCode(401);
+                response.setError("Invalid credentials");
+            } else {
+                response.setStatusCode(500);
+                response.setError("Internal Server Error: " + e.getMessage());
+            }
         }
         return response;
     }
+
+
+
 
     public HttpResponse refreshToken(HttpResponse refreshTokenReqiest){
         HttpResponse response = new HttpResponse();

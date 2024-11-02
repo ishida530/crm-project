@@ -9,13 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/admin/projects")
+@RequestMapping("/projects")
 public class ProjectController {
 
     @Autowired
     private ProjectsService projectsService;
 
-    @GetMapping("")
+    @GetMapping()
     public ResponseEntity<HttpResponse> getAllProjects() {
         return ResponseEntity.ok(projectsService.getAllProjects());
     }

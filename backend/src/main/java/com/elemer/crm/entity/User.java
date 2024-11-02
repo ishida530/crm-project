@@ -1,5 +1,6 @@
 package com.elemer.crm.entity;
 
+import com.elemer.crm.enums.UserRole; // Importuj enum
 import jakarta.persistence.*;
 import lombok.Data;
 import jakarta.validation.constraints.Email;
@@ -23,15 +24,19 @@ public class User implements UserDetails {
     @NotNull(message = "Email cannot be null")
     @Email(message = "Email should be valid")
     private String email;
-    private String name;
-    private String password;
-    private String role;
-    private String phoneNumber;
 
+    private String name;
+
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
+    private String phoneNumber;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority((role)));
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
@@ -58,5 +63,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }

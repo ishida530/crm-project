@@ -33,7 +33,6 @@ public class UserController {
 
     @GetMapping("/admin/get-all-users")
     public ResponseEntity<HttpResponse> getAllUsers(){
-        System.out.println("jestem");
         return ResponseEntity.ok(usersService.getAllUsers());
     }
 
