@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "tasks")
 @Data
@@ -26,4 +28,6 @@ public class Task {
     private TaskStatus status;
 
     private String author;
+    private Date date;
+
 }
