@@ -1,17 +1,20 @@
 import { Menu } from "@/components/common/Menu";
-import { SidebarToggle } from "@/components/common/SidebarToggle"; 
-import { Button } from "@/components/ui/button"; 
+import { SidebarToggle } from "@/components/common/SidebarToggle";
+import { Button } from "@/components/ui/button";
 import cn from "classnames";
 import { PanelsTopLeft } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useStore } from "@/hooks/use-store";
 import { useSidebar } from "@/hooks/use-sidebar";
+import { useAuth } from "@/features/auth/AuthProvier";
 
 export function AppSidebar() {
   const sidebar = useStore(useSidebar, (x) => x);
   const location = useLocation();
 
-  if (!sidebar) return null; 
+
+  const { logout } = useAuth(); 
+  if (!sidebar) return null;
 
   const { isOpen, toggleOpen, getOpenState, setIsHover, settings } = sidebar;
 
@@ -27,7 +30,7 @@ export function AppSidebar() {
       <div
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
-        className="relative h-full flex flex-col px-3 py-4 overflow-y-auto shadow-md dark:shadow-zinc-800"
+        className="relative h-full flex flex-col px-3 my-4 overflow-y-auto shadow-md dark:shadow-zinc-800  "
       >
         <Button
           className={cn(
@@ -51,7 +54,7 @@ export function AppSidebar() {
             </h1>
           </Link>
         </Button>
-        <Menu isOpen={getOpenState()} currentPath={location.pathname} onSignOut={() => { console.log('wylogowanie') }} />
+        <Menu isOpen={getOpenState()} currentPath={location.pathname} onSignOut={logout} />
       </div>
     </aside>
   );

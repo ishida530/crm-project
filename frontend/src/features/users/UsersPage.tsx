@@ -59,7 +59,7 @@ const UsersPage = () => {
 
     return (
         <div>
-            <Button onClick={handleCreateUser}>Dodaj Użytkownika</Button>
+            <Button variant={'outline'} onClick={handleCreateUser}>Dodaj Użytkownika</Button>
             <TableUsers onEditUser={handleEditUser} onDeleteUser={handleDeleteUser} />
             {isOpenEditModal && (
                 <EditUserDialog

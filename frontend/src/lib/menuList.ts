@@ -99,15 +99,10 @@ export function getMenuList(): Group[] {
             groupLabel: "",
             menus: [
                 {
-                    href: "/",
+                    href: "/projects",
                     label: "Projekty",
                     icon: SquarePen,
                     submenus: [
-                        {
-                            href: "/projects/tasks",
-                            label: "Zadania",
-                            active: false
-                        },
                         {
                             href: "/projects/tasks",
                             label: "Zadania",

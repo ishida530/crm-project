@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -10,6 +10,7 @@ export default function Calendar() {
     { title: 'event 2', date: '2024-12-05' },
   ]);
 
+  useEffect(() => { }, [calendarRef])
   const onEventAdded = () => {
     const newEvent = {
       title: `event ${events.length + 1}`,
