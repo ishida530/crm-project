@@ -17,9 +17,12 @@ public class Task {
     private int id;
 
     @NotNull
+    private String name;
+
+    @NotNull
     private String description;
 
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(name = "project_id")
     @JsonIgnore
     private Project project;

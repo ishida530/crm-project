@@ -1,5 +1,6 @@
 package com.elemer.crm.controller;
 
+import com.elemer.crm.dto.TaskDTO;
 import com.elemer.crm.entity.Task;
 import com.elemer.crm.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +49,8 @@ public class TaskController {
     }
 
     @PostMapping()
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        Task createdTask = taskService.createTask(task);
-        return ResponseEntity.ok(createdTask);
+    public ResponseEntity<Task> createTask(@RequestBody TaskDTO task) {
+        return ResponseEntity.ok(taskService.createTask(task));
     }
 
     @PutMapping("/{id}")

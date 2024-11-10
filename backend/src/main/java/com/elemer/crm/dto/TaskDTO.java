@@ -17,6 +17,7 @@ public class TaskDTO {
     private TaskStatus status;
     private String author;
     private Date date;
+    private Integer project;
 
 
 

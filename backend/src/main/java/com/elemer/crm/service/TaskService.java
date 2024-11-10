@@ -1,8 +1,12 @@
 package com.elemer.crm.service;
 
+import com.elemer.crm.dto.TaskDTO;
+import com.elemer.crm.entity.Project;
 import com.elemer.crm.entity.Task;
+import com.elemer.crm.repository.ProjectsRepository;
 import com.elemer.crm.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,10 +16,12 @@ import java.util.Optional;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final ProjectsRepository projectsRepository;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, ProjectsRepository projectsRepository) {
         this.taskRepository = taskRepository;
+        this.projectsRepository = projectsRepository;
     }
 
     public List<Task> getAllTasks() {
@@ -38,12 +44,25 @@ public class TaskService {
         return taskRepository.findByAuthor(author);
     }
 
-    public Task createTask(Task task) {
-        try {
-            return taskRepository.save(task);
-        } catch (Exception e) {
-            throw new RuntimeException("Error creating task: " + e.getMessage(), e);
+    public Task createTask(TaskDTO taskDTO) {
+        // Tworzymy nowy obiekt Task na podstawie danych z TaskDTO
+        Task task = new Task();
+        task.setName(taskDTO.getName());
+        task.setDescription(taskDTO.getDescription());
+        task.setStatus(taskDTO.getStatus());
+        task.setAuthor(taskDTO.getAuthor());
+        task.setDate(taskDTO.getDate());
+
+        if (taskDTO.getProject() != null) {
+            Project project = projectsRepository.findById(taskDTO.getProject())
+                    .orElseThrow(() -> new IllegalArgumentException("Project with ID " + taskDTO.getProject() + " not found"));
+
+            task.setProject(project);
+        } else {
+            task.setProject(null);
         }
+
+        return taskRepository.save(task);
     }
 
     public Task updateTask(int id, Task taskDetails) {
