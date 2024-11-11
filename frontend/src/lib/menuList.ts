@@ -102,13 +102,6 @@ export function getMenuList(): Group[] {
                     href: "/projects",
                     label: "Projekty",
                     icon: SquarePen,
-                    submenus: [
-                        {
-                            href: "/projects/tasks",
-                            label: "Zadania",
-                            active: false
-                        }
-                    ]
                 }
             ]
         }

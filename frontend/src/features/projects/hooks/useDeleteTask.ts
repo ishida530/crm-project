@@ -14,7 +14,7 @@ export const useDeleteTask = () => {
         mutationFn: deleteTask, 
         onSuccess: (data) => {
             console.log('Task deleted successfully:', data);
-            queryClient.invalidateQueries({ queryKey: ['getAllProjects'] });
+            queryClient.invalidateQueries({ queryKey: ['getProjectDetails'] });
         },
         onError: (error) => {
             console.error('Error deleting task:', error);

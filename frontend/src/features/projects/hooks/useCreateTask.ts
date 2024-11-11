@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axiosInstance from '@/api/api';
-import {  Task } from '../types';
+import { Task } from '../types';
 
 
 export const useCreateTask = () => {
@@ -16,7 +16,7 @@ export const useCreateTask = () => {
         mutationFn: createTask,
         onSuccess: (data) => {
             console.log('Task created successfully:', data);
-            queryClient.invalidateQueries({ queryKey: ['getAllProjects'] })
+            queryClient.invalidateQueries({ queryKey: ['getProjectDetails'] })
 
         },
         onError: (error) => {

@@ -1,9 +1,8 @@
-import { useCallback, useRef } from 'react';
+import { useRef } from 'react';
 import plLocale from '@fullcalendar/core/locales/pl'
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { Button } from './button';
 import {
   Tooltip,
   TooltipContent,
@@ -11,7 +10,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { EventType } from '@/features/dashboard/types';
-import {  DateSelectArg, EventClickArg } from '@fullcalendar/core/index.js';
+import { DateSelectArg, EventClickArg } from '@fullcalendar/core/index.js';
 
 
 
@@ -21,23 +20,14 @@ interface CalendarProps {
   onEditEvent: (clickInfo: EventClickArg) => void,
 }
 
-export default function Calendar({ eventsData, onAddEvent,onEditEvent }: CalendarProps) {
+export default function Calendar({ eventsData, onAddEvent, onEditEvent }: CalendarProps) {
 
 
 
   const calendarRef = useRef<FullCalendar | null>(null);
 
-  // const handleEventClick = useCallback((clickInfo: EventClickArg) => {
-  //   if (
-  //     window.confirm(`このイベント「${clickInfo.event.title}」を削除しますか`)
-  //   ) {
-  //     clickInfo.event.remove();
-  //   }
-  // }, []);
-
   return (
     <>
-      <Button variant={'outline'} onClick={onAddEvent}>Add Event</Button>
       <FullCalendar
         ref={calendarRef}
         plugins={[dayGridPlugin, interactionPlugin]}

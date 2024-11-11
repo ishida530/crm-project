@@ -77,16 +77,15 @@ const router = createBrowserRouter([
                         <ProjectsPage />
                     </PrivateRoute>
                 ),
-                children: [
-                    {
-                        path: ':id',
-                        element: (
-                            <PrivateRoute>
-                                <ProjectDetailPage />
-                            </PrivateRoute>
-                        ),
-                    },
-                ],
+            },
+            {
+                path: 'projects/:id',
+                element: (
+                    <PrivateRoute>
+                        <ProjectDetailPage />
+                    </PrivateRoute>
+                ),
+
             }
 
         ],

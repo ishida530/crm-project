@@ -44,3 +44,9 @@ export type DeleteProjectResponse = {
     statusCode: number,
     message: string
 }
+
+export type ProjectResponse ={
+    statusCode: number;
+    message: string;
+    project: Project;
+}
