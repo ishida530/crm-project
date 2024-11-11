@@ -46,3 +46,8 @@ export const userRoles = [
     { role: UserRole.EMPLOYEE, title: "Pracownik" },
     { role: UserRole.INVOICE_CLERK, title: "Księgowy" },
 ];
+export type UserListResponse = {
+    statusCode: number;
+    message: string;
+    userList: User[];
+};

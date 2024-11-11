@@ -12,7 +12,7 @@ const useGetProjects = () => {
     }
 
     const { data, error, isLoading } = useQuery<ProjectsResponse, Error>({
-        queryKey: ['projects'],
+        queryKey: ['getAllProjects'],
         queryFn: fetchProjects,
 
 

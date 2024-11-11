@@ -12,27 +12,35 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { formSchema } from './validate';
-import { User,  UserRole,  userRoles } from './types'; 
+import { EventType } from './types';
+import { Textarea } from '@/components/ui/textarea';
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-interface EditUserDialogProps {
-    initialValues?: User;
-    onSave: (updatedProfile: User) => void;
+interface EventFormProps {
+    initialValues: EventType;
+    onSave: (data: EventType) => void;
     isOpen: boolean;
     onClose: () => void;
+    isEdit: boolean;
+    onDelete:()=>void;
 }
 
-const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDialogProps) => {
+const EventFormModal = ({ initialValues, onSave, isOpen, onClose, isEdit,onDelete }: EventFormProps) => {
 
-    const form = useForm<User>({
+    const form = useForm({
         resolver: zodResolver(formSchema),
-        defaultValues: initialValues || { name: '', email: '', phoneNumber: '', role: UserRole.EMPLOYEE },
+        defaultValues: initialValues
     });
 
-    const onSubmit = (data: User) => {
-        if (Object.keys(form.formState.errors).length != 0) {
-            console.error('Form errors:  tuu', form.formState.errors);
+    const formatDateForInput = (date: Date | undefined): string => {
+        if (!date) return '';
+        const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+        const formattedDate = localDate.toISOString().slice(0, 16);
+        return formattedDate;
+    };
+    const onSubmit = (data: EventType) => {
+        console.log('Form Errors:', form.formState.errors);
+        if (Object.keys(form.formState.errors).length > 0) {
+            console.error('Błędy formularza:', form.formState.errors);
             return;
         }
         onSave(data);
@@ -43,21 +51,21 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>{initialValues ? "Edit User" : "Create User"}</DialogTitle>
+                    <DialogTitle>{initialValues ? "Edytuj Wydarzenie" : "Dodaj Wydarzenie"}</DialogTitle>
                     <DialogDescription>
-                        {initialValues ? "Make changes to the user's profile." : "Fill in the details to create a new user."}
+                        {initialValues ? "Wprowadź zmiany w wydarzeniu." : "Wypełnij dane, aby dodać nowe wydarzenie."}
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="title"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Name</FormLabel>
+                                    <FormLabel>Tytuł</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Name" {...field} />
+                                        <Input placeholder="Tytuł" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -65,12 +73,18 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
                         />
                         <FormField
                             control={form.control}
-                            name="email"
+                            name="start"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Email</FormLabel>
+                                    <FormLabel>Data Rozpoczęcia</FormLabel>
                                     <FormControl>
-                                        <Input type="email" placeholder="Email" {...field} />
+                                        <Input
+                                            type="datetime-local"
+                                            value={formatDateForInput(field.value)}
+                                            onChange={field.onChange}
+                                            onBlur={field.onBlur}
+                                            name={field.name}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -78,12 +92,18 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
                         />
                         <FormField
                             control={form.control}
-                            name="phoneNumber"
+                            name="end"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Phone Number</FormLabel>
+                                    <FormLabel>Data Zakończenia</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Phone Number" {...field} />
+                                        <Input
+                                            type="datetime-local"
+                                            value={formatDateForInput(field.value)}
+                                            onChange={field.onChange}
+                                            onBlur={field.onBlur}
+                                            name={field.name}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -91,23 +111,12 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
                         />
                         <FormField
                             control={form.control}
-                            name="role"
+                            name="description"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Role</FormLabel>
+                                    <FormLabel>Opis</FormLabel>
                                     <FormControl>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select role" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {userRoles.map(({ role, title }) => (
-                                                    <SelectItem key={role} value={role}>
-                                                        {title}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                        <Textarea placeholder="Opis" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -115,14 +124,19 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
                         />
                         <DialogFooter>
                             <Button type="submit" className="w-full">
-                                Save Changes
+                                {initialValues ? "Zapisz zmiany" : "Dodaj Wydarzenie"}
                             </Button>
                         </DialogFooter>
                     </form>
                 </Form>
+                {isEdit &&
+                    <Button type="submit" variant={'destructive'} className="w-full" onClick={onDelete}>
+                        Usuń wydarzenie
+                    </Button>
+                }
             </DialogContent>
         </Dialog>
     );
 };
 
-export default EditUserDialog;
+export default EventFormModal;

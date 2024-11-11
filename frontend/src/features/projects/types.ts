@@ -1,4 +1,3 @@
-import { UserRole } from "../users/types";
 
 
 export enum TaskStatus {
@@ -8,20 +7,23 @@ export enum TaskStatus {
 }
 
 export type Task = {
-    id: number;
+    id?: number;
     description: string;
-    status: TaskStatus;
-    author: string;
-    date: string;
+    status?: TaskStatus;
+    author?: string;
+    date: Date;
+    endDate?: Date;
+    name: string;
+    project?: number;
 };
 
 export type Project = {
-    id: number;
+    id?: number;
     name: string;
     deadline: string;
     investorRepresentative: string;
     projectManager: string;
-    tasks: Task[];
+    tasks?: Task[];
 };
 
 export type ProjectsResponse = {
@@ -29,3 +31,16 @@ export type ProjectsResponse = {
     message: string;
     projects: Project[];
 };
+export type CreateProjectResponse = {
+    statusCode: number;
+    message: string;
+    projects: Project;
+};
+
+export type BadgeVariantsColor = 'default' | 'secondary' | 'destructive' | 'outline' | null | undefined;
+
+
+export type DeleteProjectResponse = {
+    statusCode: number,
+    message: string
+}

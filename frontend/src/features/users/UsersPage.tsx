@@ -7,14 +7,16 @@ import DeleteUserAlertDialog from './DeleteUserAlertDialog';
 import { useDeleteUser } from './hooks/useDeleteUser';
 import { Button } from '@/components/ui/button';
 import { useCreateUser } from './hooks/useCreateUser';
+import useGetAllUsers from './hooks/useGetAllUsers';
 
 const UsersPage = () => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
-    const [userId, setUserId] = useState<number>();
+    const [userId, setUserId] = useState<number | null>(null);
 
+    const { users, error, isLoading } = useGetAllUsers();
     const { mutate: updateUser } = useUpdateUser();
     const { mutate: deleteUser } = useDeleteUser();
     const { mutate: createUser } = useCreateUser();
@@ -29,13 +31,9 @@ const UsersPage = () => {
         if (isEdit && selectedUser) {
             updateUser({ userId: selectedUser.id, userData: updatedProfile });
         } else {
-            createUser({
-                name: updatedProfile.name,
-                phoneNumber: updatedProfile.phoneNumber,
-                role: updatedProfile.role,
-                email: updatedProfile.email,
-            });
+            createUser(updatedProfile);
         }
+
         setIsOpenEditModal(false);
         setIsEdit(false);
         setSelectedUser(null);
@@ -47,7 +45,9 @@ const UsersPage = () => {
     };
 
     const handleDelete = () => {
-        if (userId) deleteUser(userId);
+        if (userId) {
+            deleteUser(userId);
+        }
         setIsOpenDeleteModal(false);
     };
 
@@ -57,10 +57,17 @@ const UsersPage = () => {
         setIsOpenEditModal(true);
     };
 
+    if (isLoading) return <div>Loading users...</div>;
+    if (error) return <div>Error loading users: {error.message}</div>;
+
     return (
         <div>
-            <Button variant={'outline'} onClick={handleCreateUser}>Dodaj Użytkownika</Button>
-            <TableUsers onEditUser={handleEditUser} onDeleteUser={handleDeleteUser} />
+            <TableUsers
+                users={users}
+                onAddUser={handleCreateUser}
+                onEditUser={handleEditUser}
+                onDeleteUser={handleDeleteUser}
+            />
             {isOpenEditModal && (
                 <EditUserDialog
                     initialValues={isEdit ? selectedUser : undefined}

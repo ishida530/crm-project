@@ -11,30 +11,27 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { formSchema } from './validate';
-import { User,  UserRole,  userRoles } from './types'; 
+import {  formSchemaProject } from './validate'; // Zakładam, że odpowiednio skonfigurowano `formSchema`
+import { Project } from './types';
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-interface EditUserDialogProps {
-    initialValues?: User;
-    onSave: (updatedProfile: User) => void;
+
+interface ProjectFormProps {
+    initialValues?: Project;
+    onSave: (data: Project) => void;
     isOpen: boolean;
     onClose: () => void;
 }
 
-const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDialogProps) => {
-
-    const form = useForm<User>({
-        resolver: zodResolver(formSchema),
-        defaultValues: initialValues || { name: '', email: '', phoneNumber: '', role: UserRole.EMPLOYEE },
+const ProjectFormModal = ({ initialValues, onSave, isOpen, onClose }: ProjectFormProps) => {
+    const form = useForm<Project>({
+        resolver: zodResolver(formSchemaProject),
+        defaultValues: initialValues || { id: 0, name: '', deadline: '', investorRepresentative: '', projectManager: '' },
     });
+    const onSubmit = (data: Project) => {
+        console.log('Form submitted with data:', data);
+        console.log('Form errors:', form.formState.errors)
 
-    const onSubmit = (data: User) => {
-        if (Object.keys(form.formState.errors).length != 0) {
-            console.error('Form errors:  tuu', form.formState.errors);
-            return;
-        }
         onSave(data);
         onClose();
     };
@@ -43,9 +40,9 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>{initialValues ? "Edit User" : "Create User"}</DialogTitle>
+                    <DialogTitle>{initialValues ? "Edytuj Projekt" : "Utwórz Projekt"}</DialogTitle>
                     <DialogDescription>
-                        {initialValues ? "Make changes to the user's profile." : "Fill in the details to create a new user."}
+                        {initialValues ? "Wprowadź zmiany w projekcie." : "Wypełnij dane, aby utworzyć nowy projekt."}
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
@@ -55,9 +52,9 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Name</FormLabel>
+                                    <FormLabel>Nazwa Projektu</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Name" {...field} />
+                                        <Input placeholder="Nazwa Projektu" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -65,12 +62,12 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
                         />
                         <FormField
                             control={form.control}
-                            name="email"
+                            name="deadline"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Email</FormLabel>
+                                    <FormLabel>Termin</FormLabel>
                                     <FormControl>
-                                        <Input type="email" placeholder="Email" {...field} />
+                                        <Input type="date" placeholder="Termin" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -78,12 +75,12 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
                         />
                         <FormField
                             control={form.control}
-                            name="phoneNumber"
+                            name="investorRepresentative"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Phone Number</FormLabel>
+                                    <FormLabel>Przedstawiciel Inwestora</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Phone Number" {...field} />
+                                        <Input placeholder="Przedstawiciel Inwestora" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -91,23 +88,12 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
                         />
                         <FormField
                             control={form.control}
-                            name="role"
+                            name="projectManager"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Role</FormLabel>
+                                    <FormLabel>Kierownik Projektu</FormLabel>
                                     <FormControl>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select role" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {userRoles.map(({ role, title }) => (
-                                                    <SelectItem key={role} value={role}>
-                                                        {title}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                        <Input placeholder="Kierownik Projektu" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -115,7 +101,7 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
                         />
                         <DialogFooter>
                             <Button type="submit" className="w-full">
-                                Save Changes
+                                {initialValues ? "Zapisz zmiany" : "Utwórz Projekt"}
                             </Button>
                         </DialogFooter>
                     </form>
@@ -125,4 +111,4 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
     );
 };
 
-export default EditUserDialog;
+export default ProjectFormModal;

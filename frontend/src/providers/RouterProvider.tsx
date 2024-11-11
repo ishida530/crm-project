@@ -11,6 +11,7 @@ import SalesPage from '@/features/sales/SalesPage';
 import ProductsPage from '@/features/products/ProductsPage';
 import InventoryPage from '@/features/inventory/InventoryPage';
 import ProjectsPage from '@/features/projects/ProjectsPage';
+import ProjectDetailPage from '@/features/projects/ProjectDetailPage';
 
 const router = createBrowserRouter([
     {
@@ -76,7 +77,18 @@ const router = createBrowserRouter([
                         <ProjectsPage />
                     </PrivateRoute>
                 ),
-            },
+                children: [
+                    {
+                        path: ':id',
+                        element: (
+                            <PrivateRoute>
+                                <ProjectDetailPage />
+                            </PrivateRoute>
+                        ),
+                    },
+                ],
+            }
+
         ],
     },
 ]);
