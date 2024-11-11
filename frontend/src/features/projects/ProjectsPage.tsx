@@ -32,7 +32,7 @@ const ProjectsPage = () => {
             console.log("Updated project", projectData);
             editProject({ id: projectToEdit.id, ...projectData })
         } else {
-            createProject(projectData); // For adding new project
+            createProject(projectData); 
         }
         setProjectToEdit(null)
         handleCloseForm();

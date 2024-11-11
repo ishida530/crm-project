@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutGrid, LogOut, User } from 'lucide-react'; 
+import { LayoutGrid, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -17,13 +17,15 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import {  useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/features/auth/AuthProvier';
 
 export function UserNav() {
     const navigate = useNavigate();
-
+    const { logout } = useAuth()
     const handleSignOut = () => {
         console.log("Signing out...");
+        logout()
         navigate('/');
     };
 

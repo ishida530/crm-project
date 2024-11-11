@@ -11,8 +11,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; // Zakładam, że Select został poprawnie zaimportowany z Twojej biblioteki UI
-import { formSchemaTask } from './validate'; // Zakładam, że odpowiednio skonfigurowano `formSchema` dla `Task`.
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; 
+import { formSchemaTask } from './validate';
 import { Task, TaskStatus } from './types';
 
 

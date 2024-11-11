@@ -17,7 +17,6 @@ export function AppSidebar() {
   if (!sidebar) return null;
 
   const { isOpen, toggleOpen, getOpenState, setIsHover, settings } = sidebar;
-
   return (
     <aside
       className={cn(

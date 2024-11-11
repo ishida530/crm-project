@@ -22,7 +22,7 @@ const App = () => {
   if (!sidebar) return null;
 
   const { getOpenState, settings } = sidebar;
-
+  console.log('isAuthenticated', isAuthenticated)
   return (
     <div className="flex flex-col h-screen">
       <div className="flex flex-grow">
@@ -33,7 +33,7 @@ const App = () => {
             (isAuthenticated ? 'lg:ml-[90px]' : "w-100") :
             (isAuthenticated ? "lg:ml-72" : 'w-100'))
         )}>
-          <Navbar title="Elemer" isAuthenticated={isAuthenticated} />
+          {isAuthenticated && <Navbar title="Elemer" isAuthenticated={isAuthenticated} />}
 
           <main className="flex-grow p-10 overflow-y-auto">
             <Outlet />

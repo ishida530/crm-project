@@ -11,27 +11,33 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import {  formSchemaProject } from './validate';
-import { Project } from './types';
+import { formSchema } from './validate';
+import { Customer } from './types'; 
 
-
-
-interface ProjectFormProps {
-    initialValues?: Project;
-    onSave: (data: Project) => void;
+interface EditCustomerDialogProps {
+    initialValues?: Customer;
+    onSave: (updatedProfile: Customer) => void;
     isOpen: boolean;
     onClose: () => void;
 }
 
-const ProjectFormModal = ({ initialValues, onSave, isOpen, onClose }: ProjectFormProps) => {
-    const form = useForm<Project>({
-        resolver: zodResolver(formSchemaProject),
-        defaultValues: initialValues || { id: 0, name: '', deadline: '', investorRepresentative: '', projectManager: '' },
+const EditCustomerDialog = ({ initialValues, onSave, isOpen, onClose }: EditCustomerDialogProps) => {
+    const form = useForm<Customer>({
+        resolver: zodResolver(formSchema),
+        defaultValues: initialValues || {
+            contactName: '',
+            email: '',
+            address: '',
+            nip: '',
+            website: ''
+        },
     });
-    const onSubmit = (data: Project) => {
-        console.log('Form submitted with data:', data);
-        console.log('Form errors:', form.formState.errors)
 
+    const onSubmit = (data: Customer) => {
+        if (Object.keys(form.formState.errors).length !== 0) {
+            console.error('Form errors:', form.formState.errors);
+            return;
+        }
         onSave(data);
         onClose();
     };
@@ -40,21 +46,21 @@ const ProjectFormModal = ({ initialValues, onSave, isOpen, onClose }: ProjectFor
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>{initialValues ? "Edytuj Projekt" : "Utwórz Projekt"}</DialogTitle>
+                    <DialogTitle>{initialValues ? "Edit Customer" : "Create Customer"}</DialogTitle>
                     <DialogDescription>
-                        {initialValues ? "Wprowadź zmiany w projekcie." : "Wypełnij dane, aby utworzyć nowy projekt."}
+                        {initialValues ? "Make changes to the customer's profile." : "Fill in the details to create a new customer."}
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="contactName"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Nazwa Projektu</FormLabel>
+                                    <FormLabel>Contact Name</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Nazwa Projektu" {...field} />
+                                        <Input placeholder="Contact Name" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -62,12 +68,12 @@ const ProjectFormModal = ({ initialValues, onSave, isOpen, onClose }: ProjectFor
                         />
                         <FormField
                             control={form.control}
-                            name="deadline"
+                            name="email"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Termin</FormLabel>
+                                    <FormLabel>Email</FormLabel>
                                     <FormControl>
-                                        <Input type="date" placeholder="Termin" {...field} />
+                                        <Input type="email" placeholder="Email" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -75,12 +81,12 @@ const ProjectFormModal = ({ initialValues, onSave, isOpen, onClose }: ProjectFor
                         />
                         <FormField
                             control={form.control}
-                            name="investorRepresentative"
+                            name="address"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Przedstawiciel Inwestora</FormLabel>
+                                    <FormLabel>Address</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Przedstawiciel Inwestora" {...field} />
+                                        <Input placeholder="Address" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -88,12 +94,25 @@ const ProjectFormModal = ({ initialValues, onSave, isOpen, onClose }: ProjectFor
                         />
                         <FormField
                             control={form.control}
-                            name="projectManager"
+                            name="nip"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Kierownik Projektu</FormLabel>
+                                    <FormLabel>NIP</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Kierownik Projektu" {...field} />
+                                        <Input placeholder="NIP" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="website"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Website</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Website" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -101,7 +120,7 @@ const ProjectFormModal = ({ initialValues, onSave, isOpen, onClose }: ProjectFor
                         />
                         <DialogFooter>
                             <Button type="submit" className="w-full">
-                                {initialValues ? "Zapisz zmiany" : "Utwórz Projekt"}
+                                Save Changes
                             </Button>
                         </DialogFooter>
                     </form>
@@ -111,4 +130,4 @@ const ProjectFormModal = ({ initialValues, onSave, isOpen, onClose }: ProjectFor
     );
 };
 
-export default ProjectFormModal;
+export default EditCustomerDialog;

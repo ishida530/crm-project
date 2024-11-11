@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Calendar from '@/components/ui/Calendar';
 import useGetAllEvents from './hooks/useGetEvents';
-import { EventType } from './types'; // Zaimportuj odpowiednie typy
+import { EventType } from './types';
 import EventFormModal from './EventFormModal';
 import { useCreateEvent } from './hooks/useCreateEvent';
 import { DateSelectArg, EventClickArg } from '@fullcalendar/core/index.js';

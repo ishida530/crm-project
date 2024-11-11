@@ -79,7 +79,6 @@ const ProjectDetailPage = () => {
         return (
             <>
                 <div className="p-6">
-                    {/* Sekcja szczegółów projektu */}
                     <div className="mb-6">
                         <Card className="p-6">
                             <h1 className="text-3xl mb-2">{name}</h1>
@@ -95,9 +94,8 @@ const ProjectDetailPage = () => {
                         </Card>
                     </div>
 
-                    {/* Sekcja tablicy Kanban */}
                     <div className="mb-4 flex gap-2">
-                        <Button onClick={handleAddTask}>Dodaj zadanie</Button>
+                        <Button variant={'outline'} onClick={handleAddTask}>Dodaj zadanie</Button>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div>

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axiosInstance from '@/api/api';
-import { Task, } from '../types'; // Assuming you have Task and UpdateTaskResponse types
+import { Task, } from '../types'; 
 
 export const useEditTask = () => {
     const queryClient = useQueryClient();

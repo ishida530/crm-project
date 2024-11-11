@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Task, TaskStatus } from '../types';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
-import { Badge } from 'lucide-react';
 import { getStatusProperties } from '../hooks/utils';
 import { useParams } from 'react-router-dom';
 
@@ -15,8 +14,6 @@ interface TaskCardProps {
 const TaskCard = ({ task, onDelete, onEdit }: TaskCardProps) => {
     const { id } = useParams();
 
-    // Bezpieczne wywołanie funkcji, tylko jeśli task i task.status istnieją
-    const { label, color } = task?.status ? getStatusProperties(task.status) : { label: 'Brak statusu', color: 'outline' };
 
     return (
         <Card key={task.id} className="border border-gray-200 rounded-lg shadow-sm bg-white p-4">
