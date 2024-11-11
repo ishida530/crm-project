@@ -32,5 +32,6 @@ public class Task {
 
     private String author;
     private Date date;
+    private Date endDate;
 
 }

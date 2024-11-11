@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,13 +46,13 @@ public class TaskService {
     }
 
     public Task createTask(TaskDTO taskDTO) {
-        // Tworzymy nowy obiekt Task na podstawie danych z TaskDTO
         Task task = new Task();
         task.setName(taskDTO.getName());
         task.setDescription(taskDTO.getDescription());
         task.setStatus(taskDTO.getStatus());
         task.setAuthor(taskDTO.getAuthor());
         task.setDate(taskDTO.getDate());
+        task.setEndDate(taskDTO.getEndDate());
 
         if (taskDTO.getProject() != null) {
             Project project = projectsRepository.findById(taskDTO.getProject())
@@ -65,14 +66,18 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public Task updateTask(int id, Task taskDetails) {
+    public Task updateTask(int id, TaskDTO taskDetails) {
+        System.out.println(taskDetails);
         try {
             return taskRepository.findById(id)
+
                     .map(task -> {
+
+                        task.setName(taskDetails.getName());
                         task.setDescription(taskDetails.getDescription());
                         task.setStatus(taskDetails.getStatus());
                         task.setAuthor(taskDetails.getAuthor());
-                        task.setProject(taskDetails.getProject());
+
                         return taskRepository.save(task);
                     })
                     .orElseThrow(() -> new RuntimeException("Task not found with id " + id));
