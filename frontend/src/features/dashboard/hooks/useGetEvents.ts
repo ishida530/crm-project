@@ -24,22 +24,21 @@ const useGetAllEvents = () => {
         return d.toISOString();
     }
 
-
     useEffect(() => {
         if (data) {
             const formattedEvents = data.map((task) => {
-                const start = task.date ? formatDate(task.date) : new Date();
-                const end = task.endDate ? formatDate(task.endDate) : undefined;
-
+                const start = task.date ? new Date(task.date) : new Date(); 
+                const end = task.endDate ? new Date(task.endDate) : undefined; 
+    
                 return {
                     title: task.name,
-                    start,
+                    start, 
                     end,
                     description: task.description,
-                    id: task.id
+                    id: task.id?.toString(),
                 };
             });
-            setEvents(formattedEvents);
+            setEvents(formattedEvents as EventType[]);
         }
     }, [data]);
 

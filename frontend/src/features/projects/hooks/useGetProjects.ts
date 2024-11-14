@@ -5,9 +5,9 @@ import { ProjectsResponse } from '../types';
 
 
 const useGetProjects = () => {
-    
+
     const fetchProjects = async (): Promise<ProjectsResponse> => {
-        const response = await axiosInstance.get('/projects');
+        const response = await axiosInstance.get('projects');
         return response.data;
     }
 

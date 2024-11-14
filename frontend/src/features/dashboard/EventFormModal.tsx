@@ -16,27 +16,34 @@ import { EventType } from './types';
 import { Textarea } from '@/components/ui/textarea';
 
 interface EventFormProps {
-    initialValues: EventType;
+    initialValues: EventType | null;
     onSave: (data: EventType) => void;
     isOpen: boolean;
     onClose: () => void;
     isEdit: boolean;
-    onDelete:()=>void;
+    onDelete: () => void;
 }
 
-const EventFormModal = ({ initialValues, onSave, isOpen, onClose, isEdit,onDelete }: EventFormProps) => {
+const EventFormModal = ({ initialValues, onSave, isOpen, onClose, isEdit, onDelete }: EventFormProps) => {
 
     const form = useForm({
         resolver: zodResolver(formSchema),
-        defaultValues: initialValues
+        defaultValues: initialValues || {
+            title: '',
+            start: new Date(), 
+            end: undefined,
+            description: ''
+        }
     });
 
-    const formatDateForInput = (date: Date | undefined): string => {
+    const formatDateForInput = (date: Date | string | undefined): string => {
         if (!date) return '';
-        const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-        const formattedDate = localDate.toISOString().slice(0, 16);
-        return formattedDate;
+        const formattedDate = typeof date === 'string' ? new Date(date) : date;
+
+        const localDate = new Date(formattedDate.getTime() - formattedDate.getTimezoneOffset() * 60000);
+        return localDate.toISOString().slice(0, 16);
     };
+
     const onSubmit = (data: EventType) => {
         console.log('Form Errors:', form.formState.errors);
         if (Object.keys(form.formState.errors).length > 0) {

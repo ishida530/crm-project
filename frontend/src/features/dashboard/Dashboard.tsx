@@ -10,101 +10,99 @@ import { useDeleteEvent } from './hooks/useDeleteEvent';
 import DeleteEventAlertDialog from './DeleteEventAlertDialog';
 
 const Dashboard = () => {
-    const { events, isLoading, error } = useGetAllEvents();
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isdeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [event, setEvent] = useState<EventType>()
-    const [isEdit, setIsEdit] = useState<boolean>(false)
-    const { mutate: createEvent } = useCreateEvent()
-    const { mutate: editEvent } = useEditEvent()
-    const { mutate: deleteEvent } = useDeleteEvent()
+  const { events, isLoading, error } = useGetAllEvents();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [currentEvent, setCurrentEvent] = useState<EventType | null>(null);
+  const [isEdit, setIsEdit] = useState(false);
+  const { mutate: createEvent } = useCreateEvent();
+  const { mutate: editEvent } = useEditEvent();
+  const { mutate: deleteEvent } = useDeleteEvent();
 
+  const handleOpenModal = (selectInfo: DateSelectArg) => {
+    setIsEdit(false);
+    setCurrentEvent({
+      title: '',
+      start: selectInfo.start,
+      end: selectInfo.end,
+      description: '',
+    });
+    setIsModalOpen(true);
+  };
 
-    const handleOpenModal = (selectInfo: DateSelectArg) => {
-        console.log(selectInfo)
-        setIsEdit(false)
-        setEvent({
-            title: '',
-            start: selectInfo.start,
-            end: selectInfo.end,
-            description: ''
-        })
-        setIsModalOpen(true);
+  const handleEdit = (clickInfo: EventClickArg) => {
+    setIsEdit(true);
+    setCurrentEvent({
+      title: clickInfo.event.title,
+      start: clickInfo.event.start || new Date(),
+      end: clickInfo.event.end || undefined,
+      description: clickInfo.event.extendedProps.description || '',
+      id: Number(clickInfo.event.id),
+    });
+    setIsModalOpen(true);
+  };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSaveEvent = (eventData: EventType) => {
+    const newEvent = {
+      name: eventData.title,
+      description: eventData.description,
+      date: eventData.start,
+      endDate: eventData.end,
+      id: currentEvent?.id,
     };
-    const handleEdit = (clickInfo: EventClickArg) => {
-        console.log(clickInfo)
-        setIsEdit(true)
-        setEvent({
-            title: clickInfo.event.title,
-            start: clickInfo.event.start ? clickInfo.event.start : new Date(),
-            end: clickInfo.event.end ? clickInfo.event.end : undefined,
-            description: clickInfo.event.extendedProps.description,
-            id: Number(clickInfo.event.id),
-        })
-        setIsModalOpen(true);
-
+    if (isEdit) {
+      editEvent(newEvent);
+    } else {
+      createEvent(newEvent);
     }
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-    };
+    handleCloseModal();
+  };
 
-    const handleSaveEvent = (eventData: EventType) => {
-        console.log(eventData)
-        const newEvent = {
-            name: eventData.title,
-            description: eventData.description,
-            date: eventData.start,
-            endDate: eventData.end,
-            id: event?.id
-        }
-        if (isEdit) {
-            editEvent(newEvent)
-        } else {
-            createEvent(newEvent)
-        }
-
-        handleCloseModal();
-    };
-
-
-    const handleDelete = () => {
-        deleteEvent(Number(event?.id))
-        setIsDeleteModalOpen(false)
-
+  const handleDelete = () => {
+    if (currentEvent?.id) {
+      deleteEvent(Number(currentEvent.id));
     }
+    setIsDeleteModalOpen(false);
+  };
 
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-    if (error) {
-        return <div>Error: {error.message}</div>;
-    }
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
-    return (
-        <div>
-            <Calendar eventsData={events}
-                onAddEvent={handleOpenModal}
-                onEditEvent={handleEdit}
-            />
-            {isModalOpen && <EventFormModal
-                initialValues={event}
-                onSave={handleSaveEvent}
-                isOpen={isModalOpen}
-                onClose={handleCloseModal}
-                isEdit={isEdit}
-                onDelete={() => setIsDeleteModalOpen(true)}
-            />}
-
-            {isdeleteModalOpen && < DeleteEventAlertDialog
-                isOpen={isdeleteModalOpen}
-                onClose={() => setIsDeleteModalOpen(false)}
-                onSave={handleDelete}
-            />
-            }
-        </div>
-    );
+  return (
+    <div>
+      <Calendar
+        eventsData={events}
+        onAddEvent={handleOpenModal}
+        onEditEvent={handleEdit}
+      />
+      {isModalOpen && (
+        <EventFormModal
+          initialValues={currentEvent}
+          onSave={handleSaveEvent}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          isEdit={isEdit}
+          onDelete={() => setIsDeleteModalOpen(true)}
+        />
+      )}
+      {isDeleteModalOpen && (
+        <DeleteEventAlertDialog
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onSave={handleDelete}
+        />
+      )}
+    </div>
+  );
 };
 
 export default Dashboard;
