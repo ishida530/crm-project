@@ -11,8 +11,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import {  formSchemaProject } from './validate';
+import { formSchemaProject } from './validate';
 import { Project } from './types';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import useGetAllProjectTemplates from '../projectsTemplates/hooks/useGetAllProjectTemplates';
+import { ProjectTemplate } from '../projectsTemplates/types';
 
 
 
@@ -24,9 +27,12 @@ interface ProjectFormProps {
 }
 
 const ProjectFormModal = ({ initialValues, onSave, isOpen, onClose }: ProjectFormProps) => {
+
+
+    const { projectTemplates, isLoading, } = useGetAllProjectTemplates()
     const form = useForm<Project>({
         resolver: zodResolver(formSchemaProject),
-        defaultValues: initialValues || { id: 0, name: '', deadline: '', investorRepresentative: '', projectManager: '' },
+        defaultValues: initialValues || { id: 0, name: '', deadline: '', investorRepresentative: '', projectManager: '', projectTemplateId: "" },
     });
     const onSubmit = (data: Project) => {
         console.log('Form submitted with data:', data);
@@ -99,6 +105,42 @@ const ProjectFormModal = ({ initialValues, onSave, isOpen, onClose }: ProjectFor
                                 </FormItem>
                             )}
                         />
+                        {
+                            !initialValues && !isLoading &&
+                            <FormField
+                                control={form.control}
+                                name="projectTemplateId"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Szablon projektu</FormLabel>
+                                        <FormControl>
+                                            <Select
+                                                onValueChange={(value) => field.onChange(value)}
+                                                value={field.value?.toString() || ""}
+                                            >
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="Wybierz szablon projektu" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {projectTemplates.map((projectTemplate: ProjectTemplate) => (
+                                                        <SelectItem
+                                                            key={projectTemplate.id}
+                                                            value={String(projectTemplate.id)}
+                                                        >
+                                                            {projectTemplate.name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+
+                        }
+
                         <DialogFooter>
                             <Button type="submit" className="w-full">
                                 {initialValues ? "Zapisz zmiany" : "Utwórz Projekt"}

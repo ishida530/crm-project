@@ -82,10 +82,10 @@ export function Menu({ isOpen, currentPath = "", onSignOut }: MenuProps) {
                 </div>
               ) : (
                 <div className="w-full" key={index}>
-                  <Link to={href}>
                     <CollapseMenuButton
                       icon={Icon}
                       label={label}
+                      href={href}
                       active={
                         active === undefined
                           ? currentPath.startsWith(href)
@@ -94,7 +94,6 @@ export function Menu({ isOpen, currentPath = "", onSignOut }: MenuProps) {
                       submenus={submenus}
                       isOpen={isOpen}
                     />
-                  </Link>
                 </div>
               )
             )}

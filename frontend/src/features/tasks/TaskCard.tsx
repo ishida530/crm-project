@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Task, TaskStatus } from '../types';
+import { Task, TaskStatus } from '../projects/types';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
-import { getStatusProperties } from '../hooks/utils';
+import { getStatusProperties } from '../projects/hooks/utils';
 import { useParams } from 'react-router-dom';
 
 interface TaskCardProps {

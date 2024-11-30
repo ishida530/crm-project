@@ -15,7 +15,7 @@ const useGetProjectDetails = (projectId: number) => {
     });
 
     return {
-        project: data?.project,
+        data: data?.project,
         error,
         isLoading,
     };

@@ -11,9 +11,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; 
-import { formSchemaTask } from './validate';
-import { Task, TaskStatus } from './types';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { formSchemaTask } from '../projects/validate';
+import { Task, TaskStatus } from '../projects/types';
 
 
 
@@ -27,7 +27,7 @@ interface TaskFormProps {
 const TaskFormModal = ({ initialValues, onSave, isOpen, onClose }: TaskFormProps) => {
     const form = useForm<Task>({
         resolver: zodResolver(formSchemaTask),
-        defaultValues: initialValues || { description: '', status: TaskStatus.TO_DO, author: '', date: '', name: '' },
+        defaultValues: initialValues || { description: '', status: TaskStatus.TO_DO, author: '', startDate: '', name: '' },
     });
     const onSubmit = (data: Task) => {
         console.log('Form submitted with data:', data);
@@ -118,7 +118,7 @@ const TaskFormModal = ({ initialValues, onSave, isOpen, onClose }: TaskFormProps
                         />
                         <FormField
                             control={form.control}
-                            name="date"
+                            name="startDate"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Data</FormLabel>

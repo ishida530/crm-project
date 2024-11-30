@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Calendar from '@/components/ui/Calendar';
 import useGetAllEvents from './hooks/useGetEvents';
 import { EventType } from './types';
@@ -101,6 +101,12 @@ const Dashboard = () => {
           onSave={handleDelete}
         />
       )}
+       {/* <h1>Powiadomienia o zadaniach</h1>
+      <ul>
+        {messages.map((message, index) => (
+          <li key={index}>{message}</li>
+        ))}
+      </ul> */}
     </div>
   );
 };

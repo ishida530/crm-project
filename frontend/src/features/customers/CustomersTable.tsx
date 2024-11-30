@@ -2,14 +2,16 @@ import React, { useState, useMemo } from "react";
 import {
     useReactTable,
     getCoreRowModel,
-    getSortedRowModel,
     flexRender,
+    SortingState,
+    getSortedRowModel,
 } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";  // Import Select component
 import { Customer } from './types';
 
 interface TableCustomersProps {
@@ -20,44 +22,67 @@ interface TableCustomersProps {
 }
 
 const TableCustomers = ({ customers = [], onEditCustomer, onDeleteCustomer, onAddCustomer }: TableCustomersProps) => {
-    const [searchInput, setSearchInput] = useState<string>("");
+    const [searchInput, setSearchInput] = useState<string>(""); 
+    const [selectedGroup, setSelectedGroup] = useState<string>("all");
+    const [sorting, setSorting] = useState<SortingState>([]); // State to track sorting
 
     const filteredData = useMemo(() => {
-        if (!searchInput) return customers;
-        return customers.filter(
-            (customer) =>
+        return customers.filter((customer: Customer) => {
+            const matchesSearch = 
+                !searchInput ||
                 customer.contactName.toLowerCase().includes(searchInput.toLowerCase()) ||
                 customer.email.toLowerCase().includes(searchInput.toLowerCase()) ||
                 customer.address.toLowerCase().includes(searchInput.toLowerCase()) ||
                 customer.nip.toLowerCase().includes(searchInput.toLowerCase()) ||
-                customer.website.toLowerCase().includes(searchInput.toLowerCase())
-        );
-    }, [searchInput, customers]);
+                customer.website.toLowerCase().includes(searchInput.toLowerCase()) ||
+                customer.group?.name.toLowerCase().includes(searchInput.toLowerCase());
+            
+            const matchesGroup = 
+                selectedGroup === "all" || customer.group?.name.toLowerCase() === selectedGroup.toLowerCase();
+
+            return matchesSearch && matchesGroup;
+        });
+    }, [searchInput, customers, selectedGroup]);
 
     const columns = useMemo(() => [
         {
             accessorKey: "id",
             header: "ID",
+            // Enable sorting for this column
+            enableSorting: true,
         },
         {
             accessorKey: "contactName",
             header: "Nazwa kontaktu",
+            enableSorting: true,
         },
         {
             accessorKey: "email",
             header: "Email",
+            enableSorting: true,
         },
         {
             accessorKey: "address",
             header: "Adres",
+            enableSorting: true,
         },
         {
             accessorKey: "nip",
             header: "NIP",
+            enableSorting: true,
         },
         {
             accessorKey: "website",
             header: "Strona WWW",
+            enableSorting: true,
+        },
+        {
+            accessorKey: "group",
+            header: "Grupa",
+            cell: ({ row }) => {
+                return row.original.group ? row.original.group.name : '';
+            },
+            enableSorting: true,
         },
         {
             id: "actions",
@@ -93,9 +118,17 @@ const TableCustomers = ({ customers = [], onEditCustomer, onDeleteCustomer, onAd
     const table = useReactTable({
         data: filteredData,
         columns,
+        state: { sorting },
+        onSortingChange: setSorting, // Update sorting state when it changes
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
     });
+
+    // Get unique groups for the select options
+    const groups = useMemo(() => {
+        const groupNames = new Set(customers.map((customer) => customer.group?.name).filter(Boolean));
+        return Array.from(groupNames);
+    }, [customers]);
 
     return (
         <div className="w-full">
@@ -106,6 +139,21 @@ const TableCustomers = ({ customers = [], onEditCustomer, onDeleteCustomer, onAd
                     onChange={(e) => setSearchInput(e.target.value)}
                     className="max-w-sm"
                 />
+                {/* Add Select filter for groups */}
+                <Select value={selectedGroup} onValueChange={setSelectedGroup} className="max-w-sm ml-4">
+                    <SelectTrigger>
+                        <SelectValue placeholder="Wybierz grupę" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {/* Set the value for "All groups" to 'all' */}
+                        <SelectItem value="all">Wszystkie grupy</SelectItem>
+                        {groups.map((group) => (
+                            <SelectItem key={group} value={group}>
+                                {group}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
                 <Button variant="outline" onClick={onAddCustomer} className="ml-4">
                     Dodaj klienta
                 </Button>
@@ -118,9 +166,18 @@ const TableCustomers = ({ customers = [], onEditCustomer, onDeleteCustomer, onAd
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
                                     <TableHead key={header.id}>
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(header.column.columnDef.header, header.getContext())}
+                                        {/* Click handler for sorting */}
+                                        <Button
+                                            variant="ghost"
+                                            className="text-left"
+                                            onClick={() => {
+                                                table.getColumn(header.id)?.toggleSorting();
+                                            }}
+                                        >
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(header.column.columnDef.header, header.getContext())}
+                                        </Button>
                                     </TableHead>
                                 ))}
                             </TableRow>

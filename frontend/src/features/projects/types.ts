@@ -11,10 +11,12 @@ export type Task = {
     description: string;
     status?: TaskStatus;
     author?: string;
-    date: Date;
+    startDate: Date;
     endDate?: Date;
     name: string;
     project?: number;
+    nothificationSent: number
+    projectTemplateId?: number
 };
 
 export type Project = {
@@ -24,6 +26,7 @@ export type Project = {
     investorRepresentative: string;
     projectManager: string;
     tasks?: Task[];
+    projectTemplateId?:number;
 };
 
 export type ProjectsResponse = {
@@ -45,7 +48,7 @@ export type DeleteProjectResponse = {
     message: string
 }
 
-export type ProjectResponse ={
+export type ProjectResponse = {
     statusCode: number;
     message: string;
     project: Project;

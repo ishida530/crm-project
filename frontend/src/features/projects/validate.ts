@@ -27,7 +27,7 @@ export const formSchemaTask = z.object({
         .min(1, { message: "Autor jest wymagany" })
         .max(100, { message: "Autor nie może przekraczać 100 znaków" }),
 
-    date: z
+    startDate: z
         .string()
         .min(1, { message: "Data jest wymagana" })
         .refine((date) => {
@@ -64,4 +64,6 @@ export const formSchemaProject = z.object({
         .string()
         .min(1, { message: "Kierownik projektu jest wymagany" })
         .max(100, { message: "Kierownik projektu nie może przekraczać 100 znaków" }),
+    projectTemplateId: z
+        .string().optional(),
 });

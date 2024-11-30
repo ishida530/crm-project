@@ -1,10 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axiosInstance from '@/api/api';
-import { Task, } from '../types'; 
+import { Task, } from '../../projects/types';
+import { useLocation } from 'react-router-dom';
 
 export const useEditTask = () => {
     const queryClient = useQueryClient();
-
+    const { pathname } = useLocation()
     const editTask = async (taskData: Task): Promise<Task> => {
         const response = await axiosInstance.put(`/projects/tasks/${taskData.id}`, taskData);
         return response.data;
@@ -14,7 +15,12 @@ export const useEditTask = () => {
         mutationFn: editTask,
         onSuccess: (data) => {
             console.log('Task updated successfully:', data);
-            queryClient.invalidateQueries({ queryKey: ['getProjectDetails'] });
+            if (pathname.includes("templates")) {
+                queryClient.invalidateQueries({ queryKey: ['getProjectTemplateDetails'] });
+            } else {
+                queryClient.invalidateQueries({ queryKey: ['getProjectDetails'] });
+
+            }
         },
         onError: (error) => {
             console.error('Error updating task:', error);

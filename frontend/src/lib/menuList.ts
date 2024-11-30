@@ -3,7 +3,6 @@ import {
     SquarePen,
     LayoutGrid,
     Folder,
-    ShoppingBag,
     Package,
     LucideIcon
 } from "lucide-react";
@@ -58,18 +57,12 @@ export function getMenuList(): Group[] {
                     href: "/clients",
                     label: "Klienci",
                     icon: Users,
-                    submenus: []
-                }
-            ]
-        },
-        {
-            groupLabel: "",
-            menus: [
-                {
-                    href: "/sales",
-                    label: "Sprzedaż",
-                    icon: ShoppingBag,
-                    submenus: []
+                    submenus: [
+                        {
+                            href: "/clients/groups",
+                            label: "Grupy Klientów"
+                        }
+                    ]
                 }
             ]
         },
@@ -102,6 +95,12 @@ export function getMenuList(): Group[] {
                     href: "/projects",
                     label: "Projekty",
                     icon: SquarePen,
+                    submenus: [
+                        {
+                            href: "/projects/templates",
+                            label: "Szablony projektów"
+                        }
+                    ]
                 }
             ]
         }

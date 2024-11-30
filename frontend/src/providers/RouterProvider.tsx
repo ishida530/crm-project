@@ -7,11 +7,14 @@ import PrivateRoute from '@/features/auth/PrivateRoute';
 import UsersPage from '@/features/users/UsersPage';
 import Dashboard from '@/features/dashboard/Dashboard';
 import CustomersPage from '@/features/customers/CustomersPage';
-import SalesPage from '@/features/sales/SalesPage';
 import ProductsPage from '@/features/products/ProductsPage';
 import InventoryPage from '@/features/inventory/InventoryPage';
 import ProjectsPage from '@/features/projects/ProjectsPage';
 import ProjectDetailPage from '@/features/projects/ProjectDetailPage';
+import CustomerGroupPage from '@/features/customerGroup/CustomerGroupPage';
+import ProjectTemplatesPage from '@/features/projectsTemplates/ProjectsTemplatesPage';
+import useGetProjectTemplateDetails from '@/features/projectsTemplates/hooks/useGetProjectTemplateDetails';
+import useGetProjectDetails from '@/features/projects/hooks/useGetProjectDetails';
 
 const router = createBrowserRouter([
     {
@@ -39,10 +42,10 @@ const router = createBrowserRouter([
                 ),
             },
             {
-                path: 'sales',
+                path: 'clients/groups', // Nowa trasa dla CustomerGroupPage
                 element: (
                     <PrivateRoute>
-                        <SalesPage />
+                        <CustomerGroupPage />
                     </PrivateRoute>
                 ),
             },
@@ -82,12 +85,26 @@ const router = createBrowserRouter([
                 path: 'projects/:id',
                 element: (
                     <PrivateRoute>
-                        <ProjectDetailPage />
+                        <ProjectDetailPage  getProject={useGetProjectDetails} />
                     </PrivateRoute>
                 ),
-
-            }
-
+            },
+            {
+                path: 'projects/templates',
+                element: (
+                    <PrivateRoute>
+                        <ProjectTemplatesPage />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: 'projects/templates/:id',
+                element: (
+                    <PrivateRoute>
+                        <ProjectDetailPage getProject={useGetProjectTemplateDetails} />
+                    </PrivateRoute>
+                ),
+            },
         ],
     },
 ]);

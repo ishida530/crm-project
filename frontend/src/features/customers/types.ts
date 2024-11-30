@@ -1,3 +1,5 @@
+import { CustomerGroup } from "../customerGroup/types";
+
 export interface RegisterCustomer {
     contactName: string;
     email: string;
@@ -19,6 +21,8 @@ export interface Customer {
     address: string;
     nip: string;
     website: string;
+    group?:CustomerGroup
+
 }
 
 export interface CustomerListResponse {
@@ -30,3 +34,4 @@ export interface DeleteCustomerResponse {
     success: boolean;
     message: string;
 }
+

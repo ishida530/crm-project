@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Task } from '../types';
 import axiosInstance from '@/api/api';
+import { useLocation } from 'react-router-dom';
+import { Task } from '@/features/projects/types';
 
 const deleteTask = async (taskId: number): Promise<Task> => {
     const response = await axiosInstance.delete(`/projects/tasks/${taskId}`);
@@ -9,12 +10,20 @@ const deleteTask = async (taskId: number): Promise<Task> => {
 
 export const useDeleteTask = () => {
     const queryClient = useQueryClient();
-    
+    const { pathname } = useLocation()
     const { mutate, isError, data } = useMutation<Task, Error, number>({
-        mutationFn: deleteTask, 
+        mutationFn: deleteTask,
         onSuccess: (data) => {
             console.log('Task deleted successfully:', data);
-            queryClient.invalidateQueries({ queryKey: ['getProjectDetails'] });
+
+            if (pathname.includes("templates")) {
+                queryClient.invalidateQueries({ queryKey: ['getProjectTemplateDetails'] });
+
+            } else {
+                queryClient.invalidateQueries({ queryKey: ['getProjectDetails'] });
+
+            }
+
         },
         onError: (error) => {
             console.error('Error deleting task:', error);
@@ -22,8 +31,8 @@ export const useDeleteTask = () => {
     });
 
     return {
-        mutate, 
-        isError, 
+        mutate,
+        isError,
         data,
     };
 };

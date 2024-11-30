@@ -2,68 +2,49 @@ import React, { useState, useMemo } from "react";
 import {
     useReactTable,
     getCoreRowModel,
-    flexRender,
-    SortingState,
     getSortedRowModel,
+    flexRender,
 } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { CustomerGroup } from "./types";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-import { Project } from "../types";
-import { Link } from "react-router-dom";
 
-interface ProjectTableProps {
-    data: Project[];
-    onEditProject: (project: Project) => void;
-    onDeleteProject: (projectId: number) => void;
-    onAddProject: () => void;
+interface CustomerGroupTableProps {
+    onEditGroup: (group: CustomerGroup) => void;
+    onDeleteGroup: (groupId: number) => void;
+    onAddGroup: () => void;
+    customerGroups: CustomerGroup[]
 }
 
-const ProjectTable = ({ data, onEditProject, onDeleteProject, onAddProject }: ProjectTableProps) => {
+const CustomerGroupTable = ({ customerGroups = [], onEditGroup, onDeleteGroup, onAddGroup }: CustomerGroupTableProps) => {
     const [searchInput, setSearchInput] = useState<string>("");
-    const [sorting, setSorting] = useState<SortingState>([]); // State to track sorting
 
     const filteredData = useMemo(() => {
-        return data.filter((project) => {
-            const matchesSearch =
-                !searchInput ||
-                project.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-                project.investorRepresentative.toLowerCase().includes(searchInput.toLowerCase()) ||
-                project.projectManager.toLowerCase().includes(searchInput.toLowerCase());
-
-            return matchesSearch;
-        });
-    }, [searchInput, data]);
+        console.log(customerGroups)
+        if (!searchInput) return customerGroups;
+        return customerGroups.filter(
+            (group) =>
+                group.name.toLowerCase().includes(searchInput.toLowerCase()) 
+        );
+    }, [searchInput, customerGroups]);
 
     const columns = useMemo(() => [
         {
             accessorKey: "id",
             header: "ID",
-            enableSorting: true,
         },
         {
             accessorKey: "name",
-            header: "Nazwa projektu",
-            enableSorting: true,
-        },
-        {
-            accessorKey: "investorRepresentative",
-            header: "Przedstawiciel inwestora",
-            enableSorting: true,
-        },
-        {
-            accessorKey: "projectManager",
-            header: "Menedżer projektu",
-            enableSorting: true,
+            header: "Nazwa grupy",
         },
         {
             id: "actions",
             header: "Akcje",
-            cell: ({ row }: Project) => {
-                const project = row.original;
-
+            cell: ({ row }) => {
+                const customer = row.original;
                 return (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -74,44 +55,40 @@ const ProjectTable = ({ data, onEditProject, onDeleteProject, onAddProject }: Pr
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Akcje</DropdownMenuLabel>
-                            <DropdownMenuItem onClick={() => onEditProject(project)}>
-                                <Link to={`/projects/${project.id}`}>Szczegóły projektu</Link>
+                            <DropdownMenuItem onClick={() => onEditGroup(customer)}>
+                                Edytuj klienta
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => onEditProject(project)}>Edytuj projekt</DropdownMenuItem>
                             <DropdownMenuItem
-                                onClick={() => onDeleteProject(project.id)}
+                                onClick={() => onDeleteGroup(customer.id)}
                                 className="text-red-600"
                             >
-                                Usuń projekt
+                                Usuń klienta
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 );
             },
         },
-    ], [onEditProject, onDeleteProject]);
+    ], [onEditGroup, onDeleteGroup]);
 
     const table = useReactTable({
         data: filteredData,
         columns,
-        state: { sorting },
-        onSortingChange: setSorting, // Update sorting state when it changes
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
     });
 
     return (
         <div className="w-full">
-            {/* Pasek filtrów i przycisk dodawania */}
             <div className="flex items-center justify-between py-4">
                 <Input
-                    placeholder="Filtruj projekty..."
+                    placeholder="Filtruj grupy..."
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
                     className="max-w-sm"
                 />
-                <Button variant="outline" onClick={onAddProject} className="ml-4">
-                    Dodaj projekt
+                <Button variant="outline" onClick={onAddGroup} className="ml-4">
+                    Dodaj grupę
                 </Button>
             </div>
 
@@ -122,18 +99,9 @@ const ProjectTable = ({ data, onEditProject, onDeleteProject, onAddProject }: Pr
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
                                     <TableHead key={header.id}>
-                                        {/* Klik handler do sortowania */}
-                                        <Button
-                                            variant="ghost"
-                                            className="text-left"
-                                            onClick={() => {
-                                                table.getColumn(header.id)?.toggleSorting();
-                                            }}
-                                        >
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(header.column.columnDef.header, header.getContext())}
-                                        </Button>
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(header.column.columnDef.header, header.getContext())}
                                     </TableHead>
                                 ))}
                             </TableRow>
@@ -164,4 +132,4 @@ const ProjectTable = ({ data, onEditProject, onDeleteProject, onAddProject }: Pr
     );
 };
 
-export default ProjectTable;
+export default CustomerGroupTable;

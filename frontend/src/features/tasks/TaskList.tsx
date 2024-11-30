@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { getStatusProperties } from "../hooks/utils";
-import { Task } from "../types";
+import { getStatusProperties } from "../projects/hooks/utils";
+import { Task } from "../projects/types";
 
 interface TaskListProps {
     tasks: Task[];

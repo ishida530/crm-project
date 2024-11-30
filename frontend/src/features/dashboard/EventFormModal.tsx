@@ -45,7 +45,6 @@ const EventFormModal = ({ initialValues, onSave, isOpen, onClose, isEdit, onDele
     };
 
     const onSubmit = (data: EventType) => {
-        console.log('Form Errors:', form.formState.errors);
         if (Object.keys(form.formState.errors).length > 0) {
             console.error('Błędy formularza:', form.formState.errors);
             return;

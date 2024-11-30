@@ -22,7 +22,6 @@ const App = () => {
   if (!sidebar) return null;
 
   const { getOpenState, settings } = sidebar;
-  console.log('isAuthenticated', isAuthenticated)
   return (
     <div className="flex flex-col h-screen">
       <div className="flex flex-grow">

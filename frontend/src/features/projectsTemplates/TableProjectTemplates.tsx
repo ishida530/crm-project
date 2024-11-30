@@ -11,31 +11,36 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-import { Project } from "../types";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"; // Import Select component
+import { ProjectTemplate } from './types';
 import { Link } from "react-router-dom";
+import useGetProjectTemplateDetails from "./hooks/useGetProjectTemplateDetails";
 
-interface ProjectTableProps {
-    data: Project[];
-    onEditProject: (project: Project) => void;
-    onDeleteProject: (projectId: number) => void;
-    onAddProject: () => void;
+interface TableProjectTemplatesProps {
+    onEditProjectTemplate: (projectTemplate: ProjectTemplate) => void;
+    onDeleteProjectTemplate: (projectTemplateId: number) => void;
+    projectTemplates: ProjectTemplate[] | undefined;
+    onAddProjectTemplate: () => void;
 }
 
-const ProjectTable = ({ data, onEditProject, onDeleteProject, onAddProject }: ProjectTableProps) => {
+const TableProjectTemplates = ({ projectTemplates = [], onEditProjectTemplate, onDeleteProjectTemplate, onAddProjectTemplate }: TableProjectTemplatesProps) => {
     const [searchInput, setSearchInput] = useState<string>("");
+    const [selectedGroup, setSelectedGroup] = useState<string>("all");
     const [sorting, setSorting] = useState<SortingState>([]); // State to track sorting
 
     const filteredData = useMemo(() => {
-        return data.filter((project) => {
+        return projectTemplates.filter((projectTemplate: ProjectTemplate) => {
             const matchesSearch =
                 !searchInput ||
-                project.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-                project.investorRepresentative.toLowerCase().includes(searchInput.toLowerCase()) ||
-                project.projectManager.toLowerCase().includes(searchInput.toLowerCase());
+                projectTemplate.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+                projectTemplate.description.toLowerCase().includes(searchInput.toLowerCase());
 
-            return matchesSearch;
+            const matchesGroup =
+                selectedGroup === "all" || projectTemplate.group?.name.toLowerCase() === selectedGroup.toLowerCase();
+
+            return matchesSearch && matchesGroup;
         });
-    }, [searchInput, data]);
+    }, [searchInput, projectTemplates, selectedGroup]);
 
     const columns = useMemo(() => [
         {
@@ -45,24 +50,19 @@ const ProjectTable = ({ data, onEditProject, onDeleteProject, onAddProject }: Pr
         },
         {
             accessorKey: "name",
-            header: "Nazwa projektu",
+            header: "Nazwa szablonu",
             enableSorting: true,
         },
         {
-            accessorKey: "investorRepresentative",
-            header: "Przedstawiciel inwestora",
-            enableSorting: true,
-        },
-        {
-            accessorKey: "projectManager",
-            header: "Menedżer projektu",
+            accessorKey: "description",
+            header: "Opis",
             enableSorting: true,
         },
         {
             id: "actions",
             header: "Akcje",
-            cell: ({ row }: Project) => {
-                const project = row.original;
+            cell: ({ row }: ProjectTemplate) => {
+                const projectTemplate = row.original;
 
                 return (
                     <DropdownMenu>
@@ -74,22 +74,29 @@ const ProjectTable = ({ data, onEditProject, onDeleteProject, onAddProject }: Pr
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Akcje</DropdownMenuLabel>
-                            <DropdownMenuItem onClick={() => onEditProject(project)}>
-                                <Link to={`/projects/${project.id}`}>Szczegóły projektu</Link>
+                            <DropdownMenuItem onClick={() => onEditProjectTemplate(projectTemplate)}>
+                                <Link
+                                    to={`/projects/templates/${projectTemplate.id}`}
+                                >
+                                    Szczegóły szablonu
+                                </Link>
+
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => onEditProject(project)}>Edytuj projekt</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => onEditProjectTemplate(projectTemplate)}>
+                                Edytuj szablon
+                            </DropdownMenuItem>
                             <DropdownMenuItem
-                                onClick={() => onDeleteProject(project.id)}
+                                onClick={() => onDeleteProjectTemplate(projectTemplate.id)}
                                 className="text-red-600"
                             >
-                                Usuń projekt
+                                Usuń szablon
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 );
             },
         },
-    ], [onEditProject, onDeleteProject]);
+    ], [onEditProjectTemplate, onDeleteProjectTemplate]);
 
     const table = useReactTable({
         data: filteredData,
@@ -100,18 +107,25 @@ const ProjectTable = ({ data, onEditProject, onDeleteProject, onAddProject }: Pr
         getSortedRowModel: getSortedRowModel(),
     });
 
+    // Get unique groups for the select options
+    const groups = useMemo(() => {
+        const groupNames = new Set(projectTemplates.map((projectTemplate) => projectTemplate.group?.name).filter(Boolean));
+        return Array.from(groupNames);
+    }, [projectTemplates]);
+
     return (
         <div className="w-full">
-            {/* Pasek filtrów i przycisk dodawania */}
             <div className="flex items-center justify-between py-4">
                 <Input
-                    placeholder="Filtruj projekty..."
+                    placeholder="Filtruj szablony projektów..."
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
                     className="max-w-sm"
                 />
-                <Button variant="outline" onClick={onAddProject} className="ml-4">
-                    Dodaj projekt
+                {/* Add Select filter for groups */}
+
+                <Button variant="outline" onClick={onAddProjectTemplate} className="ml-4">
+                    Dodaj szablon
                 </Button>
             </div>
 
@@ -122,7 +136,7 @@ const ProjectTable = ({ data, onEditProject, onDeleteProject, onAddProject }: Pr
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
                                     <TableHead key={header.id}>
-                                        {/* Klik handler do sortowania */}
+                                        {/* Click handler for sorting */}
                                         <Button
                                             variant="ghost"
                                             className="text-left"
@@ -164,4 +178,4 @@ const ProjectTable = ({ data, onEditProject, onDeleteProject, onAddProject }: Pr
     );
 };
 
-export default ProjectTable;
+export default TableProjectTemplates;
