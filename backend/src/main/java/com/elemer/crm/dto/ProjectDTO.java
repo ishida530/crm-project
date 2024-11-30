@@ -21,4 +21,7 @@ public class ProjectDTO {
     private String message;
     private int statusCode;
     private String error;
+
+    private Integer projectTemplateId;
+
 }

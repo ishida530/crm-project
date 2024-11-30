@@ -1,6 +1,7 @@
 package com.elemer.crm.util;
 
 import io.github.cdimascio.dotenv.Dotenv;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
@@ -26,7 +27,7 @@ public class EncryptionUtil {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, SECRET_KEY);
-            byte[] encryptedData = cipher.doFinal(data.getBytes("UTF-8")); // Specyfikacja kodowania
+            byte[] encryptedData = cipher.doFinal(data.getBytes("UTF-8"));
             return Base64.getEncoder().encodeToString(encryptedData);
         } catch (Exception e) {
             System.err.println("Encryption error: " + e.getMessage());
@@ -39,7 +40,7 @@ public class EncryptionUtil {
             throw new IllegalArgumentException("Data to decrypt cannot be null or empty");
         }
         try {
-            // Usuń wszelkie nieprawidłowe znaki, jeśli istnieją
+            // Usuwanie nielegalnych znaków (np. białych znaków lub innych symboli)
             String cleanData = encryptedData.replaceAll("[^A-Za-z0-9+/=]", "");
             byte[] decodedData = Base64.getDecoder().decode(cleanData);
             Cipher cipher = Cipher.getInstance(ALGORITHM);

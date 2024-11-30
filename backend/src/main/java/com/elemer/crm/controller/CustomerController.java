@@ -31,6 +31,7 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<Customer> createCustomer(@Valid @RequestBody CustomerDTO customerDTO) {
+        System.out.println("controller: " + customerDTO);
         Customer createdCustomer = customerService.createCustomer(customerDTO);
         return new ResponseEntity<>(createdCustomer, HttpStatus.CREATED);
     }

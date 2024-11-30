@@ -26,4 +26,6 @@ public class CustomerDTO {
 
     @NotBlank(message = "Strona www nie może być pusta")
     private String website;
+
+    private Long group;
 }

@@ -3,6 +3,7 @@ package com.elemer.crm.entity;
 import com.elemer.crm.dto.ProjectDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -17,7 +18,7 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
+@Email
     @NotNull(message = "Project name cannot be null")
     private String name;
 

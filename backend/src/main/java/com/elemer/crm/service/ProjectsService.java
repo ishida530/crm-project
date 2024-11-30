@@ -3,6 +3,9 @@ package com.elemer.crm.service;
 import com.elemer.crm.dto.HttpResponse;
 import com.elemer.crm.dto.ProjectDTO;
 import com.elemer.crm.entity.Project;
+import com.elemer.crm.entity.ProjectTemplate;
+import com.elemer.crm.entity.Task;
+import com.elemer.crm.repository.ProjectTemplateRepository;
 import com.elemer.crm.repository.ProjectsRepository;
 import com.elemer.crm.util.EncryptionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,9 @@ public class ProjectsService {
 
     @Autowired
     private ProjectsRepository projectsRepository;
+
+    @Autowired
+    private ProjectTemplateRepository projectTemplateRepository;
 
     public HttpResponse getAllProjects() {
         HttpResponse httpResponse = new HttpResponse();
@@ -41,15 +47,38 @@ public class ProjectsService {
 
         try {
             Project newProject = new Project();
-            newProject.setProjectManager(EncryptionUtil.encrypt(projectRequest.getProjectManager()));
             newProject.setName(EncryptionUtil.encrypt(projectRequest.getName()));
-            newProject.setDeadline(projectRequest.getDeadline()); // Zakładamy, że daty nie szyfrujemy
+            newProject.setProjectManager(EncryptionUtil.encrypt(projectRequest.getProjectManager()));
+            newProject.setDeadline(projectRequest.getDeadline());
             newProject.setInvestorRepresentative(EncryptionUtil.encrypt(projectRequest.getInvestorRepresentative()));
 
+            if (projectRequest.getProjectTemplateId() != null) {
+                Integer templateId = projectRequest.getProjectTemplateId();
+                ProjectTemplate template = projectTemplateRepository.findById(templateId)
+                        .orElseThrow(() -> new IllegalArgumentException("Project Template with ID " + templateId + " not found"));
+
+                List<Task> tasks = template.getTasks().stream()
+                        .map(templateTask -> {
+                            Task newTask = new Task();
+                            newTask.setName(templateTask.getName());
+                            newTask.setDescription(templateTask.getDescription());
+                            newTask.setStatus(templateTask.getStatus());
+                            newTask.setAuthor(templateTask.getAuthor());
+                            newTask.setStartDate(templateTask.getStartDate());
+                            newTask.setEndDate(templateTask.getEndDate());
+                            newTask.setProject(newProject);
+                            return newTask;
+                        })
+                        .toList();
+
+                newProject.setTasks(tasks);
+            }
+
             projectsRepository.save(newProject);
+
             httpResponse.setProject(newProject);
             httpResponse.setStatusCode(200);
-            httpResponse.setMessage("Project added successfully with encrypted data");
+            httpResponse.setMessage("Project added successfully with tasks from template (if applicable)");
         } catch (Exception e) {
             httpResponse.setStatusCode(500);
             httpResponse.setMessage("Error occurred: " + e.getMessage());
@@ -57,13 +86,13 @@ public class ProjectsService {
         return httpResponse;
     }
 
+
     public HttpResponse getProjectById(Integer id) {
         HttpResponse httpResponse = new HttpResponse();
         try {
             Project projectById = projectsRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Project not found"));
 
-            // Decrypt project data before setting response
             decryptProjectData(projectById);
 
             httpResponse.setProject(projectById);
@@ -104,7 +133,6 @@ public class ProjectsService {
             Project project = projectsRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Project not found"));
 
-            // Delete project
             projectsRepository.delete(project);
             httpResponse.setStatusCode(200);
             httpResponse.setMessage("Project deleted successfully");

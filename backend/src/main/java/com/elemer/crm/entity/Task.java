@@ -22,16 +22,22 @@ public class Task {
     @NotNull
     private String description;
 
-    @ManyToOne(optional = true)
+    @ManyToOne()
     @JoinColumn(name = "project_id")
     @JsonIgnore
     private Project project;
+
+    @ManyToOne()
+    @JoinColumn(name = "project_template_id")
+    @JsonIgnore
+    private ProjectTemplate projectTemplate;
 
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
 
     private String author;
-    private Date date;
+    private Date startDate;
     private Date endDate;
 
+    private Integer notificationSent;
 }
