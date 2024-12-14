@@ -13,9 +13,8 @@ export function AppSidebar() {
   const location = useLocation();
 
 
-  const { logout } = useAuth(); 
+  const { logout } = useAuth();
   if (!sidebar) return null;
-
   const { isOpen, toggleOpen, getOpenState, setIsHover, settings } = sidebar;
   return (
     <aside

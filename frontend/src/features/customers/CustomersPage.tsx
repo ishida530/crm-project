@@ -64,7 +64,6 @@ const CustomersPage = () => {
     <div>
       <TableCustomers
         customers={customers}
-        groups
         onAddCustomer={handleCreateCustomer}
         onEditCustomer={handleEditCustomer}
         onDeleteCustomer={handleDeleteCustomer}

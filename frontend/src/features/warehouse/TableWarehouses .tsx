@@ -11,36 +11,41 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"; // Import Select component
-import { ProjectTemplate } from './types';
+import { Warehouse } from './types';
 import { Link } from "react-router-dom";
-import useGetProjectTemplateDetails from "./hooks/useGetProjectTemplateDetails";
 
-interface TableProjectTemplatesProps {
-    onEditProjectTemplate: (projectTemplate: ProjectTemplate) => void;
-    onDeleteProjectTemplate: (projectTemplateId: number) => void;
-    projectTemplates: ProjectTemplate[] | undefined;
-    onAddProjectTemplate: () => void;
+interface TableWarehousesProps {
+    onEditWarehouse: (warehouse: Warehouse) => void;
+    onDeleteWarehouse: (warehouseId: number) => void;
+    warehouses: Warehouse[] | undefined;
+    onAddWarehouse: () => void;
 }
 
-const TableProjectTemplates = ({ projectTemplates = [], onEditProjectTemplate, onDeleteProjectTemplate, onAddProjectTemplate }: TableProjectTemplatesProps) => {
+const TableWarehouses = ({ warehouses = [], onEditWarehouse, onDeleteWarehouse, onAddWarehouse }: TableWarehousesProps) => {
     const [searchInput, setSearchInput] = useState<string>("");
-    const [selectedGroup, setSelectedGroup] = useState<string>("all");
-    const [sorting, setSorting] = useState<SortingState>([]); // State to track sorting
+    const [selectedProducer, setSelectedProducer] = useState<string>("all");
+    const [sorting, setSorting] = useState<SortingState>([]);
 
     const filteredData = useMemo(() => {
-        return projectTemplates.filter((projectTemplate: ProjectTemplate) => {
+        return warehouses.filter((warehouse: Warehouse) => {
             const matchesSearch =
                 !searchInput ||
-                projectTemplate.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-                projectTemplate.description.toLowerCase().includes(searchInput.toLowerCase());
+                warehouse.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+                warehouse.location.toLowerCase().includes(searchInput.toLowerCase()) ||
+                warehouse.products.some((product) =>
+                    product.producer.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    product.name.toLowerCase().includes(searchInput.toLowerCase())
+                );
 
-            const matchesGroup =
-                selectedGroup === "all" || projectTemplate.group?.name.toLowerCase() === selectedGroup.toLowerCase();
+            const matchesProducer =
+                selectedProducer === "all" ||
+                warehouse.products.some((product) =>
+                    product.producer.toLowerCase() === selectedProducer.toLowerCase()
+                );
 
-            return matchesSearch && matchesGroup;
+            return matchesSearch && matchesProducer;
         });
-    }, [searchInput, projectTemplates, selectedGroup]);
+    }, [searchInput, warehouses, selectedProducer]);
 
     const columns = useMemo(() => [
         {
@@ -50,20 +55,19 @@ const TableProjectTemplates = ({ projectTemplates = [], onEditProjectTemplate, o
         },
         {
             accessorKey: "name",
-            header: "Nazwa szablonu",
+            header: "Nazwa magazynu",
             enableSorting: true,
         },
         {
-            accessorKey: "description",
-            header: "Opis",
+            accessorKey: "address",
+            header: "Adres",
             enableSorting: true,
         },
         {
             id: "actions",
             header: "Akcje",
-            cell: ({ row }: ProjectTemplate) => {
-                const projectTemplate = row.original;
-
+            cell: ({ row }) => {
+                const warehouse = row.original;
                 return (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -74,56 +78,55 @@ const TableProjectTemplates = ({ projectTemplates = [], onEditProjectTemplate, o
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Akcje</DropdownMenuLabel>
-                            <Link
-                                to={`/projects/templates/${projectTemplate.id}`}
-                            >
-                                Szczegóły szablonu
-                            </Link>
-
-                            <DropdownMenuItem onClick={() => onEditProjectTemplate(projectTemplate)}>
-                                Edytuj szablon
+                            <DropdownMenuItem >
+                                <Link to={`/warehouses/${warehouse.id}`}>
+                                    Szczegóły magazynu
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => onEditWarehouse(warehouse)}>
+                                Edytuj magazyn
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                                onClick={() => onDeleteProjectTemplate(projectTemplate.id)}
+                                onClick={() => onDeleteWarehouse(warehouse.id)}
                                 className="text-red-600"
                             >
-                                Usuń szablon
+                                Usuń magazyn
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 );
             },
         },
-    ], [onEditProjectTemplate, onDeleteProjectTemplate]);
+    ], [onEditWarehouse, onDeleteWarehouse]);
 
     const table = useReactTable({
         data: filteredData,
         columns,
         state: { sorting },
-        onSortingChange: setSorting, // Update sorting state when it changes
+        onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
     });
 
-    // Get unique groups for the select options
-    const groups = useMemo(() => {
-        const groupNames = new Set(projectTemplates.map((projectTemplate) => projectTemplate.group?.name).filter(Boolean));
-        return Array.from(groupNames);
-    }, [projectTemplates]);
+    const producers = useMemo(() => {
+        const producerNames = new Set(
+            warehouses.flatMap((warehouse) => warehouse.products.map((product) => product.producer))
+        );
+        return Array.from(producerNames);
+    }, [warehouses]);
 
     return (
         <div className="w-full">
             <div className="flex items-center justify-between py-4">
                 <Input
-                    placeholder="Filtruj szablony projektów..."
+                    placeholder="Filtruj magazyny..."
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
                     className="max-w-sm"
                 />
-                {/* Add Select filter for groups */}
 
-                <Button variant="outline" onClick={onAddProjectTemplate} className="ml-4">
-                    Dodaj szablon
+                <Button variant="outline" onClick={onAddWarehouse} className="ml-4">
+                    Dodaj magazyn
                 </Button>
             </div>
 
@@ -134,7 +137,6 @@ const TableProjectTemplates = ({ projectTemplates = [], onEditProjectTemplate, o
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
                                     <TableHead key={header.id}>
-                                        {/* Click handler for sorting */}
                                         <Button
                                             variant="ghost"
                                             className="text-left"
@@ -176,4 +178,4 @@ const TableProjectTemplates = ({ projectTemplates = [], onEditProjectTemplate, o
     );
 };
 
-export default TableProjectTemplates;
+export default TableWarehouses;

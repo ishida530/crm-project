@@ -1,21 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/api/api';
-import { CustomerListResponse } from '../types';
+import { Customer, } from '../types';
 
 const useGetAllCustomers = () => {
-  const fetchCustomers = async (): Promise<CustomerListResponse> => {
+  const fetchCustomers = async (): Promise<Customer[]> => {
     const response = await axiosInstance.get('customers');
     return response.data;
   };
 
-  const { data, error, isLoading } = useQuery<CustomerListResponse, Error>({
+  const { data, error, isLoading } = useQuery<Customer[], Error>({
     queryKey: ['getAllCustomers'],
     queryFn: fetchCustomers,
-    staleTime: 300000, 
+    staleTime: 300000,
   });
 
   return {
-    customers: data, 
+    customers: data,
     error,
     isLoading,
   };

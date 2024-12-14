@@ -18,7 +18,7 @@ import useGetAllCustomersGroup from '../customerGroup/hooks/useGetAllCustomerGro
 import { CustomerGroup } from '../customerGroup/types';
 
 interface EditCustomerDialogProps {
-    initialValues?: Customer;
+    initialValues?: Customer | null | undefined;
     onSave: (updatedProfile: Customer) => void;
     isOpen: boolean;
     onClose: () => void;

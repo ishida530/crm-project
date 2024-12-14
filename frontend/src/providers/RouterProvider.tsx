@@ -7,14 +7,16 @@ import PrivateRoute from '@/features/auth/PrivateRoute';
 import UsersPage from '@/features/users/UsersPage';
 import Dashboard from '@/features/dashboard/Dashboard';
 import CustomersPage from '@/features/customers/CustomersPage';
-import ProductsPage from '@/features/products/ProductsPage';
-import InventoryPage from '@/features/inventory/InventoryPage';
 import ProjectsPage from '@/features/projects/ProjectsPage';
 import ProjectDetailPage from '@/features/projects/ProjectDetailPage';
 import CustomerGroupPage from '@/features/customerGroup/CustomerGroupPage';
 import ProjectTemplatesPage from '@/features/projectsTemplates/ProjectsTemplatesPage';
 import useGetProjectTemplateDetails from '@/features/projectsTemplates/hooks/useGetProjectTemplateDetails';
 import useGetProjectDetails from '@/features/projects/hooks/useGetProjectDetails';
+import WarehousesPage from '@/features/warehouse/WarehousesPage';
+import WarehouseDetailsPage from '@/features/warehouse/WarehouseDetailsPage';
+import { UserRole } from '@/features/users/types';
+
 
 const router = createBrowserRouter([
     {
@@ -24,7 +26,7 @@ const router = createBrowserRouter([
             {
                 path: '/dashboard',
                 element: (
-                    <PrivateRoute>
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN]}>
                         <Dashboard />
                     </PrivateRoute>
                 ),
@@ -36,39 +38,39 @@ const router = createBrowserRouter([
             {
                 path: 'clients',
                 element: (
-                    <PrivateRoute>
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.INVOICE_CLERK]}>
                         <CustomersPage />
                     </PrivateRoute>
                 ),
             },
             {
-                path: 'clients/groups', // Nowa trasa dla CustomerGroupPage
+                path: 'clients/groups',
                 element: (
-                    <PrivateRoute>
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.INVOICE_CLERK]}>
                         <CustomerGroupPage />
                     </PrivateRoute>
                 ),
             },
             {
-                path: 'products',
+                path: 'warehouses',
                 element: (
-                    <PrivateRoute>
-                        <ProductsPage />
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER]}>
+                        <WarehousesPage />
                     </PrivateRoute>
                 ),
             },
             {
-                path: 'inventory',
+                path: 'warehouses/:id',
                 element: (
-                    <PrivateRoute>
-                        <InventoryPage />
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER]}>
+                        <WarehouseDetailsPage />
                     </PrivateRoute>
                 ),
             },
             {
                 path: 'users',
                 element: (
-                    <PrivateRoute>
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN]}>
                         <UsersPage />
                     </PrivateRoute>
                 ),
@@ -76,7 +78,7 @@ const router = createBrowserRouter([
             {
                 path: 'projects',
                 element: (
-                    <PrivateRoute>
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE]}>
                         <ProjectsPage />
                     </PrivateRoute>
                 ),
@@ -84,15 +86,15 @@ const router = createBrowserRouter([
             {
                 path: 'projects/:id',
                 element: (
-                    <PrivateRoute>
-                        <ProjectDetailPage  getProject={useGetProjectDetails} />
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE]}>
+                        <ProjectDetailPage getProject={useGetProjectDetails} />
                     </PrivateRoute>
                 ),
             },
             {
                 path: 'projects/templates',
                 element: (
-                    <PrivateRoute>
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER]}>
                         <ProjectTemplatesPage />
                     </PrivateRoute>
                 ),
@@ -100,7 +102,7 @@ const router = createBrowserRouter([
             {
                 path: 'projects/templates/:id',
                 element: (
-                    <PrivateRoute>
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER]}>
                         <ProjectDetailPage getProject={useGetProjectTemplateDetails} />
                     </PrivateRoute>
                 ),

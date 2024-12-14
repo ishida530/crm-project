@@ -6,16 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { formSchema } from './validate';
 import { LoginCredentials } from './types';
-import { useAuth } from './AuthProvier';
-import { useNavigate } from 'react-router-dom';
 import useAuthLogin from './useAuthLogin';
 
 
 const LoginPage: React.FC = () => {
-    const { handleLogin, isPending, error } = useAuthLogin();
+    const { handleLogin, isPending, error, data: responseData } = useAuthLogin();
 
-    const { login } = useAuth()
-    const navigate = useNavigate();
     const form = useForm<LoginCredentials>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -24,10 +20,9 @@ const LoginPage: React.FC = () => {
         },
     });
 
-    const onSubmit = (data: LoginCredentials) => {
-        handleLogin(data);
-        login();
-        navigate('/')
+    const onSubmit = async (data: LoginCredentials) => {
+        await handleLogin(data);
+        console.log('responseData', responseData)
     };
 
     return (

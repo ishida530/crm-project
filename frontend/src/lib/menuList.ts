@@ -1,108 +1,94 @@
+import { UserRole } from "@/features/users/types";
 import {
     Users,
     SquarePen,
     LayoutGrid,
     Folder,
-    Package,
     LucideIcon
 } from "lucide-react";
 
+// Submenu type definition
 type Submenu = {
     href: string;
     label: string;
     active?: boolean;
+    allowedRoles?: UserRole[];
 };
 
+// Menu type definition
 type Menu = {
     href: string;
     label: string;
     active?: boolean;
     icon: LucideIcon;
     submenus?: Submenu[];
+    allowedRoles?: UserRole[];
 };
 
-type Group = {
-    groupLabel: string;
-    menus: Menu[];
-};
-
-export function getMenuList(): Group[] {
+// Function to filter and return menus based on user role
+export function getMenuList(userRole: UserRole): Menu[] {
     return [
+        // Dashboard Menu
         {
-            groupLabel: "",
-            menus: [
-                {
-                    href: "/dashboard",
-                    label: "Dashboard",
-                    icon: LayoutGrid,
-                    submenus: []
-                }
-            ]
+            href: "/dashboard",
+            label: "Dashboard",
+            icon: LayoutGrid,
+            submenus: [],
+            allowedRoles: [UserRole.ADMIN],  // Allowed roles for this menu
         },
+        // Users Menu
         {
-            groupLabel: "",
-            menus: [
-                {
-                    href: "/users",
-                    label: "Użytkownicy",
-                    icon: Users,
-                    submenus: []
-                }
-            ]
+            href: "/users",
+            label: "Użytkownicy",
+            icon: Users,
+            submenus: [],
+            allowedRoles: [UserRole.ADMIN],  // Allowed roles for this menu
         },
+        // Clients Menu with Submenu
         {
-            groupLabel: "",
-            menus: [
+            href: "/clients",
+            label: "Klienci",
+            icon: Users,
+            submenus: [
                 {
-                    href: "/clients",
-                    label: "Klienci",
-                    icon: Users,
-                    submenus: [
-                        {
-                            href: "/clients/groups",
-                            label: "Grupy Klientów"
-                        }
-                    ]
+                    href: "/clients/groups",
+                    label: "Grupy Klientów",
+                    allowedRoles: [UserRole.ADMIN, UserRole.INVOICE_CLERK],  // Allowed roles for this submenu
                 }
-            ]
+            ],
+            allowedRoles: [UserRole.ADMIN, UserRole.INVOICE_CLERK],  // Allowed roles for this menu
         },
+        // Warehouses Menu
         {
-            groupLabel: "",
-            menus: [
-                {
-                    href: "/products",
-                    label: "Produkty",
-                    icon: Package,
-                    submenus: []
-                }
-            ]
+            href: "/warehouses",
+            label: "Magazyn",
+            icon: Folder,
+            submenus: [],
+            allowedRoles: [UserRole.ADMIN, UserRole.MANAGER],  // Allowed roles for this menu
         },
+        // Projects Menu with Submenu
         {
-            groupLabel: "",
-            menus: [
+            href: "/projects",
+            label: "Projekty",
+            icon: SquarePen,
+            submenus: [
                 {
-                    href: "/inventory",
-                    label: "Magazyn",
-                    icon: Folder,
-                    submenus: []
+                    href: "/projects/templates",
+                    label: "Szablony projektów",
+                    allowedRoles: [UserRole.ADMIN, UserRole.MANAGER],  // Allowed roles for this submenu
                 }
-            ]
-        },
-        {
-            groupLabel: "",
-            menus: [
-                {
-                    href: "/projects",
-                    label: "Projekty",
-                    icon: SquarePen,
-                    submenus: [
-                        {
-                            href: "/projects/templates",
-                            label: "Szablony projektów"
-                        }
-                    ]
-                }
-            ]
+            ],
+            allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE],  // Allowed roles for this menu
         }
-    ];
+    ]
+    .filter(menu => 
+        // Filter main menus based on allowed roles
+        menu.allowedRoles?.includes(userRole) || !menu.allowedRoles
+    ).map(menu => ({
+        ...menu,
+        submenus: menu.submenus?.filter(submenu =>
+            // Filter submenus based on allowed roles
+            submenu.allowedRoles?.includes(userRole) || !submenu.allowedRoles
+        )
+    }));
 }
