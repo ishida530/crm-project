@@ -27,5 +27,6 @@ public class HttpResponse {
     private List<User> userList;
     private List<Project> projects;
     private Project project;
+    private Boolean success;
 
 }

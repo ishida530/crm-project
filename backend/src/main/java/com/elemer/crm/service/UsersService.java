@@ -110,8 +110,11 @@ public class UsersService {
             response.setRefreshToken(refreshToken);
             response.setExpirationTime("24Hrs");
             response.setMessage("Successfully logged in");
+            response.setSuccess(true);
+
 
         } catch (Exception e) {
+            response.setSuccess(false);
             if (e instanceof NoSuchElementException) {
                 response.setStatusCode(404);
                 response.setError("User not found");
@@ -119,8 +122,8 @@ public class UsersService {
                 response.setStatusCode(401);
                 response.setError("Invalid credentials");
             } else {
-                response.setStatusCode(500);
                 response.setError("Internal Server Error: " + e.getMessage());
+                response.setError("Invalid credentials");
             }
         }
         return response;
@@ -145,7 +148,7 @@ public class UsersService {
             response.setStatusCode(200);
             return response;
 
-        }catch (Exception e){
+        } catch (Exception e){
             response.setStatusCode(500);
             response.setMessage(e.getMessage());
             return response;

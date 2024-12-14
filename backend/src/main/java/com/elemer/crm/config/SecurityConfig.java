@@ -35,7 +35,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/login", "/public/**").permitAll()
                         .requestMatchers("/users/**").hasAuthority("ADMIN")
                         .requestMatchers("/clients/**").hasAnyAuthority("ADMIN", "INVOICE_CLERK")
-                        .requestMatchers("/warehouse/**").hasAnyAuthority("ADMIN", "MANAGER")
+                        .requestMatchers("/warehouses/**").hasAnyAuthority("ADMIN", "MANAGER")
                         .requestMatchers("/sales/**").hasAnyAuthority("ADMIN", "INVOICE_CLERK")
                         .requestMatchers("/projects/**","/projects/tasks/**").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
                         .requestMatchers("/products/**").hasAuthority("ADMIN")
