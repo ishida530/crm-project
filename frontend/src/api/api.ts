@@ -10,11 +10,10 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem("token")
-        console.log('token przy wysylce', token);
+        const tokenJWT = localStorage.getItem("token")
 
-        if (token) {
-            config.headers['Authorization'] = `Bearer ${token}`
+        if (tokenJWT) {
+            config.headers['Authorization'] = `Bearer ${tokenJWT}`
         }
         return config
 

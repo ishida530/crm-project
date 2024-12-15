@@ -6,17 +6,64 @@ import { useStore } from "./hooks/use-store";
 import { Navbar } from "./components/common/Header";
 import { useAuth } from "./features/auth/AuthProvier";
 import { useEffect } from "react";
+import { getToken, messaging, onMessage } from './firebase'; // Zaimportuj Firebase Messaging
+import axiosInstance from "./api/api";
+
 
 const App = () => {
   const sidebar = useStore(useSidebar, (x) => x);
   const { isAuthenticated } = useAuth();
 
   const navigate = useNavigate();
+  // Funkcja do uzyskiwania uprawnień i subskrybowania powiadomień
+  // Funkcja do uzyskiwania uprawnień i subskrybowania powiadomień
+
+  // if ('serviceWorker' in navigator) {
+  //   navigator.serviceWorker.register('/firebase-messaging-sw.js')
+  //     .then(function (registration) {
+  //       console.log('Service Worker zarejestrowany pomyślnie: ', registration);
+
+
+        
+  //     })
+  //     .catch(function (error) {
+  //       console.error('Rejestracja Service Workera nie powiodła się: ', error);
+  //     });
+  // }
+
+  async function requestPermission() {
+    //requesting permission using Notification API
+    const permission = await Notification.requestPermission();
+
+    if (permission === "granted") {
+      const token = await getToken(messaging, {
+        vapidKey: "BGQuZkwmFXmudPjn-k545IcQq8syG6PFNfe5OfeEKZfNr1xaxDB5ZO4mulxthS8uX4W5I-lgzDrp_IqJ78Awl24",
+      });
+
+
+      //We can send token to server
+      console.log("Token generated : ", token);
+      axiosInstance.post(`notification/send?token=${token}`, {
+        "title": "Nowe powiadomienie",
+        "body": "Masz nowe wiadomości w aplikacji!"
+      }).then(res => {
+        console.log('res', res)
+
+      })
+    } else if (permission === "denied") {
+      //notifications are blocked
+      alert("You denied for the notification");
+    }
+  }
+
 
   useEffect(() => {
+    requestPermission();
+
     if (!isAuthenticated) {
       navigate('/login');
     }
+
   }, [isAuthenticated]);
 
   if (!sidebar) return null;
