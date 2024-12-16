@@ -34,6 +34,8 @@ public class User implements UserDetails {
 
     private String phoneNumber;
 
+    private String tokenFCM;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

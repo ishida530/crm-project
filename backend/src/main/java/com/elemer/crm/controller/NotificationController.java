@@ -26,16 +26,4 @@ public class NotificationController {
         return firebaseMessagingService.sendNotification(note, token);
     }
 
-    // Klasa do odbioru tokenu
-    public static class TokenRequest {
-        private String token;
-
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-    }
 }

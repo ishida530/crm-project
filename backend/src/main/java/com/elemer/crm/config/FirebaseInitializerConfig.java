@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 import javax.annotation.PostConstruct;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -27,26 +28,4 @@ public class FirebaseInitializerConfig {
         FirebaseApp app = FirebaseApp.initializeApp(firebaseOptions);
         return FirebaseMessaging.getInstance(app);
     }
-
-//    @PostConstruct
-//    public void initializeFirebase() {
-//        try {
-//
-//
-//
-//            InputStream serviceAccount = new ClassPathResource("firebase-config.json").getInputStream();
-//
-//            // Ensuring correct initialization with the service account
-//
-//            FirebaseOptions options = new FirebaseOptions.Builder()
-//                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-//                    .build();
-//
-//            FirebaseApp.initializeApp(options);
-//            System.out.println("Firebase initialized successfully!");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("Failed to initialize Firebase");
-//        }
-//    }
 }

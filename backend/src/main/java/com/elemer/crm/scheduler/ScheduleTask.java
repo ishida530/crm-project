@@ -2,6 +2,7 @@ package com.elemer.crm.scheduler;
 import com.elemer.crm.dto.TaskDTO;
 import com.elemer.crm.entity.Task;
 import com.elemer.crm.repository.TaskRepository;
+import com.elemer.crm.service.NotificationSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,9 @@ public class ScheduleTask {
 
     @Autowired
     private TaskRepository taskRepository;
+
+//    @Autowired
+//    private NotificationSender notificationSender;
 
     @Scheduled(fixedRate = 5000)
     public void getTasks() {
@@ -32,6 +36,7 @@ public class ScheduleTask {
             System.out.println(task.getName() + " - " + task.getStartDate());
 
             task.setNotificationSent(1);
+//            notificationSender.sendNotification("asdasda");
             taskRepository.save(task);
         }
     }

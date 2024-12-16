@@ -35,15 +35,7 @@ messaging.onBackgroundMessage(function (payload) {
     icon: payload.notification.icon || '/default-icon.png', // Dodaj ikonę, jeśli chcesz
 
   };
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/firebase-messaging-sw.js')
-      .then(function (registration) {
-        console.log('Service Worker zarejestrowany pomyślnie: ', registration);
-      })
-      .catch(function (error) {
-        console.error('Rejestracja Service Workera nie powiodła się: ', error);
-      });
-  }
+
   onMessage(messaging, (payload) => {
     console.log("Message received. ", payload);
     // Tutaj można ręcznie pokazać powiadomienie, np. przy użyciu Notification API

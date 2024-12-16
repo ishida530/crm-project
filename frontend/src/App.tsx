@@ -37,17 +37,17 @@ const App = () => {
 
     if (permission === "granted") {
       const token = await getToken(messaging, {
-        vapidKey: "BGQuZkwmFXmudPjn-k545IcQq8syG6PFNfe5OfeEKZfNr1xaxDB5ZO4mulxthS8uX4W5I-lgzDrp_IqJ78Awl24",
+        vapidKey: "BAXNXcSy0a0SZyDW_BG19vY4RPwfGOj58aXI_pO6Kn5oVJBxW0vDhgdHMU182DqIX7q6RqSjaI9XZFga0e0FxeE",
       });
 
 
       //We can send token to server
       console.log("Token generated : ", token);
       axiosInstance.post(`notification/send?token=${token}`, {
-        "title": "Nowe powiadomienie",
-        "body": "Masz nowe wiadomości w aplikacji!"
+        title: "Nowe powiadomienie",
+        body: "Masz nowe wiadomości w aplikacji!"
       }).then(res => {
-        console.log('res', res)
+        console.log('response: ', res)
 
       })
     } else if (permission === "denied") {
@@ -58,10 +58,11 @@ const App = () => {
 
 
   useEffect(() => {
-    requestPermission();
 
     if (!isAuthenticated) {
       navigate('/login');
+    }else{
+      requestPermission();
     }
 
   }, [isAuthenticated]);
