@@ -26,6 +26,11 @@ public class UserController {
         return ResponseEntity.ok(usersService.login(request));
     }
 
+    @PostMapping("/tokenfcm/{userId}")
+    public ResponseEntity<HttpResponse> saveTokenFcm(@PathVariable Integer userId, @RequestBody String token) {
+        return ResponseEntity.ok(usersService.saveTokenFcm(userId, token));
+    }
+
     @PostMapping("/auth/refresh")
     public ResponseEntity<HttpResponse> refreshToken(@RequestBody HttpResponse request) {
         return ResponseEntity.ok(usersService.refreshToken(request));

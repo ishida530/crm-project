@@ -30,6 +30,11 @@ public class Project {
     private String projectManager;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Task> tasks;
 
+    @Override
+    public String toString() {
+        return "Project{id=" + id + ", name='" + name + "'}";
+    }
 }

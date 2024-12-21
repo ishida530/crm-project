@@ -14,6 +14,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HttpResponse {
     private int statusCode;
+    private Integer userId;
     private String error;
     private String message;
     private String token;

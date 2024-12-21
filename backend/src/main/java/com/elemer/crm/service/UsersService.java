@@ -111,6 +111,7 @@ public class UsersService {
             response.setExpirationTime("24Hrs");
             response.setMessage("Successfully logged in");
             response.setSuccess(true);
+            response.setUserId(user.getId());
 
 
         } catch (Exception e) {
@@ -262,5 +263,34 @@ public class UsersService {
         return httpResponse;
 
     }
+    public HttpResponse saveTokenFcm(Integer userId, String token) {
+        HttpResponse httpResponse = new HttpResponse();
 
+        if (userId == null || token == null || token.isEmpty()) {
+            httpResponse.setStatusCode(400);
+            httpResponse.setMessage("Invalid input: userId or token is null/empty.");
+            return httpResponse;
+        }
+
+        try {
+            Optional<User> user = usersRepository.findById(userId);
+            if (user.isPresent()) {
+                User currentUser = user.get();
+                currentUser.setTokenFcm(token);
+                usersRepository.save(currentUser);
+
+                httpResponse.setStatusCode(200);
+                httpResponse.setMessage("FCM token updated successfully.");
+                httpResponse.setUserId(userId);
+            } else {
+                httpResponse.setStatusCode(404);
+                httpResponse.setMessage("User not found.");
+            }
+        } catch (Exception e) {
+            httpResponse.setStatusCode(500);
+            httpResponse.setMessage("Error occurred while updating FCM token: " + e.getMessage());
+        }
+
+        return httpResponse;
+    }
 }

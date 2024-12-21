@@ -1,6 +1,7 @@
 package com.elemer.crm.entity;
 
 import com.elemer.crm.enums.UserRole; // Importuj enum
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import jakarta.validation.constraints.Email;
@@ -34,7 +35,11 @@ public class User implements UserDetails {
 
     private String phoneNumber;
 
-    private String tokenFCM;
+    private String tokenFcm;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Task> tasks;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

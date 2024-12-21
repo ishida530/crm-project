@@ -11,12 +11,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/notification")
 public class NotificationController {
 
-//    @PostMapping("/send")
-//    public String sendNotification(@RequestBody TokenRequest request) {
-//        NotificationSender.sendNotification(request.getToken());
-//        return "Powiadomienie zostało wysłane!";
-//    }
-
     @Autowired
     FirebaseMessagingService firebaseMessagingService;
 

@@ -2,6 +2,7 @@ package com.elemer.crm.controller;
 
 import com.elemer.crm.dto.TaskDTO;
 import com.elemer.crm.entity.Task;
+import com.elemer.crm.entity.User;
 import com.elemer.crm.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class TaskController {
     }
 
     @GetMapping("/author/{author}")
-    public List<Task> getTasksByAuthor(@PathVariable String author) {
+    public List<Task> getTasksByAuthor(@PathVariable User author) {
         return taskService.getTasksByAuthor(author);
     }
 

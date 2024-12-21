@@ -28,7 +28,7 @@ public class ProjectTemplateService {
                                         task.getName(),
                                         task.getDescription(),
                                         task.getStatus(),
-                                        task.getAuthor(),
+                                        task.getAuthor() != null ? task.getAuthor().getId() : null,  // Sprawdzenie null
                                         task.getStartDate(),
                                         task.getEndDate(),
                                         task.getProject() != null ? task.getProject().getId() : null,
@@ -57,7 +57,7 @@ public class ProjectTemplateService {
                                 task.getName(),
                                 task.getDescription(),
                                 task.getStatus(),
-                                task.getAuthor(),
+                                task.getAuthor() != null ? task.getAuthor().getId() : null, // Sprawdzenie null
                                 task.getStartDate(),
                                 task.getEndDate(),
                                 task.getProject() != null ? task.getProject().getId() : null,
@@ -71,8 +71,6 @@ public class ProjectTemplateService {
 
         return projectTemplateDTO;
     }
-
-
 
     public ProjectTemplateDTO createProjectTemplate(ProjectTemplateDTO projectTemplateDTO) {
         ProjectTemplate projectTemplate = new ProjectTemplate(
@@ -103,7 +101,7 @@ public class ProjectTemplateService {
                                 task.getName(),
                                 task.getDescription(),
                                 task.getStatus(),
-                                task.getAuthor(),
+                                task.getAuthor() != null ? task.getAuthor().getId() : null, // Sprawdzenie null
                                 task.getStartDate(),
                                 task.getEndDate(),
                                 task.getProject() != null ? task.getProject().getId() : null,
