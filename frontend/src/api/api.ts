@@ -13,6 +13,7 @@ axiosInstance.interceptors.request.use(
         const tokenJWT = localStorage.getItem("token")
 
         if (tokenJWT) {
+            config.headers['Content-Type'] = 'application/json'
             config.headers['Authorization'] = `Bearer ${tokenJWT}`
         }
         return config

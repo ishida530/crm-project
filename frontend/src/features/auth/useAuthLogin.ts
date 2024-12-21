@@ -18,11 +18,12 @@ const useAuthLogin = () => {
 
     const { mutate: handleLogin, data, isPending, error } = useMutation({
         mutationFn: loginReuest,
-        onSuccess: ({ token, role }) => {
+        onSuccess: ({ token, role, userId }) => {
 
             if (role) {
                 localStorage.setItem('token', token)
                 localStorage.setItem('role', role)
+                localStorage.setItem('userId', userId)
                 login()
                 navigate('/')
             } else {

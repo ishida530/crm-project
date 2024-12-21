@@ -29,9 +29,9 @@ const EventFormModal = ({ initialValues, onSave, isOpen, onClose, isEdit, onDele
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: initialValues || {
-            title: '',
-            start: new Date(), 
-            end: undefined,
+            name: '',
+            startDate: new Date(),
+            endDate: undefined,
             description: ''
         }
     });
@@ -66,7 +66,7 @@ const EventFormModal = ({ initialValues, onSave, isOpen, onClose, isEdit, onDele
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField
                             control={form.control}
-                            name="title"
+                            name="name"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Tytuł</FormLabel>
@@ -79,7 +79,7 @@ const EventFormModal = ({ initialValues, onSave, isOpen, onClose, isEdit, onDele
                         />
                         <FormField
                             control={form.control}
-                            name="start"
+                            name="startDate"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Data Rozpoczęcia</FormLabel>
@@ -98,7 +98,7 @@ const EventFormModal = ({ initialValues, onSave, isOpen, onClose, isEdit, onDele
                         />
                         <FormField
                             control={form.control}
-                            name="end"
+                            name="endDate"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Data Zakończenia</FormLabel>

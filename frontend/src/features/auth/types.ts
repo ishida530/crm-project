@@ -11,4 +11,5 @@ export type LoginResponseType = {
     refreshToken: string;
     expirationTime: string;
     role: string;
+    userId: string
 }            

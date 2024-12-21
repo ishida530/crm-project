@@ -6,7 +6,7 @@ export enum TaskStatus {
     COMPLETED = "COMPLETED"
 }
 
-export type Task = {
+export interface Task {
     id?: number;
     description: string;
     status?: TaskStatus;
@@ -15,9 +15,9 @@ export type Task = {
     endDate?: Date;
     name: string;
     project?: number;
-    nothificationSent: number
-    projectTemplateId?: number
-};
+    nothificationSent?: number;
+    projectTemplateId?: number;
+}
 
 export type Project = {
     id?: number;
@@ -26,7 +26,7 @@ export type Project = {
     investorRepresentative: string;
     projectManager: string;
     tasks?: Task[];
-    projectTemplateId?:number;
+    projectTemplateId?: number;
 };
 
 export type ProjectsResponse = {

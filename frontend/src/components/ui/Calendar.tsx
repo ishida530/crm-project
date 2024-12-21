@@ -29,45 +29,47 @@ export default function Calendar({ eventsData, onAddEvent, onEditEvent }: Calend
       minute: '2-digit',
     });
   };
-
+  console.log('eventsData', eventsData)
   return (
-<FullCalendar
-  ref={calendarRef}
-  plugins={[timeGridPlugin, dayGridPlugin, interactionPlugin]}
-  initialView="timeGridWeek"
-  headerToolbar={{
-    left: 'prev,next today',
-    center: 'title',
-    right: 'dayGridMonth,timeGridWeek,timeGridDay',
-  }}
-  events={eventsData.map(event => ({
-    ...event,
-    id: event.id?.toString() || '',
-  }))}
-  eventClick={onEditEvent}
-  locale={plLocale}
-  selectable={true}
-  select={onAddEvent}
-  eventContent={(eventInfo) => (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild className="hover:cursor-pointer">
-          <strong>{eventInfo.event.title}</strong>
-        </TooltipTrigger>
-        <TooltipContent>
-          <div>{eventInfo.event.extendedProps.description}</div>
-          <div>
-            {eventInfo.event.start && `Początek: ${eventInfo.event.start.toLocaleDateString('pl-PL')} ${formatTime(eventInfo.event.start)}`}
-          </div>
-          {eventInfo.event.end && (
-            <div>
-              Zakończenie: {eventInfo.event.end.toLocaleDateString('pl-PL')} {formatTime(eventInfo.event.end)}
-            </div>
-          )}
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  )}
-/>
+    <FullCalendar
+      ref={calendarRef}
+      plugins={[timeGridPlugin, dayGridPlugin, interactionPlugin]}
+      initialView="timeGridWeek"
+      headerToolbar={{
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay',
+      }}
+      events={eventsData.map(event => ({
+        title: event.name,
+        start: event.startDate.toISOString(),
+        end: event.endDate ? event.endDate.toISOString() : event.startDate.toISOString(),
+        id: event.id?.toString() || '',
+      }))}
+      eventClick={onEditEvent}
+      locale={plLocale}
+      selectable={true}
+      select={onAddEvent}
+      eventContent={(eventInfo) => (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild className="hover:cursor-pointer">
+              <strong>{eventInfo.event.title}</strong>
+            </TooltipTrigger>
+            <TooltipContent>
+              <div>{eventInfo.event.extendedProps.description}</div>
+              <div>
+                {eventInfo.event.start && `Początek: ${eventInfo.event.start.toLocaleDateString('pl-PL')} ${formatTime(eventInfo.event.start)}`}
+              </div>
+              {eventInfo.event.end && (
+                <div>
+                  Zakończenie: {eventInfo.event.end.toLocaleDateString('pl-PL')} {formatTime(eventInfo.event.end)}
+                </div>
+              )}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )}
+    />
   );
 }

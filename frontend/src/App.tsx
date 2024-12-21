@@ -6,14 +6,14 @@ import { useStore } from "./hooks/use-store";
 import { Navbar } from "./components/common/Header";
 import { useAuth } from "./features/auth/AuthProvier";
 import { useEffect } from "react";
-import { getToken, messaging, onMessage } from './firebase'; // Zaimportuj Firebase Messaging
-import axiosInstance from "./api/api";
+import { getToken, messaging } from './firebase'; // Zaimportuj Firebase Messaging
+import { useSaveFcmToken } from "./hooks/useSaveFcmToken";
 
 
 const App = () => {
   const sidebar = useStore(useSidebar, (x) => x);
   const { isAuthenticated } = useAuth();
-
+  const { mutate: saveTokenFcm } = useSaveFcmToken()
   const navigate = useNavigate();
   // Funkcja do uzyskiwania uprawnień i subskrybowania powiadomień
   // Funkcja do uzyskiwania uprawnień i subskrybowania powiadomień
@@ -24,7 +24,7 @@ const App = () => {
   //       console.log('Service Worker zarejestrowany pomyślnie: ', registration);
 
 
-        
+
   //     })
   //     .catch(function (error) {
   //       console.error('Rejestracja Service Workera nie powiodła się: ', error);
@@ -43,13 +43,21 @@ const App = () => {
 
       //We can send token to server
       console.log("Token generated : ", token);
-      axiosInstance.post(`notification/send?token=${token}`, {
-        title: "Nowe powiadomienie",
-        body: "Masz nowe wiadomości w aplikacji!"
-      }).then(res => {
-        console.log('response: ', res)
+      const userId = localStorage.getItem('userId');
 
-      })
+      if (userId) {
+        saveTokenFcm({
+          userId: Number(userId), 
+          token: token,            
+        });
+      }
+      // axiosInstance.post(`notification/send?token=${token}`, {
+      //   title: "Nowe powiadomienie",
+      //   body: "Masz nowe wiadomości w aplikacji!"
+      // }).then(res => {
+      //   console.log('response: ', res)
+
+      // })
     } else if (permission === "denied") {
       //notifications are blocked
       alert("You denied for the notification");
@@ -61,7 +69,7 @@ const App = () => {
 
     if (!isAuthenticated) {
       navigate('/login');
-    }else{
+    } else {
       requestPermission();
     }
 

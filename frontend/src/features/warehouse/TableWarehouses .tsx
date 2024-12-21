@@ -31,7 +31,7 @@ const TableWarehouses = ({ warehouses = [], onEditWarehouse, onDeleteWarehouse, 
             const matchesSearch =
                 !searchInput ||
                 warehouse.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-                warehouse.location.toLowerCase().includes(searchInput.toLowerCase()) ||
+                warehouse.address.toLowerCase().includes(searchInput.toLowerCase()) ||
                 warehouse.products.some((product) =>
                     product.producer.toLowerCase().includes(searchInput.toLowerCase()) ||
                     product.name.toLowerCase().includes(searchInput.toLowerCase())

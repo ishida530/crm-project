@@ -97,6 +97,7 @@ const TableUsers = ({ users, onEditUser, onDeleteUser, onAddUser }: TableUsersPr
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
     });
+    console.log("Filtered Data:", filteredData);
 
     return (
         <div className="w-full">

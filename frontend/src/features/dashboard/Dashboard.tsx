@@ -22,9 +22,9 @@ const Dashboard = () => {
   const handleOpenModal = (selectInfo: DateSelectArg) => {
     setIsEdit(false);
     setCurrentEvent({
-      title: '',
-      start: selectInfo.start,
-      end: selectInfo.end,
+      name: '',
+      startDate: selectInfo.start,
+      endDate: selectInfo.end,
       description: '',
     });
     setIsModalOpen(true);
@@ -33,11 +33,11 @@ const Dashboard = () => {
   const handleEdit = (clickInfo: EventClickArg) => {
     setIsEdit(true);
     setCurrentEvent({
-      title: clickInfo.event.title,
-      start: clickInfo.event.start || new Date(),
-      end: clickInfo.event.end || undefined,
+      name: clickInfo.event.name,
+      startDate: clickInfo.event.startDate || new Date(),
+      endDate: clickInfo.event.end || undefined,
       description: clickInfo.event.extendedProps.description || '',
-      id: Number(clickInfo.event.id),
+      id: Number(clickInfo.event.id)
     });
     setIsModalOpen(true);
   };
@@ -48,11 +48,13 @@ const Dashboard = () => {
 
   const handleSaveEvent = (eventData: EventType) => {
     const newEvent = {
-      name: eventData.title,
+      name: eventData.name,
       description: eventData.description,
-      date: eventData.start,
-      endDate: eventData.end,
+      startDate: eventData.startDate.toISOString(),
+      endDate: eventData.endDate?.toISOString(),
       id: currentEvent?.id,
+      author: localStorage.getItem('userId'),
+      nothificationSent: 0
     };
     if (isEdit) {
       editEvent(newEvent);
@@ -65,6 +67,8 @@ const Dashboard = () => {
   const handleDelete = () => {
     if (currentEvent?.id) {
       deleteEvent(Number(currentEvent.id));
+    } else {
+      console.error("No event selected for deletion.");
     }
     setIsDeleteModalOpen(false);
   };
@@ -86,7 +90,7 @@ const Dashboard = () => {
       />
       {isModalOpen && (
         <EventFormModal
-          initialValues={currentEvent}
+          initialValues={currentEvent || { name: '', startDate: new Date(), endDate: new Date(), description: '' }}
           onSave={handleSaveEvent}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
@@ -101,12 +105,6 @@ const Dashboard = () => {
           onSave={handleDelete}
         />
       )}
-       {/* <h1>Powiadomienia o zadaniach</h1>
-      <ul>
-        {messages.map((message, index) => (
-          <li key={index}>{message}</li>
-        ))}
-      </ul> */}
     </div>
   );
 };
