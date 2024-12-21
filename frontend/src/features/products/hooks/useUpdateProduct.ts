@@ -18,6 +18,7 @@ export const useUpdateProduct = () => {
         onSuccess: (data) => {
             console.log('Product updated successfully:', data);
             queryClient.invalidateQueries({ queryKey: ['getWarehouseDetails'] });
+            queryClient.invalidateQueries({ queryKey: ['getAllProducts'] });
         },
         onError: (error) => {
             console.error('Error updating product:', error);

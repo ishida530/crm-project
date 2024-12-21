@@ -10,3 +10,5 @@ export interface UpdateProductResponse {
     message: string;
     updatedProduct: Product;
 }
+
+export { Product };

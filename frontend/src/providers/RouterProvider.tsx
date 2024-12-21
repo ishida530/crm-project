@@ -16,6 +16,7 @@ import useGetProjectDetails from '@/features/projects/hooks/useGetProjectDetails
 import WarehousesPage from '@/features/warehouse/WarehousesPage';
 import WarehouseDetailsPage from '@/features/warehouse/WarehouseDetailsPage';
 import { UserRole } from '@/features/users/types';
+import ProductsPage from '@/features/products/ProductsPage';
 
 
 const router = createBrowserRouter([
@@ -64,6 +65,15 @@ const router = createBrowserRouter([
                 element: (
                     <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER]}>
                         <WarehouseDetailsPage />
+                    </PrivateRoute>
+                ),
+            },
+
+            {
+                path: 'warehouses/products',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER]}>
+                        <ProductsPage />
                     </PrivateRoute>
                 ),
             },

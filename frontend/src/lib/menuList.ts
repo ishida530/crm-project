@@ -63,8 +63,13 @@ export function getMenuList(userRole: UserRole): Menu[] {
             href: "/warehouses",
             label: "Magazyn",
             icon: Folder,
-            submenus: [],
-            allowedRoles: [UserRole.ADMIN, UserRole.MANAGER],  // Allowed roles for this menu
+            submenus: [
+                {
+                    href: "/warehouses/products",
+                    label: "Produkty",
+                    allowedRoles: [UserRole.ADMIN, UserRole.INVOICE_CLERK],  // Allowed roles for this submenu
+                }
+            ], allowedRoles: [UserRole.ADMIN, UserRole.MANAGER],  // Allowed roles for this menu
         },
         // Projects Menu with Submenu
         {
@@ -81,14 +86,14 @@ export function getMenuList(userRole: UserRole): Menu[] {
             allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE],  // Allowed roles for this menu
         }
     ]
-    .filter(menu => 
-        // Filter main menus based on allowed roles
-        menu.allowedRoles?.includes(userRole) || !menu.allowedRoles
-    ).map(menu => ({
-        ...menu,
-        submenus: menu.submenus?.filter(submenu =>
-            // Filter submenus based on allowed roles
-            submenu.allowedRoles?.includes(userRole) || !submenu.allowedRoles
-        )
-    }));
+        .filter(menu =>
+            // Filter main menus based on allowed roles
+            menu.allowedRoles?.includes(userRole) || !menu.allowedRoles
+        ).map(menu => ({
+            ...menu,
+            submenus: menu.submenus?.filter(submenu =>
+                // Filter submenus based on allowed roles
+                submenu.allowedRoles?.includes(userRole) || !submenu.allowedRoles
+            )
+        }));
 }
