@@ -5,7 +5,10 @@ import com.elemer.crm.entity.Warehouse;
 import com.elemer.crm.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -16,9 +19,23 @@ public class ProductService {
         this.productRepository = productRepository;
         this.warehouseService = warehouseService;
     }
+    public List<Map<String, Object>> getAllProducts() {
+        List<Product> products = productRepository.findAll();
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        return products.stream()
+                .map(product -> {
+                    Map<String, Object> productData = new HashMap<>();
+                    productData.put("id", product.getId());
+                    productData.put("producer", product.getProducer());
+                    productData.put("name", product.getName());
+                    productData.put("quantity", product.getQuantity());
+                    productData.put("unitOfMeasure", product.getUnitOfMeasure());
+                    productData.put("warehouseId", product.getWarehouse() != null ? product.getWarehouse().getId() : null);
+                    productData.put("warehouseName", product.getWarehouse() != null ? product.getWarehouse().getName() : null);
+
+                    return productData;
+                })
+                .collect(Collectors.toList());
     }
 
     public Product getProductById(Integer id) {
@@ -27,7 +44,6 @@ public class ProductService {
     }
 
     public Product saveProduct(Product product) {
-        // Obsługuje sytuację, gdy warehouse jest null
         if (product.getWarehouse() != null) {
             Integer warehouseId = product.getWarehouse().getId();
             Warehouse warehouse = warehouseService.getWarehouseById(warehouseId);
