@@ -4,7 +4,6 @@ import com.elemer.crm.dto.HttpResponse;
 import com.elemer.crm.dto.InvestmentDTO;
 import com.elemer.crm.entity.Investment;
 import com.elemer.crm.repository.InvestmentRepository;
-import com.elemer.crm.util.EncryptionUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,12 +16,12 @@ public class InvestmentService {
     @Autowired
     private InvestmentRepository investmentRepository;
 
+    // Method to fetch all investments
     public HttpResponse getAllInvestments() {
         HttpResponse response = new HttpResponse();
         try {
             List<Investment> investments = investmentRepository.findAll();
             if (!investments.isEmpty()) {
-                investments.forEach(this::decryptInvestmentData);
                 response.setInvestments(investments);
                 response.setStatusCode(200);
                 response.setMessage("Success");
@@ -37,12 +36,59 @@ public class InvestmentService {
         return response;
     }
 
+    // Method to add a new investment
     public HttpResponse addInvestment(InvestmentDTO investmentDTO) {
         HttpResponse response = new HttpResponse();
         try {
             Investment investment = new Investment();
-            investment.setName(EncryptionUtil.encrypt(investmentDTO.getName()));
-            // Set other properties
+            investment.setName(investmentDTO.getName());
+            investment.setContractSigningDate(investmentDTO.getContractSigningDate());
+            investment.setCompletionDeadline(investmentDTO.getCompletionDeadline());
+            investment.setContractAnnex(investmentDTO.getContractAnnex());
+            investment.setNotes(investmentDTO.getNotes());
+            investment.setConstructionSiteContact(investmentDTO.getConstructionSiteContact());
+            investment.setResponsiblePerson(investmentDTO.getResponsiblePerson());
+            investment.setSupervisionInspector(investmentDTO.getSupervisionInspector());
+
+            // Mapowanie Integer (1 lub 0) z InvestmentDTO
+            investment.setJournalRegistration(investmentDTO.getJournalRegistration() != null ? investmentDTO.getJournalRegistration() : 0);
+            investment.setWorkStartNotification(investmentDTO.getWorkStartNotification() != null ? investmentDTO.getWorkStartNotification() : 0);
+            investment.setConstructionBoard(investmentDTO.getConstructionBoard() != null ? investmentDTO.getConstructionBoard() : 0);
+
+            investment.setBuildingProjectMinorChanges(investmentDTO.getBuildingProjectMinorChanges());
+            investment.setExecutionProject(investmentDTO.getExecutionProject());
+            investment.setStringDesign(investmentDTO.getStringDesign());
+            investment.setMediumVoltageConnectionScope(investmentDTO.getMediumVoltageConnectionScope());
+            investment.setAcceptanceProtocol(investmentDTO.getAcceptanceProtocol());
+            investment.setOSDAcceptanceDocumentation(investmentDTO.getOSDAcceptanceDocumentation());
+            investment.setClientAcceptanceDocumentation(investmentDTO.getClientAcceptanceDocumentation());
+
+            investment.setPowerPlantConnection(investmentDTO.getPowerPlantConnection() != null ? investmentDTO.getPowerPlantConnection() : 0);
+            investment.setPSPNotification(investmentDTO.getPSPNotification() != null ? investmentDTO.getPSPNotification() : 0);
+            investment.setPINBNotification(investmentDTO.getPINBNotification() != null ? investmentDTO.getPINBNotification() : 0);
+
+            investment.setSurveyorStakeout(investmentDTO.getSurveyorStakeout());
+            investment.setSurveyorInventory(investmentDTO.getSurveyorInventory());
+            investment.setFenceDelivery(investmentDTO.getFenceDelivery());
+            investment.setFenceConstruction(investmentDTO.getFenceConstruction());
+            investment.setSiteSecurity(investmentDTO.getSiteSecurity());
+            investment.setStructureDelivery(investmentDTO.getStructureDelivery());
+            investment.setPiling(investmentDTO.getPiling());
+            investment.setStructureAssembly(investmentDTO.getStructureAssembly());
+            investment.setModuleDelivery(investmentDTO.getModuleDelivery());
+            investment.setModuleInstallation(investmentDTO.getModuleInstallation());
+            investment.setAssemblyMaterials(investmentDTO.getAssemblyMaterials());
+            investment.setACWiringRoutes(investmentDTO.getACWiringRoutes());
+            investment.setDCWiringRoutes(investmentDTO.getDCWiringRoutes());
+
+            System.out.println(investmentDTO.getDCWiringRoutes());
+            investment.setMediumVoltageWiringRoutes(investmentDTO.getMediumVoltageWiringRoutes());
+            investment.setTransformerStation(investmentDTO.getTransformerStation());
+            investment.setTelemechanics(investmentDTO.getTelemechanics());
+            investment.setCCTV(investmentDTO.getCCTV());
+            investment.setEquipotentialConnections(investmentDTO.getEquipotentialConnections());
+
+            // Zapisz inwestycję do bazy danych
             investmentRepository.save(investment);
 
             response.setInvestment(investment);
@@ -54,14 +100,12 @@ public class InvestmentService {
         }
         return response;
     }
-
+    // Method to get investment by ID
     public HttpResponse getInvestmentById(Integer id) {
         HttpResponse response = new HttpResponse();
         try {
             Investment investment = investmentRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Investment not found"));
-
-            decryptInvestmentData(investment);
 
             response.setInvestment(investment);
             response.setStatusCode(200);
@@ -73,14 +117,59 @@ public class InvestmentService {
         return response;
     }
 
+    // Method to update an existing investment
     public HttpResponse updateInvestment(Integer id, InvestmentDTO investmentDTO) {
         HttpResponse response = new HttpResponse();
         try {
             Investment existingInvestment = investmentRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Investment not found"));
 
-            existingInvestment.setName(EncryptionUtil.encrypt(investmentDTO.getName()));
-            // Update other properties
+            existingInvestment.setName(investmentDTO.getName());
+            existingInvestment.setContractSigningDate(investmentDTO.getContractSigningDate());
+            existingInvestment.setCompletionDeadline(investmentDTO.getCompletionDeadline());
+            existingInvestment.setContractAnnex(investmentDTO.getContractAnnex());
+            existingInvestment.setNotes(investmentDTO.getNotes());
+            existingInvestment.setConstructionSiteContact(investmentDTO.getConstructionSiteContact());
+            existingInvestment.setResponsiblePerson(investmentDTO.getResponsiblePerson());
+            existingInvestment.setSupervisionInspector(investmentDTO.getSupervisionInspector());
+
+            // Now using Integer for fields that are booleans in the DTO
+            existingInvestment.setJournalRegistration(investmentDTO.getJournalRegistration()); // expects Integer (1 or 0)
+            existingInvestment.setWorkStartNotification(investmentDTO.getWorkStartNotification()); // expects Integer (1 or 0)
+            existingInvestment.setConstructionBoard(investmentDTO.getConstructionBoard()); // expects Integer (1 or 0)
+
+            existingInvestment.setBuildingProjectMinorChanges(investmentDTO.getBuildingProjectMinorChanges());
+            existingInvestment.setExecutionProject(investmentDTO.getExecutionProject());
+            existingInvestment.setStringDesign(investmentDTO.getStringDesign());
+            existingInvestment.setMediumVoltageConnectionScope(investmentDTO.getMediumVoltageConnectionScope());
+            existingInvestment.setAcceptanceProtocol(investmentDTO.getAcceptanceProtocol());
+            existingInvestment.setOSDAcceptanceDocumentation(investmentDTO.getOSDAcceptanceDocumentation());
+            existingInvestment.setClientAcceptanceDocumentation(investmentDTO.getClientAcceptanceDocumentation());
+
+            existingInvestment.setPowerPlantConnection(investmentDTO.getPowerPlantConnection()); // expects Integer (1 or 0)
+            existingInvestment.setPSPNotification(investmentDTO.getPSPNotification()); // expects Integer (1 or 0)
+            existingInvestment.setPINBNotification(investmentDTO.getPINBNotification()); // expects Integer (1 or 0)
+
+            existingInvestment.setSurveyorStakeout(investmentDTO.getSurveyorStakeout());
+            existingInvestment.setSurveyorInventory(investmentDTO.getSurveyorInventory());
+            existingInvestment.setFenceDelivery(investmentDTO.getFenceDelivery());
+            existingInvestment.setFenceConstruction(investmentDTO.getFenceConstruction());
+            existingInvestment.setSiteSecurity(investmentDTO.getSiteSecurity());
+            existingInvestment.setStructureDelivery(investmentDTO.getStructureDelivery());
+            existingInvestment.setPiling(investmentDTO.getPiling());
+            existingInvestment.setStructureAssembly(investmentDTO.getStructureAssembly());
+            existingInvestment.setModuleDelivery(investmentDTO.getModuleDelivery());
+            existingInvestment.setModuleInstallation(investmentDTO.getModuleInstallation());
+            existingInvestment.setAssemblyMaterials(investmentDTO.getAssemblyMaterials());
+            existingInvestment.setACWiringRoutes(investmentDTO.getACWiringRoutes());
+            existingInvestment.setDCWiringRoutes(investmentDTO.getDCWiringRoutes());
+            existingInvestment.setMediumVoltageWiringRoutes(investmentDTO.getMediumVoltageWiringRoutes());
+            existingInvestment.setTransformerStation(investmentDTO.getTransformerStation());
+            existingInvestment.setTelemechanics(investmentDTO.getTelemechanics());
+            existingInvestment.setCCTV(investmentDTO.getCCTV());
+            existingInvestment.setEquipotentialConnections(investmentDTO.getEquipotentialConnections());
+
+            // Save the updated investment
             investmentRepository.save(existingInvestment);
 
             response.setStatusCode(200);
@@ -92,6 +181,7 @@ public class InvestmentService {
         return response;
     }
 
+    // Method to delete an investment by ID
     public HttpResponse deleteInvestment(Integer id) {
         HttpResponse response = new HttpResponse();
         try {
@@ -107,10 +197,5 @@ public class InvestmentService {
             response.setMessage("Error: " + e.getMessage());
         }
         return response;
-    }
-
-    private void decryptInvestmentData(Investment investment) {
-        investment.setName(EncryptionUtil.decrypt(investment.getName()));
-        // Decrypt other fields as needed
     }
 }
