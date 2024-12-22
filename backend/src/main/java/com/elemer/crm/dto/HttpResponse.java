@@ -1,5 +1,6 @@
 package com.elemer.crm.dto;
 
+import com.elemer.crm.entity.Investment;
 import com.elemer.crm.entity.Project;
 import com.elemer.crm.entity.User;
 import com.elemer.crm.enums.UserRole;
@@ -27,6 +28,8 @@ public class HttpResponse {
     private User user;
     private List<User> userList;
     private List<Project> projects;
+    private Investment investment;
+    private List<Investment> investments;
     private Project project;
     private Boolean success;
 
