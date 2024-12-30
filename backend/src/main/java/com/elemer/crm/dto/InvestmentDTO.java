@@ -70,10 +70,10 @@ public class InvestmentDTO {
     private Integer powerPlantConnection;
 
     @JsonProperty("psp_notification")
-    private Integer PSPNotification;  // Integer (1 or 0)
+    private Integer PSPNotification;
 
     @JsonProperty("pinb_notification")
-    private Integer PINBNotification; // Integer (1 or 0)
+    private Integer PINBNotification;
 
     @JsonProperty("surveyor_stakeout")
     private String surveyorStakeout;

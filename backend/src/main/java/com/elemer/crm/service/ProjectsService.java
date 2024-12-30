@@ -113,7 +113,7 @@ public class ProjectsService {
 
             existingProject.setName(EncryptionUtil.encrypt(projectRequest.getName()));
             existingProject.setProjectManager(EncryptionUtil.encrypt(projectRequest.getProjectManager()));
-            existingProject.setDeadline(projectRequest.getDeadline()); // Date does not need encryption
+            existingProject.setDeadline(projectRequest.getDeadline());
             existingProject.setInvestorRepresentative(EncryptionUtil.encrypt(projectRequest.getInvestorRepresentative()));
 
             projectsRepository.save(existingProject);

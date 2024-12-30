@@ -72,10 +72,10 @@ public class Investment {
     private Integer powerPlantConnection;
 
     @Column(name = "psp_notification")
-    private Integer PSPNotification;  // Integer (1 or 0)
+    private Integer PSPNotification;
 
     @Column(name = "pinb_notification")
-    private Integer PINBNotification; // Integer (1 or 0)
+    private Integer PINBNotification;
 
     @Column(name = "surveyor_stakeout")
     private String surveyorStakeout;

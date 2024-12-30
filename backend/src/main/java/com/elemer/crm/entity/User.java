@@ -1,6 +1,6 @@
 package com.elemer.crm.entity;
 
-import com.elemer.crm.enums.UserRole; // Importuj enum
+import com.elemer.crm.enums.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;

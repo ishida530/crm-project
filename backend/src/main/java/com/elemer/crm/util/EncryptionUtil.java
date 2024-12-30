@@ -40,13 +40,12 @@ public class EncryptionUtil {
             throw new IllegalArgumentException("Data to decrypt cannot be null or empty");
         }
         try {
-            // Usuwanie nielegalnych znaków (np. białych znaków lub innych symboli)
             String cleanData = encryptedData.replaceAll("[^A-Za-z0-9+/=]", "");
             byte[] decodedData = Base64.getDecoder().decode(cleanData);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, SECRET_KEY);
             byte[] originalData = cipher.doFinal(decodedData);
-            return new String(originalData, "UTF-8"); // Specyfikacja kodowania
+            return new String(originalData, "UTF-8");
         } catch (IllegalArgumentException e) {
             System.err.println("Decryption error: " + e.getMessage());
             throw new RuntimeException("Error decrypting data", e);

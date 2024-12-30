@@ -44,7 +44,7 @@ public class Task {
     private Date startDate;
     private Date endDate;
 
-    @JsonIgnore  // <-- Dodanie tej adnotacji zignoruje pole podczas serializacji do JSON
+    @JsonIgnore
     private Integer notificationSent;
 
     @Override

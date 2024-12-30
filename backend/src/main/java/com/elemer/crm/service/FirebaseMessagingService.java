@@ -27,7 +27,7 @@ public class FirebaseMessagingService {
 
 
             Message message = Message.builder()
-                    .setToken(token)  // Token użytkownika
+                    .setToken(token)
                     .setNotification(notification)
                     .build();
 
@@ -37,7 +37,7 @@ public class FirebaseMessagingService {
             return response;
         } catch (FirebaseMessagingException e) {
             System.err.println("Error sending notification: " + e.getMessage());
-            throw e; // Przekaż błąd dalej, jeśli chcesz obsłużyć go później
+            throw e;
         }
 
     }

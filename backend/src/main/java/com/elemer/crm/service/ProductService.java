@@ -67,7 +67,6 @@ public class ProductService {
         existingProduct.setQuantity(product.getQuantity());
         existingProduct.setUnitOfMeasure(product.getUnitOfMeasure());
 
-        // Obsługuje sytuację, gdy warehouse jest null
         if (product.getWarehouse() != null) {
             Warehouse warehouse = warehouseService.getWarehouseById(product.getWarehouse().getId());
             existingProduct.setWarehouse(warehouse);

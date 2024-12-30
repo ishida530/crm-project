@@ -16,7 +16,6 @@ public class InvestmentService {
     @Autowired
     private InvestmentRepository investmentRepository;
 
-    // Method to fetch all investments
     public HttpResponse getAllInvestments() {
         HttpResponse response = new HttpResponse();
         try {
@@ -36,7 +35,6 @@ public class InvestmentService {
         return response;
     }
 
-    // Method to add a new investment
     public HttpResponse addInvestment(InvestmentDTO investmentDTO) {
         HttpResponse response = new HttpResponse();
         try {
@@ -50,7 +48,6 @@ public class InvestmentService {
             investment.setResponsiblePerson(investmentDTO.getResponsiblePerson());
             investment.setSupervisionInspector(investmentDTO.getSupervisionInspector());
 
-            // Mapowanie Integer (1 lub 0) z InvestmentDTO
             investment.setJournalRegistration(investmentDTO.getJournalRegistration() != null ? investmentDTO.getJournalRegistration() : 0);
             investment.setWorkStartNotification(investmentDTO.getWorkStartNotification() != null ? investmentDTO.getWorkStartNotification() : 0);
             investment.setConstructionBoard(investmentDTO.getConstructionBoard() != null ? investmentDTO.getConstructionBoard() : 0);
@@ -88,7 +85,6 @@ public class InvestmentService {
             investment.setCCTV(investmentDTO.getCCTV());
             investment.setEquipotentialConnections(investmentDTO.getEquipotentialConnections());
 
-            // Zapisz inwestycję do bazy danych
             investmentRepository.save(investment);
 
             response.setInvestment(investment);
@@ -100,7 +96,6 @@ public class InvestmentService {
         }
         return response;
     }
-    // Method to get investment by ID
     public HttpResponse getInvestmentById(Integer id) {
         HttpResponse response = new HttpResponse();
         try {
@@ -117,7 +112,6 @@ public class InvestmentService {
         return response;
     }
 
-    // Method to update an existing investment
     public HttpResponse updateInvestment(Integer id, InvestmentDTO investmentDTO) {
         HttpResponse response = new HttpResponse();
         try {
@@ -133,10 +127,9 @@ public class InvestmentService {
             existingInvestment.setResponsiblePerson(investmentDTO.getResponsiblePerson());
             existingInvestment.setSupervisionInspector(investmentDTO.getSupervisionInspector());
 
-            // Now using Integer for fields that are booleans in the DTO
-            existingInvestment.setJournalRegistration(investmentDTO.getJournalRegistration()); // expects Integer (1 or 0)
-            existingInvestment.setWorkStartNotification(investmentDTO.getWorkStartNotification()); // expects Integer (1 or 0)
-            existingInvestment.setConstructionBoard(investmentDTO.getConstructionBoard()); // expects Integer (1 or 0)
+            existingInvestment.setJournalRegistration(investmentDTO.getJournalRegistration());
+            existingInvestment.setWorkStartNotification(investmentDTO.getWorkStartNotification());
+            existingInvestment.setConstructionBoard(investmentDTO.getConstructionBoard());
 
             existingInvestment.setBuildingProjectMinorChanges(investmentDTO.getBuildingProjectMinorChanges());
             existingInvestment.setExecutionProject(investmentDTO.getExecutionProject());
@@ -146,9 +139,9 @@ public class InvestmentService {
             existingInvestment.setOSDAcceptanceDocumentation(investmentDTO.getOSDAcceptanceDocumentation());
             existingInvestment.setClientAcceptanceDocumentation(investmentDTO.getClientAcceptanceDocumentation());
 
-            existingInvestment.setPowerPlantConnection(investmentDTO.getPowerPlantConnection()); // expects Integer (1 or 0)
-            existingInvestment.setPSPNotification(investmentDTO.getPSPNotification()); // expects Integer (1 or 0)
-            existingInvestment.setPINBNotification(investmentDTO.getPINBNotification()); // expects Integer (1 or 0)
+            existingInvestment.setPowerPlantConnection(investmentDTO.getPowerPlantConnection());
+            existingInvestment.setPSPNotification(investmentDTO.getPSPNotification());
+            existingInvestment.setPINBNotification(investmentDTO.getPINBNotification());
 
             existingInvestment.setSurveyorStakeout(investmentDTO.getSurveyorStakeout());
             existingInvestment.setSurveyorInventory(investmentDTO.getSurveyorInventory());
@@ -169,7 +162,6 @@ public class InvestmentService {
             existingInvestment.setCCTV(investmentDTO.getCCTV());
             existingInvestment.setEquipotentialConnections(investmentDTO.getEquipotentialConnections());
 
-            // Save the updated investment
             investmentRepository.save(existingInvestment);
 
             response.setStatusCode(200);
@@ -181,7 +173,6 @@ public class InvestmentService {
         return response;
     }
 
-    // Method to delete an investment by ID
     public HttpResponse deleteInvestment(Integer id) {
         HttpResponse response = new HttpResponse();
         try {

@@ -28,7 +28,7 @@ public class ProjectTemplateService {
                                         task.getName(),
                                         task.getDescription(),
                                         task.getStatus(),
-                                        task.getAuthor() != null ? task.getAuthor().getId() : null,  // Sprawdzenie null
+                                        task.getAuthor() != null ? task.getAuthor().getId() : null,
                                         task.getStartDate(),
                                         task.getEndDate(),
                                         task.getProject() != null ? task.getProject().getId() : null,
@@ -46,7 +46,6 @@ public class ProjectTemplateService {
         ProjectTemplate projectTemplate = projectTemplateRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Project Template not found"));
 
-        // Mapowanie danych szablonu projektu do DTO
         ProjectTemplateDTO projectTemplateDTO = new ProjectTemplateDTO(
                 projectTemplate.getId(),
                 projectTemplate.getName(),
@@ -57,7 +56,7 @@ public class ProjectTemplateService {
                                 task.getName(),
                                 task.getDescription(),
                                 task.getStatus(),
-                                task.getAuthor() != null ? task.getAuthor().getId() : null, // Sprawdzenie null
+                                task.getAuthor() != null ? task.getAuthor().getId() : null,
                                 task.getStartDate(),
                                 task.getEndDate(),
                                 task.getProject() != null ? task.getProject().getId() : null,
@@ -66,7 +65,7 @@ public class ProjectTemplateService {
                                 "",
                                 ""
                         ))
-                        .collect(Collectors.toList()) : null // Upewniamy się, że tasks nie jest null
+                        .collect(Collectors.toList()) : null
         );
 
         return projectTemplateDTO;
@@ -101,7 +100,7 @@ public class ProjectTemplateService {
                                 task.getName(),
                                 task.getDescription(),
                                 task.getStatus(),
-                                task.getAuthor() != null ? task.getAuthor().getId() : null, // Sprawdzenie null
+                                task.getAuthor() != null ? task.getAuthor().getId() : null,
                                 task.getStartDate(),
                                 task.getEndDate(),
                                 task.getProject() != null ? task.getProject().getId() : null,
