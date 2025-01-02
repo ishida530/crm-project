@@ -1,5 +1,6 @@
 package com.elemer.crm.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,9 +17,11 @@ public class InvestmentDTO {
     private String name;
 
     @JsonProperty("contract_signing_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date contractSigningDate;
 
     @JsonProperty("completion_deadline")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date completionDeadline;
 
     @JsonProperty("contract_annex")

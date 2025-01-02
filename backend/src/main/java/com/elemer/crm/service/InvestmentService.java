@@ -20,14 +20,10 @@ public class InvestmentService {
         HttpResponse response = new HttpResponse();
         try {
             List<Investment> investments = investmentRepository.findAll();
-            if (!investments.isEmpty()) {
                 response.setInvestments(investments);
                 response.setStatusCode(200);
                 response.setMessage("Success");
-            } else {
-                response.setStatusCode(404);
-                response.setMessage("No investments found");
-            }
+
         } catch (Exception e) {
             response.setStatusCode(500);
             response.setMessage("Error: " + e.getMessage());
