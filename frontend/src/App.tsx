@@ -83,7 +83,7 @@ const App = () => {
       <div className="flex flex-grow">
         {isAuthenticated && <AppSidebar />}
         <div className={cn(
-          "flex flex-col w-full bg-zinc-50 dark:bg-zinc-900 transition-[margin-left] ease-in-out duration-300 max-h-full",
+          "flex flex-col w-full overflow-auto bg-zinc-50 dark:bg-zinc-900 transition-[margin-left] ease-in-out duration-300 max-h-full",
           !settings.disabled && (!getOpenState() ?
             (isAuthenticated ? 'lg:ml-[90px]' : "w-100") :
             (isAuthenticated ? "lg:ml-72" : 'w-100'))

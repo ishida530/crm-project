@@ -4,7 +4,8 @@ import {
     SquarePen,
     LayoutGrid,
     Folder,
-    LucideIcon
+    LucideIcon,
+    DollarSign,
 } from "lucide-react";
 
 // Submenu type definition
@@ -41,6 +42,14 @@ export function getMenuList(userRole: UserRole): Menu[] {
             href: "/users",
             label: "Użytkownicy",
             icon: Users,
+            submenus: [],
+            allowedRoles: [UserRole.ADMIN],  // Allowed roles for this menu
+        },
+        // Investemnts Menu
+        {
+            href: "/investemnts",
+            label: "Inwestycje",
+            icon: DollarSign,
             submenus: [],
             allowedRoles: [UserRole.ADMIN],  // Allowed roles for this menu
         },

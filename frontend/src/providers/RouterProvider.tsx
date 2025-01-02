@@ -17,6 +17,7 @@ import WarehousesPage from '@/features/warehouse/WarehousesPage';
 import WarehouseDetailsPage from '@/features/warehouse/WarehouseDetailsPage';
 import { UserRole } from '@/features/users/types';
 import ProductsPage from '@/features/products/ProductsPage';
+import InvestmentsPage from '@/features/investments/InvestmentsPage';
 
 
 const router = createBrowserRouter([
@@ -114,6 +115,14 @@ const router = createBrowserRouter([
                 element: (
                     <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER]}>
                         <ProjectDetailPage getProject={useGetProjectTemplateDetails} />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: 'investemnts',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN]}>
+                        <InvestmentsPage />
                     </PrivateRoute>
                 ),
             },
