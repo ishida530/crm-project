@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/sales/**").hasAnyAuthority("ADMIN", "INVOICE_CLERK")
                         .requestMatchers("/projects/**","/projects/tasks/**").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
                         .requestMatchers("/products/**").hasAuthority("ADMIN")
+                        .requestMatchers("/investments/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
