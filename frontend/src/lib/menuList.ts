@@ -6,6 +6,7 @@ import {
     Folder,
     LucideIcon,
     DollarSign,
+    Car,
 } from "lucide-react";
 
 // Submenu type definition
@@ -47,7 +48,7 @@ export function getMenuList(userRole: UserRole): Menu[] {
         },
         // Investemnts Menu
         {
-            href: "/investemnts",
+            href: "/investments",
             label: "Inwestycje",
             icon: DollarSign,
             submenus: [],
@@ -93,7 +94,15 @@ export function getMenuList(userRole: UserRole): Menu[] {
                 }
             ],
             allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE],  // Allowed roles for this menu
-        }
+        },
+        // Users Menu
+        {
+            href: "/vehicles",
+            label: "Flota samochodowa",
+            icon: Car,
+            submenus: [],
+            allowedRoles: [UserRole.ADMIN],  // Allowed roles for this menu
+        },
     ]
         .filter(menu =>
             // Filter main menus based on allowed roles

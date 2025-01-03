@@ -18,6 +18,7 @@ import WarehouseDetailsPage from '@/features/warehouse/WarehouseDetailsPage';
 import { UserRole } from '@/features/users/types';
 import ProductsPage from '@/features/products/ProductsPage';
 import InvestmentsPage from '@/features/investments/InvestmentsPage';
+import VehiclesPage from '@/features/vehicles/VehiclesPage';
 
 
 const router = createBrowserRouter([
@@ -119,10 +120,18 @@ const router = createBrowserRouter([
                 ),
             },
             {
-                path: 'investemnts',
+                path: 'investments',
                 element: (
                     <PrivateRoute allowedRoles={[UserRole.ADMIN]}>
                         <InvestmentsPage />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: 'vehicles',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN]}>
+                        <VehiclesPage />
                     </PrivateRoute>
                 ),
             },
