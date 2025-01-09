@@ -19,6 +19,7 @@ public class Vehicle {
 
     private LocalDate inspectionDate;
     private LocalDate insuranceDate;
+    private LocalDate udtDate;
 
     private Integer technicalInspection;
 

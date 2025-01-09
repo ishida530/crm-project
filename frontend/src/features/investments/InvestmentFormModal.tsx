@@ -147,41 +147,65 @@ const InvestmentFormModal = ({
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        {Object.keys(form.getValues()).map((key) => (
-                            <FormField
-                                key={key}
-                                control={form.control}
-                                name={key}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>{fieldLabels[key] || key}</FormLabel>
-                                        <FormControl>
-                                            {key === "contract_signing_date" ||
-                                                key === "completion_deadline" ? (
-                                                <Input
-                                                    type="date"
-                                                    value={field.value || ""}
-                                                    onChange={(e) => field.onChange(e.target.value)}
-                                                    placeholder={fieldLabels[key]}
-                                                />
-                                            ) : typeof field.value === "number" ? (
+                        {Object.keys(form.getValues()).map((key) => {
+                            const isNumberField = [
+                                "journal_registration",
+                                "work_start_notification",
+                                "construction_board",
+                                "power_plant_connection",
+                                "psp_notification",
+                                "pinb_notification",
+                            ].includes(key);
 
-                                                <Checkbox
-                                                checked={field.value === 1}
-                                                onCheckedChange={(checked) => field.onChange(checked ? 1 : 0)}
-                                            />
-                                            ) : (
-                                                <Input
-                                                    placeholder={fieldLabels[key]}
-                                                    {...field}
-                                                />
-                                            )}
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        ))}
+                            return (
+                                <FormField
+                                    key={key}
+                                    control={form.control}
+                                    name={key}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{fieldLabels[key] || key}</FormLabel>
+                                            <FormControl>
+                                                {key === "contract_signing_date" ||
+                                                key === "completion_deadline" ? (
+                                                    <Input
+                                                        type="date"
+                                                        value={field.value || ""}
+                                                        onChange={(e) => field.onChange(e.target.value)}
+                                                        placeholder={fieldLabels[key]}
+                                                    />
+                                                ) : isNumberField ? (
+                                                    <>
+                                                        <Checkbox
+                                                            checked={!!field.value}
+                                                            onCheckedChange={(checked,) =>
+                                                                field.onChange(checked ? "1" : "")
+                                                            }
+                                                        />
+                                                        {field.value && (
+                                                            <Input
+                                                                type="text"
+                                                                value={field.value}
+                                                                onChange={(e) =>
+                                                                    field.onChange(e.target.value)
+                                                                }
+                                                                placeholder="Wprowadź wartość"
+                                                            />
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <Input
+                                                        placeholder={fieldLabels[key]}
+                                                        {...field}
+                                                    />
+                                                )}
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            );
+                        })}
                         <DialogFooter>
                             <Button type="submit" className="w-full">
                                 {initialValues ? "Zapisz zmiany" : "Utwórz Inwestycję"}

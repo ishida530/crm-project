@@ -5,6 +5,7 @@ export const formSchema = z.object({
     model: z.string().min(1, "Model jest wymagany"),
     inspection_date: z.string().nullable().optional(),
     insurance_date: z.string().nullable().optional(),
+    udt_date: z.string().nullable().optional(),
     technical_inspection: z.enum(['0', '1']).optional(),
 
     driver: z.string().optional(),

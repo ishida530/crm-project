@@ -19,7 +19,7 @@ const useGetAllUsers = () => {
   });
 
   return {
-    users: data?.userList,
+    users: data?.user_list,
     error,
     isLoading,
   };

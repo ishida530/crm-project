@@ -59,16 +59,23 @@ const TableVehicles = ({ vehicles, onEditVehicle, onDeleteVehicle, onAddVehicle 
         },
         {
             accessorKey: "inspection_date",
-            header: "Data przeglądu",
+            header: "Termin przeglądu",
             cell: ({ row }) => {
                 return row.original.inspection_date ? row.original.inspection_date : 'Brak';
             },
         },
         {
             accessorKey: "insurance_date",
-            header: "Data ubezpieczenia",
+            header: "Termin ubezpieczenia",
             cell: ({ row }) => {
                 return row.original.insurance_date ? row.original.insurance_date : 'Brak';
+            },
+        },
+        {
+            accessorKey: "udt_date",
+            header: "Termin UDT",
+            cell: ({ row }) => {
+                return row.original.udt_date ? row.original.udt_date : 'Brak';
             },
         },
         {

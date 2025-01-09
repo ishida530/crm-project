@@ -44,9 +44,9 @@ public class InvestmentService {
             investment.setResponsiblePerson(investmentDTO.getResponsiblePerson());
             investment.setSupervisionInspector(investmentDTO.getSupervisionInspector());
 
-            investment.setJournalRegistration(investmentDTO.getJournalRegistration() != null ? investmentDTO.getJournalRegistration() : 0);
-            investment.setWorkStartNotification(investmentDTO.getWorkStartNotification() != null ? investmentDTO.getWorkStartNotification() : 0);
-            investment.setConstructionBoard(investmentDTO.getConstructionBoard() != null ? investmentDTO.getConstructionBoard() : 0);
+            investment.setJournalRegistration(investmentDTO.getJournalRegistration() );
+            investment.setWorkStartNotification(investmentDTO.getWorkStartNotification());
+            investment.setConstructionBoard(investmentDTO.getConstructionBoard() );
 
             investment.setBuildingProjectMinorChanges(investmentDTO.getBuildingProjectMinorChanges());
             investment.setExecutionProject(investmentDTO.getExecutionProject());
@@ -56,9 +56,9 @@ public class InvestmentService {
             investment.setOSDAcceptanceDocumentation(investmentDTO.getOSDAcceptanceDocumentation());
             investment.setClientAcceptanceDocumentation(investmentDTO.getClientAcceptanceDocumentation());
 
-            investment.setPowerPlantConnection(investmentDTO.getPowerPlantConnection() != null ? investmentDTO.getPowerPlantConnection() : 0);
-            investment.setPSPNotification(investmentDTO.getPSPNotification() != null ? investmentDTO.getPSPNotification() : 0);
-            investment.setPINBNotification(investmentDTO.getPINBNotification() != null ? investmentDTO.getPINBNotification() : 0);
+            investment.setPowerPlantConnection(investmentDTO.getPowerPlantConnection());
+            investment.setPSPNotification(investmentDTO.getPSPNotification() );
+            investment.setPINBNotification(investmentDTO.getPINBNotification());
 
             investment.setSurveyorStakeout(investmentDTO.getSurveyorStakeout());
             investment.setSurveyorInventory(investmentDTO.getSurveyorInventory());

@@ -18,6 +18,8 @@ public class VehicleDTO {
 
     private LocalDate insuranceDate;
 
+    private LocalDate udtDate;
+
     private Integer technicalInspection;
 
     private String driver;
@@ -29,4 +31,5 @@ public class VehicleDTO {
     private String engine;
 
     private Integer year;
+
 }

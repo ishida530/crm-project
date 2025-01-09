@@ -40,13 +40,13 @@ public class InvestmentDTO {
     private String supervisionInspector;
 
     @JsonProperty("journal_registration")
-    private Integer journalRegistration;
+    private Date journalRegistration;
 
     @JsonProperty("work_start_notification")
-    private Integer workStartNotification;
+    private Date workStartNotification;
 
     @JsonProperty("construction_board")
-    private Integer constructionBoard;
+    private String constructionBoard;
 
     @JsonProperty("building_project_minor_changes")
     private String buildingProjectMinorChanges;
@@ -70,13 +70,13 @@ public class InvestmentDTO {
     private String clientAcceptanceDocumentation;
 
     @JsonProperty("power_plant_connection")
-    private Integer powerPlantConnection;
+    private String powerPlantConnection;
 
     @JsonProperty("psp_notification")
-    private Integer PSPNotification;
+    private String PSPNotification;
 
     @JsonProperty("pinb_notification")
-    private Integer PINBNotification;
+    private String PINBNotification;
 
     @JsonProperty("surveyor_stakeout")
     private String surveyorStakeout;

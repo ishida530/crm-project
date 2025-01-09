@@ -39,15 +39,21 @@ export enum UserRole {
     MANAGER = "MANAGER",
     EMPLOYEE = "EMPLOYEE",
     INVOICE_CLERK = "INVOICE_CLERK",
+    DESIGNER = "DESIGNER",
+    ENGINEER = "ENGINEER",
+    WORKER = "WORKER",
 }
 export const userRoles = [
     { role: UserRole.ADMIN, title: "Administrator" },
     { role: UserRole.MANAGER, title: "Menadżer" },
     { role: UserRole.EMPLOYEE, title: "Pracownik" },
     { role: UserRole.INVOICE_CLERK, title: "Księgowy" },
+    { role: UserRole.DESIGNER, title: "Projektant" },
+    { role: UserRole.ENGINEER, title: "Inżynier" },
+    { role: UserRole.WORKER, title: "Pracownik fizyczny" },
 ];
 export type UserListResponse = {
     statusCode: number;
     message: string;
-    userList: User[];
+    user_list: User[];
 };

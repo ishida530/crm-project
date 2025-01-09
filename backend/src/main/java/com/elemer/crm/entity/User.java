@@ -22,7 +22,6 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull(message = "Email cannot be null")
     @Email(message = "Email should be valid")
     private String email;
 
@@ -40,6 +39,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Task> tasks;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonIgnore
+    private List<Attendance> attendances;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

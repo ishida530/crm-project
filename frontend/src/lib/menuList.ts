@@ -46,6 +46,13 @@ export function getMenuList(userRole: UserRole): Menu[] {
             submenus: [],
             allowedRoles: [UserRole.ADMIN],  // Allowed roles for this menu
         },
+        {
+            href: "/users/attendance",
+            label: "Lista obecnosci",
+            icon: Users,
+            submenus: [],
+            allowedRoles: [UserRole.ADMIN, UserRole.INVOICE_CLERK],
+        },
         // Investemnts Menu
         {
             href: "/investments",
@@ -103,6 +110,7 @@ export function getMenuList(userRole: UserRole): Menu[] {
             submenus: [],
             allowedRoles: [UserRole.ADMIN],  // Allowed roles for this menu
         },
+
     ]
         .filter(menu =>
             // Filter main menus based on allowed roles

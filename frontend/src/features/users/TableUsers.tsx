@@ -92,7 +92,7 @@ const TableUsers = ({ users, onEditUser, onDeleteUser, onAddUser }: TableUsersPr
     ];
 
     const table = useReactTable({
-        data: filteredData, 
+        data: filteredData,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),

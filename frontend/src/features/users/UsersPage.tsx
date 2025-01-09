@@ -20,7 +20,6 @@ const UsersPage = () => {
     const { mutate: updateUser } = useUpdateUser();
     const { mutate: deleteUser } = useDeleteUser();
     const { mutate: createUser } = useCreateUser();
-
     const handleEditUser = (user: User) => {
         setIsEdit(true);
         setSelectedUser(user);
@@ -59,7 +58,7 @@ const UsersPage = () => {
 
     if (isLoading) return <div>Loading users...</div>;
     if (error) return <div>Error loading users: {error.message}</div>;
-
+    console.log(users)
     return (
         <div>
             <TableUsers
