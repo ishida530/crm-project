@@ -27,7 +27,7 @@ interface TaskFormProps {
 const TaskFormModal = ({ initialValues, onSave, isOpen, onClose }: TaskFormProps) => {
     const form = useForm<Task>({
         resolver: zodResolver(formSchemaTask),
-        defaultValues: initialValues || { description: '', status: TaskStatus.TO_DO, author: '', startDate: '', name: '' },
+        defaultValues: initialValues || { description: '', status: TaskStatus.TO_DO, start_date: '', name: '' }
     });
     const onSubmit = (data: Task) => {
         console.log('Form submitted with data:', data);
@@ -105,20 +105,7 @@ const TaskFormModal = ({ initialValues, onSave, isOpen, onClose }: TaskFormProps
                         />
                         <FormField
                             control={form.control}
-                            name="author"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Autor</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Autor" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="startDate"
+                            name="start_date"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Data</FormLabel>

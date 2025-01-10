@@ -30,7 +30,7 @@ const TableCustomers = ({ customers = [], onEditCustomer, onDeleteCustomer, onAd
         return customers.filter((customer: Customer) => {
             const matchesSearch = 
                 !searchInput ||
-                customer.contactName.toLowerCase().includes(searchInput.toLowerCase()) ||
+                customer.contact_name.toLowerCase().includes(searchInput.toLowerCase()) ||
                 customer.email.toLowerCase().includes(searchInput.toLowerCase()) ||
                 customer.address.toLowerCase().includes(searchInput.toLowerCase()) ||
                 customer.nip.toLowerCase().includes(searchInput.toLowerCase()) ||
@@ -52,7 +52,7 @@ const TableCustomers = ({ customers = [], onEditCustomer, onDeleteCustomer, onAd
             enableSorting: true,
         },
         {
-            accessorKey: "contactName",
+            accessorKey: "contact_name",
             header: "Nazwa kontaktu",
             enableSorting: true,
         },

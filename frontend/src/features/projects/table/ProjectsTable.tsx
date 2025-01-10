@@ -49,12 +49,12 @@ const ProjectTable = ({ data, onEditProject, onDeleteProject, onAddProject }: Pr
             enableSorting: true,
         },
         {
-            accessorKey: "investorRepresentative",
+            accessorKey: "investor_representative",
             header: "Przedstawiciel inwestora",
             enableSorting: true,
         },
         {
-            accessorKey: "projectManager",
+            accessorKey: "project_manager",
             header: "Menedżer projektu",
             enableSorting: true,
         },

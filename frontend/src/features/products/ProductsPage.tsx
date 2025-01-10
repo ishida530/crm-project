@@ -63,8 +63,8 @@ const ProductsPage = () => {
     return (
         <div>
             <TableProducts
-                showWarehouseColumn
-                products={products}
+                showWarehouseColumn={true}
+                products={products} // Poprawione przekazywanie danych
                 onAddProduct={handleCreateProduct}
                 onEditProduct={handleEditProduct}
                 onDeleteProduct={handleDeleteProduct}

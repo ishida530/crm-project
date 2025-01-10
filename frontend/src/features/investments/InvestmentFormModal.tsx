@@ -50,9 +50,9 @@ const InvestmentFormModal = ({
                 construction_site_contact: "",
                 responsible_person: "",
                 supervision_inspector: "",
-                journal_registration: 0,
-                work_start_notification: 0,
-                construction_board: 0,
+                journal_registration: "", // Initially empty, will store Boolean or date
+                work_start_notification: "", // Initially empty, will store Boolean or date
+                construction_board: "",
                 building_project_minor_changes: "",
                 execution_project: "",
                 string_design: "",
@@ -60,9 +60,9 @@ const InvestmentFormModal = ({
                 acceptance_protocol: "",
                 osd_acceptance_documentation: "",
                 client_acceptance_documentation: "",
-                power_plant_connection: 0,
-                psp_notification: 0,
-                pinb_notification: 0,
+                power_plant_connection: "",
+                psp_notification: "",
+                pinb_notification: "",
                 surveyor_stakeout: "",
                 surveyor_inventory: "",
                 fence_delivery: "",
@@ -148,7 +148,7 @@ const InvestmentFormModal = ({
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         {Object.keys(form.getValues()).map((key) => {
-                            const isNumberField = [
+                            const isCheckboxField = [
                                 "journal_registration",
                                 "work_start_notification",
                                 "construction_board",
@@ -174,11 +174,11 @@ const InvestmentFormModal = ({
                                                         onChange={(e) => field.onChange(e.target.value)}
                                                         placeholder={fieldLabels[key]}
                                                     />
-                                                ) : isNumberField ? (
+                                                ) : isCheckboxField ? (
                                                     <>
                                                         <Checkbox
                                                             checked={!!field.value}
-                                                            onCheckedChange={(checked,) =>
+                                                            onCheckedChange={(checked) =>
                                                                 field.onChange(checked ? "1" : "")
                                                             }
                                                         />

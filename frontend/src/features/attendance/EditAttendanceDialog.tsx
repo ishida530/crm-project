@@ -1,66 +1,151 @@
-import React, { useState, useEffect } from 'react';
-import { Attendance } from './types';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { attendanceSchema } from './validate';
+import { Attendance, Status } from './types';
 
-type EditAttendanceDialogProps = {
-  initialValues?: Attendance;
+interface EditAttendanceDialogProps {
+  initialValues?: Attendance | null;
   onSave: (attendance: Attendance) => void;
   isOpen: boolean;
   onClose: () => void;
-};
+}
 
-const EditAttendanceDialog = ({
+const EditAttendanceDialog: React.FC<EditAttendanceDialogProps> = ({
   initialValues,
   onSave,
   isOpen,
   onClose,
-}: EditAttendanceDialogProps) => {
-  const [attendance, setAttendance] = useState<Attendance>(initialValues || { id: 0, name: '', weekdays: [] });
+}) => {
+  const form = useForm<AttendanceFormValues>({
+    resolver: zodResolver(attendanceSchema),
+    defaultValues: initialValues || {
+      user_id: 0,
+      user_name: '',
+      attendances: [
+        { date: '', status: Status.PRESENT }, // Domyślne wartości
+      ],
+    },
+  });
 
-  useEffect(() => {
-    if (initialValues) {
-      setAttendance(initialValues);
+  const onSubmit = (data: z.infer<typeof attendanceSchema>) => {
+    if (Object.keys(form.formState.errors).length > 0) {
+      console.error('Form errors:', form.formState.errors);
+      return;
     }
-  }, [initialValues]);
-
-  const handleSave = () => {
-    onSave(attendance);
+    onSave(data);
+    onClose();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div>
-      <h3>{initialValues ? 'Edit Attendance' : 'Add Attendance'}</h3>
-      <input
-        type="text"
-        value={attendance.name}
-        onChange={(e) => setAttendance({ ...attendance, name: e.target.value })}
-        placeholder="Employee Name"
-      />
-      <div>
-        {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, index) => (
-          <div key={index}>
-            <label>{day}</label>
-            <input
-              type="text"
-              value={attendance.weekdays[index] || ''}
-              onChange={(e) =>
-                setAttendance({
-                  ...attendance,
-                  weekdays: [
-                    ...attendance.weekdays.slice(0, index),
-                    e.target.value,
-                    ...attendance.weekdays.slice(index + 1),
-                  ],
-                })
-              }
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader>
+          <DialogTitle>{initialValues ? 'Edit Attendance' : 'Add Attendance'}</DialogTitle>
+          <DialogDescription>
+            {initialValues
+              ? 'Update the attendance information for the user.'
+              : 'Provide details to create a new attendance record.'}
+          </DialogDescription>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* User Name Field */}
+            <FormField
+              control={form.control}
+              name="user_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>User Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="User Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-        ))}
-      </div>
-      <button onClick={handleSave}>Save</button>
-      <button onClick={onClose}>Cancel</button>
-    </div>
+
+            {/* Attendance Records */}
+            <FormField
+              control={form.control}
+              name="attendances"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Attendance Records</FormLabel>
+                  {field.value.map((attendance, index) => (
+                    <div key={index} className="space-y-2">
+                      <div className="flex space-x-2">
+                        {/* Date Field */}
+                        <Input
+                          type="date"
+                          value={attendance.date || ''}
+                          onChange={(e) =>
+                            form.setValue(`attendances.${index}.date`, e.target.value, {
+                              shouldValidate: true,
+                            })
+                          }
+                        />
+
+                        <Select
+                          onValueChange={(value) =>
+                            form.setValue(`attendances.${index}.status`, value as Status, {
+                              shouldValidate: true,
+                            })
+                          }
+                          value={attendance.status || ''}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value={Status.PRESENT}>Present</SelectItem>
+                            <SelectItem value={Status.VACATION}>Vacation</SelectItem>
+                            <SelectItem value={Status.SICK_LEAVE}>Sick Leave</SelectItem>
+                            <SelectItem value={Status.BEREAVEMENT}>Bereavement</SelectItem>
+                            <SelectItem value={Status.ABSENT}>Absent</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  ))}
+                  {/* Add Record Button */}
+                  <Button
+                    type="button"
+                    onClick={() =>
+                      form.setValue('attendances', [
+                        ...field.value,
+                        { date: '', status: Status.PRESENT },
+                      ])
+                    }
+                  >
+                    Add Record
+                  </Button>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter>
+              <Button type="submit" className="w-full">
+                {initialValues ? 'Save Changes' : 'Save Attendance'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };
 

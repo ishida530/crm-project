@@ -17,13 +17,11 @@ export const useCreateTask = () => {
         mutationFn: createTask,
         onSuccess: (data) => {
             console.log('Task created successfully:', data);
-    
-            if (pathname.includes("templates")) {
-                queryClient.invalidateQueries({ queryKey: ['getProjectTemplateDetails'] });
-            } else {
-                queryClient.invalidateQueries({ queryKey: ['getProjectDetails'] });
 
-            }
+            queryClient.invalidateQueries({ queryKey: ['getProjectTemplateDetails'] });
+            queryClient.invalidateQueries({ queryKey: ['getProjectDetailsTasks'] });
+
+
         },
         onError: (error) => {
             console.error('Error creating task:', error);

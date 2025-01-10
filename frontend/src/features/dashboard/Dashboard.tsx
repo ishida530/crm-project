@@ -23,8 +23,8 @@ const Dashboard = () => {
     setIsEdit(false);
     setCurrentEvent({
       name: '',
-      startDate: selectInfo.start,
-      endDate: selectInfo.end,
+      start_date: selectInfo.start,
+      end_date: selectInfo.end,
       description: '',
     });
     setIsModalOpen(true);
@@ -34,8 +34,8 @@ const Dashboard = () => {
     setIsEdit(true);
     setCurrentEvent({
       name: clickInfo.event.name,
-      startDate: clickInfo.event.startDate || new Date(),
-      endDate: clickInfo.event.end || undefined,
+      start_date: clickInfo.event.start_date || new Date(),
+      end_date: clickInfo.event.end || undefined,
       description: clickInfo.event.extendedProps.description || '',
       id: Number(clickInfo.event.id)
     });
@@ -50,10 +50,10 @@ const Dashboard = () => {
     const newEvent = {
       name: eventData.name,
       description: eventData.description,
-      startDate: eventData.startDate.toISOString(),
-      endDate: eventData.endDate?.toISOString(),
+      start_date: eventData.start_date.toISOString(),
+      end_date: eventData.end_date?.toISOString(),
       id: currentEvent?.id,
-      author: localStorage.getItem('userId'),
+      author: Number(localStorage.getItem('userId')),
       nothificationSent: 0
     };
     if (isEdit) {
@@ -90,7 +90,7 @@ const Dashboard = () => {
       />
       {isModalOpen && (
         <EventFormModal
-          initialValues={currentEvent || { name: '', startDate: new Date(), endDate: new Date(), description: '' }}
+          initialValues={currentEvent || { name: '', start_date: new Date(), end_date: new Date(), description: '' }}
           onSave={handleSaveEvent}
           isOpen={isModalOpen}
           onClose={handleCloseModal}

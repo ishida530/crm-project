@@ -3,16 +3,16 @@ import axiosInstance from '@/api/api';
 import { CustomerGroup, UpdateCustomerGroupResponse } from '../types';
 
 export const useDeleteCustomerGroup = () => {
-    const updateCustomerGroup = async (groupData: CustomerGroup): Promise<UpdateCustomerGroupResponse> => {
+    const deleteCustomerGroup = async (groupData: CustomerGroup): Promise<UpdateCustomerGroupResponse> => {
         console.log('groupData', groupData);
-        const response = await axiosInstance.put(`customer-group/${groupData.id}`, groupData);
+        const response = await axiosInstance.delete(`customer-group/${groupData}`);
         return response.data;
     };
 
     const queryClient = useQueryClient();
 
     const { isError, data, mutate } = useMutation<UpdateCustomerGroupResponse, Error, CustomerGroup>({
-        mutationFn: updateCustomerGroup,
+        mutationFn: deleteCustomerGroup,
         onSuccess: (data) => {
             console.log('Customer group updated successfully:', data);
             queryClient.invalidateQueries({ queryKey: ['getAllCustomerGruop'] });

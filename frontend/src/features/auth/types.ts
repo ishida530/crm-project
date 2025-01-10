@@ -5,11 +5,11 @@ export type LoginCredentials = {
 }
 
 export type LoginResponseType = {
-    statusCode: number;
+    status_code: number;
     message: string;
     token: string;
-    refreshToken: string;
-    expirationTime: string;
+    refresh_token: string;
+    expiration_time: string;
     role: string;
     user_id: string
 }            

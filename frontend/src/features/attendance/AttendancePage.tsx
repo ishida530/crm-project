@@ -4,7 +4,7 @@ import TableAttendance from "./TableAttendance";
 
 import EditAttendanceDialog from "./EditAttendanceDialog";
 import DeleteAttendanceAlertDialog from "./DeleteAttendanceAlertDialog";
-import useGetAllAttendances from "./hooks/useGetAllAttendances";
+// import useGetAllAttendances from "./hooks/useGetAllAttendances";
 import { useUpdateAttendance } from "./hooks/useUpdateAttendance";
 import { useDeleteAttendance } from "./hooks/useDeleteAttendance";
 import { useCreateAttendance } from "./hooks/useCreateAttendance";
@@ -16,7 +16,7 @@ const AttendancePage = () => {
     const [selectedAttendance, setSelectedAttendance] = useState<Attendance | null>(null);
     const [attendanceId, setAttendanceId] = useState<number | null>(null);
 
-    const { attendances, error, isLoading } = useGetAllAttendances();
+    // const { attendances, error, isLoading } = useGetAllAttendances();
     const { mutate: updateAttendance } = useUpdateAttendance();
     const { mutate: deleteAttendance } = useDeleteAttendance();
     const { mutate: createAttendance } = useCreateAttendance();
@@ -57,13 +57,13 @@ const AttendancePage = () => {
         setIsOpenEditModal(true);
     };
 
-    if (isLoading) return <div>Loading attendance...</div>;
-    if (error) return <div>Error loading attendance: {error.message}</div>;
+    // if (isLoading) return <div>Loading attendance...</div>;
+    // if (error) return <div>Error loading attendance: {error.message}</div>;
 
     return (
         <div>
             <TableAttendance
-                attendances={attendances}
+                // attendances={attendances}
                 onAddAttendance={handleCreateAttendance}
                 onEditAttendance={handleEditAttendance}
                 onDeleteAttendance={handleDeleteAttendance}

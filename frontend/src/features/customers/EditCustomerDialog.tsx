@@ -25,23 +25,29 @@ interface EditCustomerDialogProps {
 }
 
 const EditCustomerDialog = ({ initialValues, onSave, isOpen, onClose }: EditCustomerDialogProps) => {
+    // Initialize the form with default values
+    console.log(initialValues)
     const form = useForm<Customer>({
         resolver: zodResolver(formSchema),
         defaultValues: initialValues || {
-            contactName: '',
+            contact_name: '',
             email: '',
             address: '',
             nip: '',
             website: '',
-            group: ''
+            group: '', 
         },
     });
-    const { customersGroup } = useGetAllCustomersGroup()
+
+    const { customersGroup } = useGetAllCustomersGroup();
+
     const onSubmit = (data: Customer) => {
+        // If there are form errors, prevent submission
         if (Object.keys(form.formState.errors).length !== 0) {
             console.error('Form errors:', form.formState.errors);
             return;
         }
+        // Save the data and close the dialog
         onSave(data);
         onClose();
     };
@@ -60,7 +66,7 @@ const EditCustomerDialog = ({ initialValues, onSave, isOpen, onClose }: EditCust
                         {/* Contact Name Field */}
                         <FormField
                             control={form.control}
-                            name="contactName"
+                            name="contact_name"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Contact Name</FormLabel>
@@ -71,6 +77,7 @@ const EditCustomerDialog = ({ initialValues, onSave, isOpen, onClose }: EditCust
                                 </FormItem>
                             )}
                         />
+
                         {/* Email Field */}
                         <FormField
                             control={form.control}
@@ -85,6 +92,7 @@ const EditCustomerDialog = ({ initialValues, onSave, isOpen, onClose }: EditCust
                                 </FormItem>
                             )}
                         />
+
                         {/* Address Field */}
                         <FormField
                             control={form.control}
@@ -99,6 +107,7 @@ const EditCustomerDialog = ({ initialValues, onSave, isOpen, onClose }: EditCust
                                 </FormItem>
                             )}
                         />
+
                         {/* NIP Field */}
                         <FormField
                             control={form.control}
@@ -113,6 +122,7 @@ const EditCustomerDialog = ({ initialValues, onSave, isOpen, onClose }: EditCust
                                 </FormItem>
                             )}
                         />
+
                         {/* Website Field */}
                         <FormField
                             control={form.control}
@@ -127,36 +137,47 @@ const EditCustomerDialog = ({ initialValues, onSave, isOpen, onClose }: EditCust
                                 </FormItem>
                             )}
                         />
+
                         {/* Group Field */}
                         <FormField
                             control={form.control}
                             name="group"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Group</FormLabel>
-                                    <FormControl>
-                                        <Select
-                                            value={field.value !== undefined ? field.value.toString() : ""} // Ensure field.value is not undefined
-                                            onValueChange={(value) => field.onChange(Number(value))}  // Convert the value to a number
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select a group" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {customersGroup?.map((group: CustomerGroup) => (
-                                                    group.id !== undefined ? (  // Make sure group.id is defined before using it
-                                                        <SelectItem key={group.id} value={group.id.toString()}>
-                                                            {group.name}
-                                                        </SelectItem>
-                                                    ) : null
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
+                            render={({ field }) => {
+                                let groupId;
+                                // Jeśli value jest obiektem (zawiera id grupy), to przypisz id grupy jako string
+                                if (field.value && typeof field.value === 'object' && field.value?.id !== null) {
+                                    groupId = field.value?.id?.toString();  // Przekształcamy id do stringa
+                                } else {
+                                    groupId = field.value?.toString();  // Jeżeli wartość jest już liczbą, traktujemy ją jako string
+                                }
+                                return (
+                                    <FormItem>
+                                        <FormLabel>Group</FormLabel>
+                                        <FormControl>
+                                            <Select
+                                                value={groupId ?? ""}  // Convert to string for the select value
+                                                onValueChange={(value) => field.onChange(Number(value))}  // Convert to number before submitting
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select a group" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {customersGroup?.map((group: CustomerGroup) => (
+                                                        group.id !== undefined ? (
+                                                            <SelectItem key={group.id} value={group.id.toString()}>
+                                                                {group.name}
+                                                            </SelectItem>
+                                                        ) : null
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                );
+                            }}
                         />
+
                         <DialogFooter>
                             <Button type="submit" className="w-full">
                                 Save Changes

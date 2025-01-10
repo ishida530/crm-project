@@ -1,3 +1,4 @@
+import { User } from "../users/types";
 
 
 export enum TaskStatus {
@@ -10,23 +11,23 @@ export interface Task {
     id?: number;
     description: string;
     status?: TaskStatus;
-    author?: string;
-    startDate: Date;
-    endDate?: Date;
+    author?: User | number;
+    start_date: Date;
+    end_date?: Date;
     name: string;
     project?: number;
-    nothificationSent?: number;
-    projectTemplateId?: number;
+    nothification_sent?: number;
+    project_template_id?: number;
 }
 
 export type Project = {
     id?: number;
     name: string;
     deadline: string;
-    investorRepresentative: string;
-    projectManager: string;
+    investor_representative: string;
+    project_manager: string;
     tasks?: Task[];
-    projectTemplateId?: number;
+    project_template_id?: number;
 };
 
 export type ProjectsResponse = {

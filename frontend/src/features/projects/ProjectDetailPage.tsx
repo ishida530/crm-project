@@ -10,7 +10,7 @@ import ProjectDetailContent from './ProjectDetailContent';
 
 type ProjectResponse = {
     data?: Project | ProjectTemplate;
-    error?: Error | null; 
+    error?: Error | null;
     isLoading?: boolean;
 };
 
@@ -31,7 +31,7 @@ const ProjectDetailPage = ({ getProject }: ProjectDetailPageType) => {
 
 
     if (!pathname.includes('templates')) {
-        console.log('tak?')
+        console.log('data,:', data)
         return <ProjectDetailContent project={data} />
     }
     else {

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const InvestmentFormSchema = z.object({
     name: z.string().min(1, "Nazwa inwestycji jest wymagana."),
@@ -9,9 +9,9 @@ export const InvestmentFormSchema = z.object({
     construction_site_contact: z.string().optional(),
     responsible_person: z.string().optional(),
     supervision_inspector: z.string().optional(),
-    journal_registration: z.number().optional(),
-    work_start_notification: z.number().optional(),
-    construction_board: z.number().optional(),
+    journal_registration: z.string().optional(),
+    work_start_notification: z.string().optional(),
+    construction_board: z.string().optional(),
     building_project_minor_changes: z.string().optional(),
     execution_project: z.string().optional(),
     string_design: z.string().optional(),
@@ -19,9 +19,9 @@ export const InvestmentFormSchema = z.object({
     acceptance_protocol: z.string().optional(),
     osd_acceptance_documentation: z.string().optional(),
     client_acceptance_documentation: z.string().optional(),
-    power_plant_connection: z.number().optional(),
-    psp_notification: z.number().optional(),
-    pinb_notification: z.number().optional(),
+    power_plant_connection: z.string().optional(),
+    psp_notification: z.string().optional(),
+    pinb_notification: z.string().optional(),
     surveyor_stakeout: z.string().optional(),
     surveyor_inventory: z.string().optional(),
     fence_delivery: z.string().optional(),

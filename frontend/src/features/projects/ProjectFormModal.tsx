@@ -32,7 +32,7 @@ const ProjectFormModal = ({ initialValues, onSave, isOpen, onClose }: ProjectFor
     const { projectTemplates, isLoading, } = useGetAllProjectTemplates()
     const form = useForm<Project>({
         resolver: zodResolver(formSchemaProject),
-        defaultValues: initialValues || { id: 0, name: '', deadline: '', investorRepresentative: '', projectManager: '', projectTemplateId: "" },
+        defaultValues: initialValues || { id: 0, name: '', deadline: '', investor_representative: '', project_manager: '', project_template_id: "" },
     });
     const onSubmit = (data: Project) => {
         console.log('Form submitted with data:', data);
@@ -81,7 +81,7 @@ const ProjectFormModal = ({ initialValues, onSave, isOpen, onClose }: ProjectFor
                         />
                         <FormField
                             control={form.control}
-                            name="investorRepresentative"
+                            name="investor_representative"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Przedstawiciel Inwestora</FormLabel>
@@ -94,7 +94,7 @@ const ProjectFormModal = ({ initialValues, onSave, isOpen, onClose }: ProjectFor
                         />
                         <FormField
                             control={form.control}
-                            name="projectManager"
+                            name="project_manager"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Kierownik Projektu</FormLabel>
@@ -109,7 +109,7 @@ const ProjectFormModal = ({ initialValues, onSave, isOpen, onClose }: ProjectFor
                             !initialValues && !isLoading &&
                             <FormField
                                 control={form.control}
-                                name="projectTemplateId"
+                                name="project_template_id"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Szablon projektu</FormLabel>

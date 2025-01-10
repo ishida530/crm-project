@@ -42,10 +42,11 @@ export default function Calendar({ eventsData, onAddEvent, onEditEvent }: Calend
       }}
       events={eventsData.map(event => ({
         title: event.name,
-        start: event.startDate.toISOString(),
-        end: event.endDate ? event.endDate.toISOString() : event.startDate.toISOString(),
+        start: new Date(event.start_date),  // Konwertowanie na obiekt Date
+        end: event.end_date ? new Date(event.end_date) : new Date(event.start_date),  // Konwertowanie na obiekt Date
         id: event.id?.toString() || '',
-      }))}
+      }))
+    }
       eventClick={onEditEvent}
       locale={plLocale}
       selectable={true}

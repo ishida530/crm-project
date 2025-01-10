@@ -1,223 +1,212 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useState, useMemo } from "react";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+    useReactTable,
+    getCoreRowModel,
+    flexRender,
+    SortingState,
+    getSortedRowModel,
+} from "@tanstack/react-table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
-import { Checkbox } from "@/components/ui/checkbox";
-import { InvestmentFormSchema } from "../investments/validate";
-import { Investment } from "../investments/types";
+import { Input } from "@/components/ui/input";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { MoreHorizontal } from "lucide-react";
+import { Product } from "../warehouse/types";
+import { Link } from "react-router-dom";
 
-interface InvestmentFormProps {
-    initialValues?: Investment;
-    onSave: (data: Investment) => void;
-    isOpen: boolean;
-    onClose: () => void;
+interface TableProductsProps {
+    onEditProduct: (product: Product) => void;
+    onDeleteProduct: (productId: number) => void;
+    products: Product[] | undefined;
+    onAddProduct: () => void;
+    showWarehouseColumn?: boolean;  // Nowy props do wyświetlania kolumny Magazyn
 }
 
-const InvestmentFormModal = ({
-    initialValues,
-    onSave,
-    isOpen,
-    onClose,
-}: InvestmentFormProps) => {
-    const { id, ...otherValues } = initialValues || {};
+const TableProducts = ({
+    products = [],
+    onEditProduct,
+    onDeleteProduct,
+    onAddProduct,
+    showWarehouseColumn = false,  // Odbieramy nowy props
+}: TableProductsProps) => {
+    const [searchInput, setSearchInput] = useState<string>("");
+    const [sorting, setSorting] = useState<SortingState>([]);
 
-    const form = useForm<Investment>({
-        resolver: zodResolver(InvestmentFormSchema),
-        defaultValues: initialValues
-            ? otherValues
-            : {
-                name: "",
-                contract_signing_date: "",
-                completion_deadline: "",
-                contract_annex: "",
-                notes: "",
-                construction_site_contact: "",
-                responsible_person: "",
-                supervision_inspector: "",
-                journal_registration: "",
-                work_start_notification: "",
-                construction_board: "",
-                building_project_minor_changes: "",
-                execution_project: "",
-                string_design: "",
-                medium_voltage_connection_scope: "",
-                acceptance_protocol: "",
-                osd_acceptance_documentation: "",
-                client_acceptance_documentation: "",
-                power_plant_connection: "",
-                psp_notification: "",
-                pinb_notification: "",
-                surveyor_stakeout: "",
-                surveyor_inventory: "",
-                fence_delivery: "",
-                fence_construction: "",
-                site_security: "",
-                structure_delivery: "",
-                piling: "",
-                structure_assembly: "",
-                module_delivery: "",
-                module_installation: "",
-                assembly_materials: "",
-                ac_wiring_routes: "",
-                dc_wiring_routes: "",
-                medium_voltage_wiring_routes: "",
-                transformer_station: "",
-                telematics: "",
-                cctv: "",
-                equipotential_connections: "",
+    const filteredData = useMemo(() => {
+        return products.filter((product: Product) => {
+            const matchesSearch =
+                !searchInput ||
+                product.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+                product.producer.toLowerCase().includes(searchInput.toLowerCase());
+
+            return matchesSearch;
+        });
+    }, [searchInput, products]);
+
+    const columns = useMemo(() => {
+        const baseColumns = [
+            {
+                id: "id",  // Explicit id
+                accessorKey: "id",
+                header: "ID",
+                enableSorting: true,
             },
+            {
+                id: "producer",  // Explicit id
+                accessorKey: "producer",
+                header: "Producent",
+                enableSorting: true,
+            },
+            {
+                id: "name",  // Explicit id
+                accessorKey: "name",
+                header: "Nazwa produktu",
+                enableSorting: true,
+            },
+            {
+                id: "quantity",  // Explicit id
+                accessorKey: "quantity",
+                header: "Ilość",
+                enableSorting: true,
+            },
+            {
+                id: "unit_of_measure",  // Explicit id
+                accessorKey: "unit_of_measure",
+                header: "Jednostka miary",
+                enableSorting: true,
+            },
+
+        ];
+
+        // Conditionally add warehouse column based on showWarehouseColumn
+        if (showWarehouseColumn) {
+            baseColumns.push({
+                id: "warehousename",  // Explicit id for warehouseName
+                header: "Magazyn",  // Custom header for warehouse name
+                cell: ({ row }: { row: any }) => {
+                    console.log(row.original)
+                    const warehouseId = row.original.warehouseId;
+                    const warehouseName = row.original.warehouseName;
+                    if (warehouseId) {
+                        return (
+                            <Link to={`/warehouses/${warehouseId}`}>{warehouseName}</Link>
+                        );
+                    }
+                    return "";
+                },
+            });
+        }
+
+        if (!showWarehouseColumn) {
+            baseColumns.push({
+                id: "actions",  // Explicit id for actions
+                header: "Akcje",
+                cell: ({ row }: { row: any }) => {
+                    const product = row.original;
+
+                    return (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="h-8 w-8 p-0">
+                                    <span className="sr-only">Otwórz menu</span>
+                                    <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Akcje</DropdownMenuLabel>
+                                <DropdownMenuItem onClick={() => onEditProduct(product)}>
+                                    Edytuj produkt
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() => onDeleteProduct(product.id)}
+                                    className="text-red-600"
+                                >
+                                    Usuń produkt
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    );
+                },
+            });
+        }
+
+        return baseColumns;
+    }, [onEditProduct, onDeleteProduct, showWarehouseColumn]);
+
+
+    const table = useReactTable({
+        data: filteredData,
+        columns,
+        state: { sorting },
+        onSortingChange: setSorting,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
     });
 
-    const onSubmit = (data: Investment) => {
-        console.log("Formularz przesłany z danymi:", data);
-        onSave(data);
-        onClose();
-    };
-
-    const fieldLabels: Record<string, string> = {
-        name: "Nazwa projektu",
-        contract_signing_date: "Data podpisania umowy",
-        completion_deadline: "Termin zakończenia",
-        contract_annex: "Załącznik umowy",
-        notes: "Uwagi",
-        construction_site_contact: "Kontakt na budowie",
-        responsible_person: "Osoba odpowiedzialna",
-        supervision_inspector: "Nadzór budowlany",
-        journal_registration: "Rejestracja w dzienniku budowy",
-        work_start_notification: "Powiadomienie o rozpoczęciu pracy",
-        construction_board: "Tablica budowy",
-        building_project_minor_changes: "Zmiany w projekcie budowlanym",
-        execution_project: "Projekt wykonawczy",
-        string_design: "Projekt stringów",
-        medium_voltage_connection_scope: "Zakres przyłącza średniego napięcia",
-        acceptance_protocol: "Protokół odbioru",
-        osd_acceptance_documentation: "Dokumentacja odbioru OSD",
-        client_acceptance_documentation: "Dokumentacja odbioru klienta",
-        power_plant_connection: "Przyłączenie elektrowni",
-        psp_notification: "Powiadomienie PSP",
-        pinb_notification: "Powiadomienie PINB",
-        surveyor_stakeout: "Wyznaczenie geodezyjne",
-        surveyor_inventory: "Inwentaryzacja geodezyjna",
-        fence_delivery: "Dostawa ogrodzenia",
-        fence_construction: "Budowa ogrodzenia",
-        site_security: "Zabezpieczenie placu budowy",
-        structure_delivery: "Dostawa konstrukcji",
-        piling: "Palowanie",
-        structure_assembly: "Montaż konstrukcji",
-        module_delivery: "Dostawa modułów",
-        module_installation: "Montaż modułów",
-        assembly_materials: "Materiały montażowe",
-        ac_wiring_routes: "Trasy okablowania AC",
-        dc_wiring_routes: "Trasy okablowania DC",
-        medium_voltage_wiring_routes: "Trasy okablowania SN",
-        transformer_station: "Stacja transformatorowa",
-        telematics: "Telemetria",
-        cctv: "Monitoring CCTV",
-        equipotential_connections: "Połączenia ekwipotencjalne",
-    };
-
-    const booleanFields = [
-        "journal_registration",
-        "work_start_notification",
-        "construction_board",
-        "power_plant_connection",
-        "psp_notification",
-        "pinb_notification",
-    ];
-
     return (
-        <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-            <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle>
-                        {initialValues ? "Edytuj Inwestycję" : "Utwórz Inwestycję"}
-                    </DialogTitle>
-                    <DialogDescription>
-                        {initialValues
-                            ? "Wprowadź zmiany w inwestycji."
-                            : "Wypełnij dane, aby utworzyć nową inwestycję."}
-                    </DialogDescription>
-                </DialogHeader>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        {Object.keys(form.getValues()).map((key) => {
-                            const isBooleanField = booleanFields.includes(key);
+        <div className="w-full">
+            <div className="flex items-center justify-between py-4">
+                <Input
+                    placeholder="Filtruj produkty..."
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    className="max-w-sm"
+                />
 
-                            return (
-                                <FormField
-                                    key={key}
-                                    control={form.control}
-                                    name={key}
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>{fieldLabels[key] || key}</FormLabel>
-                                            <FormControl>
-                                                {key === "contract_signing_date" ||
-                                                key === "completion_deadline" ? (
-                                                    <Input
-                                                        type="date"
-                                                        value={field.value || ""}
-                                                        onChange={(e) => field.onChange(e.target.value)}
-                                                        placeholder={fieldLabels[key]}
-                                                    />
-                                                ) : isBooleanField ? (
-                                                    <>
-                                                        <Checkbox
-                                                            checked={!!field.value}
-                                                            onCheckedChange={(checked) =>
-                                                                field.onChange(checked ? "1" : "")
-                                                            }
-                                                        />
-                                                        {field.value && (
-                                                            <Input
-                                                                type="text"
-                                                                value={field.value}
-                                                                onChange={(e) =>
-                                                                    field.onChange(e.target.value)
-                                                                }
-                                                                placeholder={fieldLabels[key]}
-                                                            />
-                                                        )}
-                                                    </>
-                                                ) : (
-                                                    <Input
-                                                        placeholder={fieldLabels[key]}
-                                                        {...field}
-                                                    />
-                                                )}
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            );
-                        })}
-                        <DialogFooter>
-                            <Button type="submit" className="w-full">
-                                {initialValues ? "Zapisz zmiany" : "Utwórz Inwestycję"}
-                            </Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
-            </DialogContent>
-        </Dialog>
+                {!showWarehouseColumn &&
+                    <Button variant="outline" onClick={onAddProduct} className="ml-4">
+                        Dodaj produkt
+                    </Button>
+                }
+            </div>
+
+            <div className="overflow-x-auto rounded-md border">
+                <Table>
+                    <TableHeader>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => (
+                                    <TableHead key={header.id}>
+                                        {/* Kliknij, aby posortować */}
+                                        <Button
+                                            variant="ghost"
+                                            className="text-left"
+                                            onClick={() => {
+                                                table.getColumn(header.id)?.toggleSorting();
+                                            }}
+                                        >
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(header.column.columnDef.header, header.getContext())}
+                                        </Button>
+                                    </TableHead>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow key={row.id}>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={columns.length} className="text-center">
+                                    Brak danych.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+        </div>
     );
 };
 
-export default InvestmentFormModal;
+export default TableProducts;

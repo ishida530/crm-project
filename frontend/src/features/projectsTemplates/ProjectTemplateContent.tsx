@@ -36,12 +36,12 @@ const ProjectTemplateContent: React.FC<ProjectTemplateContentProps> = ({ project
         if (initialTaskData) {
             const updatedTask = {
                 id: initialTaskData.id,
-                projectTemplate: initialTaskData.projectTemplateId,
+                project_template_id: initialTaskData.project_template_id,
                 ...taskData
             };
             editTask(updatedTask);
         } else {
-            createTask({ projectTemplateId: id, ...taskData });
+            createTask({ project_template_id: id, ...taskData });
         }
         setInitialTaskData(undefined);
         setIsTaskFormOpen(false);

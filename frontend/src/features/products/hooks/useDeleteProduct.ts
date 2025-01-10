@@ -15,7 +15,7 @@ export const useDeleteProduct = () => {
             console.log('Product deleted successfully:', data);
             queryClient.invalidateQueries({ queryKey: ['getWarehouseDetails'] });
             queryClient.invalidateQueries({ queryKey: ['getAllProducts'] });
-
+            console.log('Queries invalidated');
         },
         onError: (error) => {
             console.error('Error deleting product:', error);

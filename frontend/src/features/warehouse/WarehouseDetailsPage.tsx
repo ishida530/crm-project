@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useGetWarehouseDetails from './hooks/useGetWarehouseDetails';
-import { Product } from './types'; 
+import { Product } from './types';
 
 import TableProducts from '../products/TableProducts';
 import EditProductDialog from '../products/EditProductDialog';
@@ -11,7 +11,7 @@ import { useDeleteProduct } from '../products/hooks/useDeleteProduct';
 import { useUpdateProduct } from '../products/hooks/useUpdateProduct';
 
 const WarehouseDetailsPage = () => {
-    const { id } = useParams<{ id: string }>(); 
+    const { id } = useParams<{ id: string }>();
     const { data: warehouse, error, isLoading } = useGetWarehouseDetails(Number(id)); // Fetch warehouse details
 
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Project, Task, TaskStatus } from './types';
 import { useCreateTask } from '../tasks/hooks/useCreateTask';
 import { useEditTask } from '../tasks/hooks/useEditTask';
@@ -10,10 +10,12 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ProjectTemplate } from '../projectsTemplates/types';
+import useGetTasksProjects from './hooks/useGetTasksProjects';
 
 type ProjectDetailContentProps = {
     project: Project | ProjectTemplate | undefined;
 };
+
 
 const ProjectDetailContent = ({ project }: ProjectDetailContentProps) => {
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
@@ -24,25 +26,33 @@ const ProjectDetailContent = ({ project }: ProjectDetailContentProps) => {
     const { mutate: createTask } = useCreateTask();
     const { mutate: editTask } = useEditTask();
     const { mutate: deleteTask } = useDeleteTask();
-
-    console.log('project', project)
-
-    const { deadline, investorRepresentative, name, projectManager, id, tasks } = project
+    
+    const { deadline, investor_representative, name, project_manager, id } = project || {};
+    
+    const { data: tasks } = useGetTasksProjects(id)
     const handleAddTask = () => {
         setInitialTaskData(undefined);
         setIsTaskFormOpen(true);
     };
 
     const handleSaveTask = (taskData: Task) => {
+        const userId = Number(localStorage.getItem('userId'));
+        if (userId === null) {
+            console.error('User ID is not available in localStorage');
+            return;
+        }
+
         if (initialTaskData) {
             const updatedTask = {
                 id: initialTaskData.id,
                 project: initialTaskData.project,
+                author: userId,
+
                 ...taskData
             };
             editTask(updatedTask);
         } else {
-            createTask({ project: project.id, ...taskData });
+            createTask({ project: project?.id, author: userId, ...taskData });
         }
         setInitialTaskData(undefined);
         setIsTaskFormOpen(false);
@@ -68,6 +78,7 @@ const ProjectDetailContent = ({ project }: ProjectDetailContentProps) => {
     };
 
     const renderTasks = (status: TaskStatus) => (
+
         tasks && tasks
             .filter((task: Task) => task.status === status)
             .map((task: Task) => (
@@ -85,10 +96,10 @@ const ProjectDetailContent = ({ project }: ProjectDetailContentProps) => {
                             <strong>Deadline:</strong> {deadline}
                         </p>
                         <p className="text-gray-700 mb-2">
-                            <strong>Reprezentant Inwestora:</strong> {investorRepresentative}
+                            <strong>Reprezentant Inwestora:</strong> {investor_representative}
                         </p>
                         <p className="text-gray-700 mb-2">
-                            <strong>Kierownik Projektu:</strong> {projectManager}
+                            <strong>Kierownik Projektu:</strong> {project_manager}
                         </p>
                     </Card>
                 </div>
@@ -134,7 +145,6 @@ const ProjectDetailContent = ({ project }: ProjectDetailContentProps) => {
             )}
         </>
     );
-}
-
+};
 
 export default ProjectDetailContent;

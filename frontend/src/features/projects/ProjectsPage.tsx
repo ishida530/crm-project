@@ -44,8 +44,8 @@ const ProjectsPage = () => {
             id: project.id,
             deadline: project.deadline,
             name: project.name,
-            investorRepresentative: project.investorRepresentative,
-            projectManager: project.projectManager,
+            investor_representative: project.investor_representative,
+            project_manager: project.project_manager,
             tasks: []
         });
         setIsFormOpen(true);

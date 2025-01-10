@@ -27,13 +27,13 @@ const useGetAllEvents = () => {
     useEffect(() => {
         if (data) {
             const formattedEvents = data.map((task) => {
-                const start = task.startDate ? new Date(task.startDate) : new Date();
-                const end = task.endDate ? new Date(task.endDate) : undefined;
+                const start = task.start_date ? new Date(task.start_date) : new Date();
+                const end = task.end_date ? new Date(task.end_date) : undefined;
 
                 return {
                     ...task,
-                    startDate: start, 
-                    endDate: end,      
+                    start_date: start, 
+                    end_date: end,      
                     title: task.name, 
                 };
             });

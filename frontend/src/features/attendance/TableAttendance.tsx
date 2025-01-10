@@ -22,33 +22,23 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import useGetFilteredAttendances from "./hooks/useGetFilteredAttendances";
+import { Attendance } from "./types";
 
-interface AttendanceStatus {
-    id: number;
-    date: string;
-    status: "PRESENT" | "SICK_LEAVE" | "BEREAVEMENT" | "ABSENT" | "VACATION";
-}
-
-interface Attendance {
-    id: number;
-    user_name: string;
-    attendance_statuses: AttendanceStatus[];
-    days?: Record<string, string>;
-}
 
 interface TableAttendanceProps {
     onEditAttendance: (attendance: Attendance) => void;
     onDeleteAttendance: (attendanceId: number) => void;
     onAddAttendance: () => void;
-    attendances: Attendance[];
+    attendances?: Attendance[];
 }
 
 const TableAttendance: React.FC<TableAttendanceProps> = ({
-    attendances: initialAttendances,
+    // attendances: attendances_tru,
     onEditAttendance,
     onDeleteAttendance,
     onAddAttendance,
 }) => {
+    // console.log("attendances_tru", attendances_tru)
     const [attendances, setAttendances] = useState<Attendance[]>([]);
     const [searchInput, setSearchInput] = useState<string>("");
 
@@ -59,7 +49,6 @@ const TableAttendance: React.FC<TableAttendanceProps> = ({
         month: selectedMonth + 1,
         weekNumber: selectedWeek,
     });
-
     const statusMap: Record<string, string> = {
         "PRESENT": "Obecny",
         "VACATION": "Urlop",
@@ -69,23 +58,30 @@ const TableAttendance: React.FC<TableAttendanceProps> = ({
     };
 
     const transformData = (data: Attendance[]): Attendance[] => {
+        console.log("Transforming Data:", data); // Log data to inspect
         if (!data || !Array.isArray(data)) return [];
         return data.map((entry) => {
             const days: Record<string, string> = {};
-            entry.attendance_statuses.forEach((status) => {
-                const date = new Date(status.date);
-                const formattedDate = date.toLocaleDateString("pl-PL", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
+            console.log("Attendance Entry:", entry); // Log individual entries
+
+            if (entry.attendances && Array.isArray(entry.attendances)) {
+                entry.attendances.forEach((status) => {
+                    const date = new Date(status.date);
+                    const formattedDate = date.toLocaleDateString("pl-PL", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                    });
+                    days[formattedDate] = status.status;
                 });
-                days[formattedDate] = status.status;
-            });
+            }
+
             return { ...entry, days };
         });
     };
 
     useEffect(() => {
+        console.log('fetchedAttendances', fetchedAttendances)
         setAttendances(transformData(fetchedAttendances));
     }, [fetchedAttendances]);
 
@@ -150,7 +146,7 @@ const TableAttendance: React.FC<TableAttendanceProps> = ({
             ),
             cell: ({ row }: any) => {
                 const attendance = row.original;
-                const dayStatus = attendance.attendance_statuses.find(
+                const dayStatus = attendance.attendances.find(
                     (status) => {
                         const statusDate = new Date(status.date).toLocaleDateString("pl-PL", { day: "2-digit", month: "2-digit", year: "numeric" });
                         return statusDate === formatted;
@@ -163,7 +159,7 @@ const TableAttendance: React.FC<TableAttendanceProps> = ({
                         onValueChange={(value) => {
                             const updatedAttendance = {
                                 ...attendance,
-                                attendance_statuses: attendance.attendance_statuses.map((status) => {
+                                attendances: attendance.attendances.map((status) => {
                                     const statusDate = new Date(status.date).toLocaleDateString("pl-PL", { day: "2-digit", month: "2-digit", year: "numeric" });
                                     if (statusDate === formatted) {
                                         return { ...status, status: value };
@@ -171,7 +167,7 @@ const TableAttendance: React.FC<TableAttendanceProps> = ({
                                     return status;
                                 }),
                             };
-                            onEditAttendance(updatedAttendance);
+                             onEditAttendance(updatedAttendance);
                         }}
                     >
                         <SelectTrigger>
@@ -190,7 +186,7 @@ const TableAttendance: React.FC<TableAttendanceProps> = ({
         }));
 
         return [
-            { accessorKey: "id", header: "ID" },
+            { accessorKey: "user_id", header: "ID" },
             { accessorKey: "user_name", header: "Imię" },
             ...dayColumns,
         ];

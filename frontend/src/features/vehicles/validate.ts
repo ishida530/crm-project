@@ -6,8 +6,7 @@ export const formSchema = z.object({
     inspection_date: z.string().nullable().optional(),
     insurance_date: z.string().nullable().optional(),
     udt_date: z.string().nullable().optional(),
-    technical_inspection: z.enum(['0', '1']).optional(),
-
+    technical_inspection: z.number().refine(val => [0, 1].includes(val), "Przegląd techniczny musi być 0 lub 1").optional(),
     driver: z.string().optional(),
     owner: z.string().optional(),
     vin: z.string().min(1, "VIN jest wymagany"),

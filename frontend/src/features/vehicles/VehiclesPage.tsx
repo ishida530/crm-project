@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Vehicle } from './types';
 import TableVehicles from './TableVehicles';
 import useGetAllVehicles from './hooks/useGetAllVehicles';
 import { useUpdateVehicle } from './hooks/useUpdateVehicle';
@@ -7,6 +6,7 @@ import { useDeleteVehicle } from './hooks/useDeleteVehicle';
 import { useCreateVehicle } from './hooks/useCreateVehicle';
 import EditVehicleDialog from './EditVehicleDialog';
 import DeleteVehicleAlertDialog from './DeleteVehicleAlertDialog';
+import { Vehicle } from './types';
 
 const VehiclesPage = () => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -62,7 +62,7 @@ const VehiclesPage = () => {
     return (
         <div>
             <TableVehicles
-                vehicles={vehicles}
+                vehicles={vehicles && vehicles}
                 onAddVehicle={handleCreateVehicle}
                 onEditVehicle={handleEditVehicle}
                 onDeleteVehicle={handleDeleteVehicle}

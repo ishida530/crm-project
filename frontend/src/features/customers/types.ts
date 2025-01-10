@@ -1,11 +1,13 @@
 import { CustomerGroup } from "../customerGroup/types";
 
 export interface RegisterCustomer {
-    contactName: string;
+    contact_name: string;
     email: string;
     address: string;
     nip: string;
     website: string;
+    group?: number;
+
 }
 
 export interface UpdateCustomerResponse {
@@ -16,18 +18,17 @@ export interface UpdateCustomerResponse {
 
 export interface Customer {
     id: number;
-    contactName: string;
+    contact_name: string;
     email: string;
     address: string;
     nip: string;
     website: string;
-    group?:CustomerGroup
-
+    group?: CustomerGroup | undefined
 }
 
 export interface CustomerListResponse {
-    customerList: Customer[];
-    totalCount: number;
+    customer_list: Customer[];
+    total_count: number;
 }
 
 export interface DeleteCustomerResponse {

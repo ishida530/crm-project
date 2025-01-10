@@ -23,7 +23,6 @@ interface EditVehicleDialogProps {
 }
 
 const EditVehicleDialog = ({ initialValues, onSave, isOpen, onClose }: EditVehicleDialogProps) => {
-    console.log(initialValues)
     const form = useForm<Vehicle>({
         resolver: zodResolver(formSchema),
         defaultValues: initialValues || {
@@ -31,7 +30,7 @@ const EditVehicleDialog = ({ initialValues, onSave, isOpen, onClose }: EditVehic
             model: '',
             vin: '',
             engine: '',
-            year: new Date().getFullYear(),
+            year: Number(new Date().getFullYear()),
             inspection_date: '',
             insurance_date: '',
             technical_inspection: undefined,
@@ -128,7 +127,13 @@ const EditVehicleDialog = ({ initialValues, onSave, isOpen, onClose }: EditVehic
                                 <FormItem>
                                     <FormLabel>Rok</FormLabel>
                                     <FormControl>
-                                        <Input type="number" placeholder="Rok" {...field} />
+                                        <Input
+                                            type="number"
+                                            placeholder="Rok"
+                                            {...field}
+                                            value={field.value || ""} // Upewnij się, że wartość to string lub liczba
+                                            onChange={(e) => field.onChange(Number(e.target.value))}  // Zmieniamy wartość na liczbę
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -144,7 +149,7 @@ const EditVehicleDialog = ({ initialValues, onSave, isOpen, onClose }: EditVehic
                                     <FormLabel>Przegląd techniczny</FormLabel>
                                     <FormControl>
                                         <Select
-                                            onValueChange={(value) => field.onChange(value)}
+                                            onValueChange={(value) => field.onChange(Number(value))}  // Konwertuj na liczbę
                                             value={field.value?.toString() || "0"}
                                         >
                                             <SelectTrigger>

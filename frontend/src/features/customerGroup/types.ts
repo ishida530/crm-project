@@ -9,7 +9,7 @@ export type CustomerGroup = {
 export type UpdateCustomerGroupResponse = {
     id: number;
     name: string;
-    updatedAt: string;
+    updated_at: string;
 };
 
 export type RegisterCustomerGroup = {

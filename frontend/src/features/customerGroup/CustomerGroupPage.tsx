@@ -7,6 +7,7 @@ import { useUpdateCustomerGroup } from './hooks/useUpdateCustomerGroup';
 import { useDeleteCustomerGroup } from './hooks/useDeleteCustomerGroup';
 import useGetAllCustomersGroup from './hooks/useGetAllCustomerGroup';
 import EditCustomerGroupDialog from './EditCustomerGroupDialog';
+import DeleteCustomerGroupAlertDialog from './DeleteCustomerGroupAlertDialog';
 
 const CustomerGroupPage = () => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);

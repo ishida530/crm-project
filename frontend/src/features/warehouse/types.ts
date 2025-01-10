@@ -24,9 +24,9 @@ export interface Product {
     producer: string;
     name: string;
     quantity: number;
-    unitOfMeasure: string;
-    warehouse: Pick<Warehouse,"id">;
-    warehouseName:string;
+    unit_of_measure: string;
+    warehouse?: Pick<Warehouse, "id">;
+    warehouseName?: string;
 }
 export interface DeleteWarehouseResponse {
     id: number;

@@ -30,8 +30,8 @@ const EventFormModal = ({ initialValues, onSave, isOpen, onClose, isEdit, onDele
         resolver: zodResolver(formSchema),
         defaultValues: initialValues || {
             name: '',
-            startDate: new Date(),
-            endDate: undefined,
+            start_date: new Date(),
+            end_date: undefined,
             description: ''
         }
     });
@@ -79,7 +79,7 @@ const EventFormModal = ({ initialValues, onSave, isOpen, onClose, isEdit, onDele
                         />
                         <FormField
                             control={form.control}
-                            name="startDate"
+                            name="start_date"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Data Rozpoczęcia</FormLabel>
@@ -98,7 +98,7 @@ const EventFormModal = ({ initialValues, onSave, isOpen, onClose, isEdit, onDele
                         />
                         <FormField
                             control={form.control}
-                            name="endDate"
+                            name="end_date"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Data Zakończenia</FormLabel>

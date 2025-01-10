@@ -30,7 +30,7 @@ const EditProductDialog = ({ initialValues, onSave, isOpen, onClose }: EditProdu
             producer: '',
             name: '',
             quantity: 0,
-            unitOfMeasure: ''
+            unit_of_measure: ''
         },
     });
 
@@ -100,7 +100,7 @@ const EditProductDialog = ({ initialValues, onSave, isOpen, onClose }: EditProdu
                         />
                         <FormField
                             control={form.control}
-                            name="unitOfMeasure"
+                            name="unit_of_measure"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Unit of Measure</FormLabel>

@@ -20,7 +20,7 @@ export const useDeleteTask = () => {
                 queryClient.invalidateQueries({ queryKey: ['getProjectTemplateDetails'] });
 
             } else {
-                queryClient.invalidateQueries({ queryKey: ['getProjectDetails'] });
+                queryClient.invalidateQueries({ queryKey: ['getProjectDetailsTasks'] });
 
             }
 
