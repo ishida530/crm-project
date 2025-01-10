@@ -25,9 +25,9 @@ public class Project {
     @Temporal(TemporalType.DATE)
     private Date deadline;
 
-    private String investorRepresentative;
+    private String investor_representative;
 
-    private String projectManager;
+    private String project_manager;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore

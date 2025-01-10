@@ -33,11 +33,11 @@ public class ScheduleTask {
 
         List<Task> tasks = taskRepository.findAllStartingWithinMinutes(30);
         System.out.println(tasks);
-        tasks.forEach(task -> System.out.println(task.getStartDate()));
+        tasks.forEach(task -> System.out.println(task.getStart_date()));
 
         System.out.println("Zadania zaczynające się za 30 minut lub mniej:");
         for (Task task : tasks) {
-            System.out.println(task.getName() + " - " + task.getStartDate());
+            System.out.println(task.getName() + " - " + task.getStart_date());
 
             task.setNotificationSent(1);
             notificationSender.sendNotification(task.getAuthor().getId(),task);

@@ -39,7 +39,7 @@ public class CustomerService {
         }
 
         Customer customer = new Customer();
-        customer.setContactName(EncryptionUtil.encrypt(customerDTO.getContactName()));
+        customer.setContact_name(EncryptionUtil.encrypt(customerDTO.getContact_name()));
         customer.setEmail(EncryptionUtil.encrypt(customerDTO.getEmail()));
         customer.setNip(EncryptionUtil.encrypt(customerDTO.getNip()));
         customer.setAddress(EncryptionUtil.encrypt(customerDTO.getAddress()));
@@ -58,7 +58,7 @@ public class CustomerService {
         }
 
         Customer customer = getCustomerById(id);
-        customer.setContactName(EncryptionUtil.encrypt(customerDTO.getContactName()));
+        customer.setContact_name(EncryptionUtil.encrypt(customerDTO.getContact_name()));
         customer.setEmail(EncryptionUtil.encrypt(customerDTO.getEmail()));
         customer.setNip(EncryptionUtil.encrypt(customerDTO.getNip()));
         customer.setAddress(EncryptionUtil.encrypt(customerDTO.getAddress()));
@@ -79,7 +79,7 @@ public class CustomerService {
         Customer customer = getCustomerById(id);
 
         CustomerDTO customerDTO = new CustomerDTO();
-        customerDTO.setContactName(EncryptionUtil.decrypt(customer.getContactName()));
+        customerDTO.setContact_name(EncryptionUtil.decrypt(customer.getContact_name()));
         customerDTO.setEmail(EncryptionUtil.decrypt(customer.getEmail()));
         customerDTO.setNip(EncryptionUtil.decrypt(customer.getNip()));
         customerDTO.setAddress(EncryptionUtil.decrypt(customer.getAddress()));
@@ -90,7 +90,7 @@ public class CustomerService {
     }
 
     private void decryptCustomerData(Customer customer) {
-        customer.setContactName(EncryptionUtil.decrypt(customer.getContactName()));
+        customer.setContact_name(EncryptionUtil.decrypt(customer.getContact_name()));
         customer.setEmail(EncryptionUtil.decrypt(customer.getEmail()));
         customer.setNip(EncryptionUtil.decrypt(customer.getNip()));
         customer.setAddress(EncryptionUtil.decrypt(customer.getAddress()));

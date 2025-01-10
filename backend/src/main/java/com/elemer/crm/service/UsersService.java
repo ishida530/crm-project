@@ -2,7 +2,9 @@ package com.elemer.crm.service;
 
 import com.elemer.crm.dto.LoginRequest;
 import com.elemer.crm.dto.HttpResponse;
+import com.elemer.crm.entity.AttendanceStatus;
 import com.elemer.crm.entity.User;
+import com.elemer.crm.repository.AttendanceStatusRepository;
 import com.elemer.crm.repository.UsersRepository;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class UsersService {
 
     @Autowired
     private UsersRepository usersRepository;
+
+    @Autowired
+    private AttendanceStatusRepository attendanceStatusRepository;
 
     @Autowired
     private JWTUtils jwtUtils;
@@ -198,9 +203,18 @@ public class UsersService {
         try {
             Optional<User> userOptional = usersRepository.findById(userId);
             if (userOptional.isPresent()) {
+                // Sprawdzenie, czy użytkownik ma powiązane rekordy w tabeli attendance_statuses
+                if (attendanceStatusRepository.existsByUserId(userId)) {
+                    // Usuwanie powiązanych rekordów attendance_statuses
+                    List<AttendanceStatus> attendanceStatuses = attendanceStatusRepository.findByUserId(userId);
+                    attendanceStatusRepository.deleteAll(attendanceStatuses);
+                    System.out.println("Usunięto powiązane rekordy attendance_statuses.");
+                }
+
+                // Teraz usuwamy użytkownika
                 usersRepository.deleteById(userId);
                 httpResponse.setStatusCode(200);
-                httpResponse.setMessage("User deleted successfully");
+                httpResponse.setMessage("User and associated attendance statuses deleted successfully");
             } else {
                 httpResponse.setStatusCode(404);
                 httpResponse.setMessage("User not found for deletion");

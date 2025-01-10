@@ -48,12 +48,12 @@ public class ProjectsService {
         try {
             Project newProject = new Project();
             newProject.setName(EncryptionUtil.encrypt(projectRequest.getName()));
-            newProject.setProjectManager(EncryptionUtil.encrypt(projectRequest.getProjectManager()));
+            newProject.setProject_manager(EncryptionUtil.encrypt(projectRequest.getProject_manager()));
             newProject.setDeadline(projectRequest.getDeadline());
-            newProject.setInvestorRepresentative(EncryptionUtil.encrypt(projectRequest.getInvestorRepresentative()));
+            newProject.setInvestor_representative(EncryptionUtil.encrypt(projectRequest.getInvestor_representative()));
 
-            if (projectRequest.getProjectTemplateId() != null) {
-                Integer templateId = projectRequest.getProjectTemplateId();
+            if (projectRequest.getProject_template_id() != null) {
+                Integer templateId = projectRequest.getProject_template_id();
                 ProjectTemplate template = projectTemplateRepository.findById(templateId)
                         .orElseThrow(() -> new IllegalArgumentException("Project Template with ID " + templateId + " not found"));
 
@@ -64,8 +64,8 @@ public class ProjectsService {
                             newTask.setDescription(templateTask.getDescription());
                             newTask.setStatus(templateTask.getStatus());
                             newTask.setAuthor(templateTask.getAuthor());
-                            newTask.setStartDate(templateTask.getStartDate());
-                            newTask.setEndDate(templateTask.getEndDate());
+                            newTask.setStart_date(templateTask.getStart_date());
+                            newTask.setEnd_date(templateTask.getEnd_date());
                             newTask.setProject(newProject);
                             return newTask;
                         })
@@ -112,9 +112,8 @@ public class ProjectsService {
                     .orElseThrow(() -> new RuntimeException("Project not found"));
 
             existingProject.setName(EncryptionUtil.encrypt(projectRequest.getName()));
-            existingProject.setProjectManager(EncryptionUtil.encrypt(projectRequest.getProjectManager()));
             existingProject.setDeadline(projectRequest.getDeadline());
-            existingProject.setInvestorRepresentative(EncryptionUtil.encrypt(projectRequest.getInvestorRepresentative()));
+            existingProject.setInvestor_representative(EncryptionUtil.encrypt(projectRequest.getInvestor_representative()));
 
             projectsRepository.save(existingProject);
             httpResponse.setProject(existingProject);
@@ -145,7 +144,7 @@ public class ProjectsService {
 
     private void decryptProjectData(Project project) {
         project.setName(EncryptionUtil.decrypt(project.getName()));
-        project.setProjectManager(EncryptionUtil.decrypt(project.getProjectManager()));
-        project.setInvestorRepresentative(EncryptionUtil.decrypt(project.getInvestorRepresentative()));
+        project.setProject_manager(EncryptionUtil.decrypt(project.getProject_manager()));
+        project.setInvestor_representative(EncryptionUtil.decrypt(project.getInvestor_representative()));
     }
 }

@@ -41,11 +41,16 @@ public class Task {
     @JsonProperty("author")
     private User author;
 
-    private Date startDate;
-    private Date endDate;
+    private Date start_date;
+    private Date end_date;
 
     @JsonIgnore
     private Integer notificationSent;
+
+    // Metoda pomocnicza do pobrania imienia autora
+    public String getAuthorName() {
+        return author != null ? author.getName() : null;
+    }
 
     @Override
     public String toString() {

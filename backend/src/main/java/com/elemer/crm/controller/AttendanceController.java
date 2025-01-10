@@ -1,10 +1,7 @@
 package com.elemer.crm.controller;
 
-import com.elemer.crm.dto.AttendanceDTO;
+import com.elemer.crm.dto.UserAttendanceDTO;
 import com.elemer.crm.dto.UserCreateRequest;
-import com.elemer.crm.entity.Attendance;
-import com.elemer.crm.entity.AttendanceStatus;
-import com.elemer.crm.entity.User;
 import com.elemer.crm.service.AttendanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,47 +17,41 @@ public class AttendanceController {
 
     private final AttendanceService attendanceService;
 
-    @GetMapping
-    public ResponseEntity<List<AttendanceDTO>> getAllAttendances() {
-        return ResponseEntity.ok(attendanceService.getAllAttendances());
-    }
-
+    // Endpoint to get the attendance status by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Attendance> getAttendanceById(@PathVariable Integer id) {
-        return ResponseEntity.ok(attendanceService.getAttendanceById(id));
+    public ResponseEntity<UserAttendanceDTO> getAttendanceById(@PathVariable Integer id) {
+        return ResponseEntity.ok(attendanceService.getAttendanceById(id));  // Get attendance status by ID
     }
 
+    // Endpoint to create a new attendance status and a worker user
     @PostMapping
-    public ResponseEntity<User> createAttendance(@RequestBody UserCreateRequest userCreateRequest) {
-        // Zdobądź dane z requestu
-        String name = userCreateRequest.getName();
-        LocalDate date = userCreateRequest.getDate();
-        AttendanceStatus.Status status = userCreateRequest.getStatus();
-
-        User user = attendanceService.createUser(name, userCreateRequest.getRole(), date, status);
-
-        return ResponseEntity.ok(user);
+    public ResponseEntity<UserAttendanceDTO> createAttendanceStatus(@RequestBody UserAttendanceDTO userCreateRequest) {
+        UserAttendanceDTO userAttendanceDTO = attendanceService.createAttendance(userCreateRequest);  // Call service to create attendance
+        return ResponseEntity.ok(userAttendanceDTO);  // Return the attendance status as DTO
     }
 
+    // Endpoint to update the attendance status for a specific user
+    @PutMapping("/{userId}")
+    public ResponseEntity<Void> updateAttendanceStatus(
+            @PathVariable Integer userId,
+            @RequestParam LocalDate date,
+            @RequestParam String newStatus) {
+        attendanceService.updateAttendanceStatus(userId, date, newStatus);  // Update attendance status via service
+        return ResponseEntity.noContent().build();  // Return a 204 No Content response
+    }
+
+    // Endpoint to delete the attendance status by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAttendance(@PathVariable Integer id) {
-        attendanceService.deleteAttendance(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteAttendanceStatus(@PathVariable Integer id) {
+        attendanceService.deleteAttendanceStatus(id);  // Delete attendance status by ID
+        return ResponseEntity.noContent().build();  // Return a 204 No Content response
     }
 
-    @GetMapping("/{id}/absences")
-    public ResponseEntity<List<AttendanceStatus>> getAbsences(@PathVariable Integer id) {
-        return ResponseEntity.ok(attendanceService.getAbsentStatuses(id));
-    }
-
+    // Endpoint to get attendance statuses for a specific month and week
     @GetMapping("/statuses")
-    public ResponseEntity<List<AttendanceDTO>> getStatusesByMonthAndWeek(
+    public ResponseEntity<List<UserAttendanceDTO>> getStatusesByMonthAndWeek(
             @RequestParam int month,
             @RequestParam int weekNumber) {
-
-        List<AttendanceDTO> attendanceDTOList = attendanceService.getStatusesByMonthAndWeek(month, weekNumber);
-
-        return ResponseEntity.ok(attendanceDTOList);
+        return ResponseEntity.ok(attendanceService.getStatusesByMonthAndWeek(month, weekNumber));  // Get statuses for a specific month and week
     }
-
 }

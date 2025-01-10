@@ -22,7 +22,7 @@ public class Customer {
     private Long id;
 
     @NotBlank(message = "Nazwa kontaktu nie może być pusta")
-    private String contactName;
+    private String contact_name;
 
     @NotBlank(message = "Email nie może być pusty")
     private String email;

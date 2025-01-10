@@ -12,7 +12,7 @@ import lombok.Data;
 public class CustomerDTO {
 
     @NotBlank(message = "Nazwa kontaktu nie może być pusta")
-    private String contactName;
+    private String contact_name;
 
     @Email(message = "Nieprawidłowy format maila")
     @NotBlank(message = "Email nie może być pusty")

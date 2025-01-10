@@ -40,9 +40,9 @@ public class User implements UserDetails {
     @JsonIgnore
     private List<Task> tasks;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<Attendance> attendances;
+    private List<AttendanceStatus> attendanceStatuses;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -14,14 +14,14 @@ public class ProjectDTO {
 
     private String name;
     private Date deadline;
-    private String investorRepresentative;
-    private String projectManager;
+    private String investor_representative;
+    private String project_manager;
     private String email;
 
     private String message;
     private int statusCode;
     private String error;
 
-    private Integer projectTemplateId;
+    private Integer project_template_id;
 
 }

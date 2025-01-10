@@ -29,13 +29,14 @@ public class ProjectTemplateService {
                                         task.getDescription(),
                                         task.getStatus(),
                                         task.getAuthor() != null ? task.getAuthor().getId() : null,
-                                        task.getStartDate(),
-                                        task.getEndDate(),
+                                        task.getAuthor() != null ? task.getAuthor().getName() : null,  // Dodano authorName
+                                        task.getStart_date(),
+                                        task.getEnd_date(),
                                         task.getProject() != null ? task.getProject().getId() : null,
                                         task.getProjectTemplate() != null ? task.getProjectTemplate().getId() : null,
-                                        0,
-                                        "",
-                                        ""
+                                        0,  // statusCode
+                                        "",  // error
+                                        ""   // message
                                 ))
                                 .collect(Collectors.toList())
                 ))
@@ -57,13 +58,14 @@ public class ProjectTemplateService {
                                 task.getDescription(),
                                 task.getStatus(),
                                 task.getAuthor() != null ? task.getAuthor().getId() : null,
-                                task.getStartDate(),
-                                task.getEndDate(),
+                                task.getAuthor() != null ? task.getAuthor().getName() : null,  // Dodano authorName
+                                task.getStart_date(),
+                                task.getEnd_date(),
                                 task.getProject() != null ? task.getProject().getId() : null,
                                 task.getProjectTemplate() != null ? task.getProjectTemplate().getId() : null,
-                                0,
-                                "",
-                                ""
+                                0,  // statusCode
+                                "",  // error
+                                ""   // message
                         ))
                         .collect(Collectors.toList()) : null
         );
@@ -101,13 +103,14 @@ public class ProjectTemplateService {
                                 task.getDescription(),
                                 task.getStatus(),
                                 task.getAuthor() != null ? task.getAuthor().getId() : null,
-                                task.getStartDate(),
-                                task.getEndDate(),
+                                task.getAuthor() != null ? task.getAuthor().getName() : null,  // Dodano authorName
+                                task.getStart_date(),
+                                task.getEnd_date(),
                                 task.getProject() != null ? task.getProject().getId() : null,
                                 task.getProjectTemplate() != null ? task.getProjectTemplate().getId() : null,
-                                0,
-                                "",
-                                ""
+                                0,  // statusCode
+                                "",  // error
+                                ""   // message
                         ))
                         .collect(Collectors.toList())
         );

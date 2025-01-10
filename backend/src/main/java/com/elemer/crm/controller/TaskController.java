@@ -35,7 +35,7 @@ public class TaskController {
     }
 
     @GetMapping("/project/{projectId}")
-    public List<Task> getTasksByProjectId(@PathVariable int projectId) {
+    public List<TaskDTO> getTasksByProjectId(@PathVariable int projectId) {
         return taskService.getTasksByProjectId(projectId);
     }
 
@@ -51,6 +51,7 @@ public class TaskController {
 
     @PostMapping()
     public ResponseEntity<Task> createTask(@RequestBody TaskDTO task) {
+        System.out.println("/projects/tasks");
         return ResponseEntity.ok(taskService.createTask(task));
     }
 

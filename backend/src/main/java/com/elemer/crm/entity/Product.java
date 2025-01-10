@@ -1,7 +1,6 @@
 package com.elemer.crm.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,10 +14,10 @@ public class Product {
     private String producer;
     private String name;
     private Integer quantity;
-    private String unitOfMeasure;
+    private String unit_of_measure;
 
     @ManyToOne
-    @JoinColumn(name = "warehouse_id")
+    @JoinColumn(name = "warehouse_id", nullable = true) // Kolumna może być NULL, gdy magazyn zostaje usunięty
     @JsonBackReference
     private Warehouse warehouse;
 }

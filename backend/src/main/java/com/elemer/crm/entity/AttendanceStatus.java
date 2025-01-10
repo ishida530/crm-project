@@ -18,22 +18,19 @@ public class AttendanceStatus {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "attendance_id")
-    @JsonBackReference  // Dodajemy adnotację, aby uniknąć zagnieżdżenia
-    private Attendance attendance;  // Relacja do Attendance
+    @JoinColumn(name = "user_id", nullable = false)  // Powiązanie z tabelą User
+    private User user;
 
     private LocalDate date;  // Data obecności
 
     @Enumerated(EnumType.STRING)
     private Status status;  // Status obecności
 
-    public enum Status
-    {
+    public enum Status {
         PRESENT,        // Employee is present
         VACATION,       // Paid vacation
         SICK_LEAVE,     // Sick leave
         BEREAVEMENT,    // Bereavement leave
         ABSENT          // Employee is absent
     }
-
 }
