@@ -1,5 +1,6 @@
 package com.elemer.crm.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,10 +16,12 @@ public class AttendanceStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("id")
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)  // Powiązanie z tabelą User
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
     private User user;
 
     private LocalDate date;  // Data obecności

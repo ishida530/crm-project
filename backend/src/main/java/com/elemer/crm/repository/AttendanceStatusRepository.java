@@ -12,6 +12,7 @@ import java.util.Optional;
 
 public interface AttendanceStatusRepository extends JpaRepository<AttendanceStatus, Integer> {
     List<AttendanceStatus> findByUserId(Integer userId);
+    Optional<AttendanceStatus> findById(Integer id);
 
     @Query("SELECT a FROM AttendanceStatus a WHERE MONTH(a.date) = :month AND WEEK(a.date) = :weekNumber")
     List<AttendanceStatus> findByMonthAndWeek(@Param("month") int month, @Param("weekNumber") int weekNumber);

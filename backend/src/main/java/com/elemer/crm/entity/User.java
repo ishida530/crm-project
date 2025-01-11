@@ -2,6 +2,7 @@ package com.elemer.crm.entity;
 
 import com.elemer.crm.enums.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import jakarta.validation.constraints.Email;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -40,9 +42,9 @@ public class User implements UserDetails {
     @JsonIgnore
     private List<Task> tasks;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<AttendanceStatus> attendanceStatuses;
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference  // Serializujemy attendances w User, ale nie cyklicznie
+    private Set<AttendanceStatus> attendances;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

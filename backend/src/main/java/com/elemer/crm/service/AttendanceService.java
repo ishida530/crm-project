@@ -25,46 +25,71 @@ public class AttendanceService {
     private final UsersRepository usersRepository;
 
     // Method to create a new attendance status
-    public UserAttendanceDTO createAttendance(UserAttendanceDTO request) {
-        // Create a new user with the default role WORKER
-        User user = new User();
-        user.setName(request.getUserName());
-        user.setRole(UserRole.WORKER);  // Default role
-        usersRepository.save(user);
 
-        // Iterate through each attendance record and save it
-        for (UserAttendanceDTO.AttendanceDateDTO attendance : request.getAttendances()) {
-            // Create a new attendance status for each date and status
-            AttendanceStatus attendanceStatus = new AttendanceStatus();
-            attendanceStatus.setUser(user);
-            attendanceStatus.setDate(attendance.getDate());
-            attendanceStatus.setStatus(attendance.getStatus());
-
-            // Save the attendance status
-            attendanceStatusRepository.save(attendanceStatus);
+    public UserAttendanceDTO createOrUpdateAttendance(UserAttendanceDTO request) {
+        User user;
+        // Sprawdź, czy userId jest podane i spróbuj znaleźć użytkownika
+        if (request.getUserId() != null) {
+            user = usersRepository.findById(request.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found for user ID: " + request.getUserId()));
+        } else {
+            // Jeśli userId jest null, utwórz nowego użytkownika
+            if (request.getUserName() == null || request.getUserName().isEmpty()) {
+                throw new RuntimeException("User name must be provided when user ID is not specified.");
+            }
+            user = new User();
+            user.setName(request.getUserName());
+            user.setRole(UserRole.WORKER); // Domyślna rola
+            usersRepository.save(user);
         }
 
-        // Map and return the result
+        // Iteruj przez listę obecności i zapisuj/aktualizuj dane
+        for (UserAttendanceDTO.AttendanceDateDTO attendanceDTO : request.getAttendances()) {
+            AttendanceStatus attendanceStatus;
+
+            // Jeśli ID obecności jest podane, zaktualizuj istniejący rekord
+            if (attendanceDTO.getAttendanceId() != null) {
+                attendanceStatus = attendanceStatusRepository.findById(attendanceDTO.getAttendanceId())
+                        .orElseThrow(() -> new RuntimeException("Attendance record not found for ID: " + attendanceDTO.getAttendanceId()));
+                attendanceStatus.setDate(attendanceDTO.getDate());
+                attendanceStatus.setStatus(attendanceDTO.getStatus());
+            } else {
+                // Jeśli ID obecności nie ma, stwórz nowy rekord
+                attendanceStatus = new AttendanceStatus();
+                attendanceStatus.setUser(user);
+                attendanceStatus.setDate(attendanceDTO.getDate());
+                attendanceStatus.setStatus(attendanceDTO.getStatus());
+
+            }
+
+            System.out.println(attendanceStatus);
+
+            // Zapisz rekord obecności
+            attendanceStatusRepository.save(attendanceStatus);
+            System.out.println("zapisany "+ attendanceStatus);
+
+        }
+
+        // Zwróć oryginalny request jako odpowiedź
         return request;
     }
 
-
     // Method to update an existing attendance status
-    public void updateAttendanceStatus(Integer attendanceStatusId, LocalDate date, String newStatus) {
-        // Find the attendance status by ID (using the injected attendanceStatusRepository)
-        AttendanceStatus attendanceStatus = attendanceStatusRepository.findById(attendanceStatusId)
-                .orElseThrow(() -> new RuntimeException("attendanceStatusId not found for id: " + attendanceStatusId));
+    public AttendanceStatus updateAttendanceStatus(Integer id, String newStatus) {
+        // Find the attendance status by user ID
+        AttendanceStatus attendanceStatus = attendanceStatusRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Attendance status not found for user ID: " + id));
 
         // Convert the newStatus string to the corresponding Enum value
         try {
             AttendanceStatus.Status enumStatus = AttendanceStatus.Status.valueOf(newStatus.toUpperCase());
-            attendanceStatus.setStatus(enumStatus);
+            attendanceStatus.setStatus(enumStatus);  // Update the status
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Invalid attendance status: " + newStatus);
         }
 
-        // Save the updated attendance status
-        attendanceStatusRepository.save(attendanceStatus);
+        // Save and return the updated attendance status
+        return attendanceStatusRepository.save(attendanceStatus);
     }
 
     // Method to delete an attendance status by ID
@@ -109,6 +134,7 @@ public class AttendanceService {
                     List<UserAttendanceDTO.AttendanceDateDTO> attendanceDateDTOs = userStatuses.stream()
                             .map(status -> {
                                 UserAttendanceDTO.AttendanceDateDTO dateDTO = new UserAttendanceDTO.AttendanceDateDTO();
+                                dateDTO.setAttendanceId(status.getId());  // Dodajemy attendanceId
                                 dateDTO.setDate(status.getDate());
                                 dateDTO.setStatus(status.getStatus());
                                 return dateDTO;

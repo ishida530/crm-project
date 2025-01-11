@@ -15,6 +15,7 @@ public class UserAttendanceDTO {
 
     @Data
     public static class AttendanceDateDTO {
+        private Integer attendanceId;  // Dodanie ID obecności
         private LocalDate date;
         private AttendanceStatus.Status status;  // Enum statusu obecności
     }

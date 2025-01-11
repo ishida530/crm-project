@@ -26,7 +26,8 @@ public class AttendanceController {
     // Endpoint to create a new attendance status and a worker user
     @PostMapping
     public ResponseEntity<UserAttendanceDTO> createAttendanceStatus(@RequestBody UserAttendanceDTO userCreateRequest) {
-        UserAttendanceDTO userAttendanceDTO = attendanceService.createAttendance(userCreateRequest);  // Call service to create attendance
+        System.out.println(userCreateRequest);
+        UserAttendanceDTO userAttendanceDTO = attendanceService.createOrUpdateAttendance(userCreateRequest);  // Call service to create attendance
         return ResponseEntity.ok(userAttendanceDTO);  // Return the attendance status as DTO
     }
 
@@ -34,9 +35,8 @@ public class AttendanceController {
     @PutMapping("/{userId}")
     public ResponseEntity<Void> updateAttendanceStatus(
             @PathVariable Integer userId,
-            @RequestParam LocalDate date,
             @RequestParam String newStatus) {
-        attendanceService.updateAttendanceStatus(userId, date, newStatus);  // Update attendance status via service
+        attendanceService.updateAttendanceStatus(userId, newStatus);  // Update attendance status via service
         return ResponseEntity.noContent().build();  // Return a 204 No Content response
     }
 
