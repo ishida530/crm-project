@@ -22,23 +22,24 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import useGetFilteredAttendances from "./hooks/useGetFilteredAttendances";
-import { Attendance } from "./types";
+import { Attendance, Status as StatusTypes } from "./types";
 
 
 interface TableAttendanceProps {
-    onEditAttendance: (attendance: Attendance) => void;
+    onEditAttendance: ({ id: number, newStatus: string }) => void;
     onDeleteAttendance: (attendanceId: number) => void;
     onAddAttendance: () => void;
     attendances?: Attendance[];
+    onChangeSelectValue: (attendance: Attendance) => void
 }
 
 const TableAttendance: React.FC<TableAttendanceProps> = ({
     // attendances: attendances_tru,
+    onChangeSelectValue,
     onEditAttendance,
     onDeleteAttendance,
     onAddAttendance,
 }) => {
-    // console.log("attendances_tru", attendances_tru)
     const [attendances, setAttendances] = useState<Attendance[]>([]);
     const [searchInput, setSearchInput] = useState<string>("");
 
@@ -58,30 +59,30 @@ const TableAttendance: React.FC<TableAttendanceProps> = ({
     };
 
     const transformData = (data: Attendance[]): Attendance[] => {
-        console.log("Transforming Data:", data); // Log data to inspect
         if (!data || !Array.isArray(data)) return [];
-        return data.map((entry) => {
-            const days: Record<string, string> = {};
-            console.log("Attendance Entry:", entry); // Log individual entries
+        return data
+            .map((entry) => {
+                const days: Record<string, string> = {};
 
-            if (entry.attendances && Array.isArray(entry.attendances)) {
-                entry.attendances.forEach((status) => {
-                    const date = new Date(status.date);
-                    const formattedDate = date.toLocaleDateString("pl-PL", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
+                if (entry.attendances && Array.isArray(entry.attendances)) {
+                    entry.attendances.forEach((status) => {
+                        const date = new Date(status.date);
+                        const formattedDate = date.toLocaleDateString("pl-PL", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                        });
+                        days[formattedDate] = status.status;
+                        days["attendance_id"] = status.attendance_id;
                     });
-                    days[formattedDate] = status.status;
-                });
-            }
+                }
 
-            return { ...entry, days };
-        });
+                return { ...entry, days };
+            })
+            .sort((a, b) => a.user_id - b.user_id); // Sort data by user_id or any other field
     };
 
     useEffect(() => {
-        console.log('fetchedAttendances', fetchedAttendances)
         setAttendances(transformData(fetchedAttendances));
     }, [fetchedAttendances]);
 
@@ -151,8 +152,7 @@ const TableAttendance: React.FC<TableAttendanceProps> = ({
                         const statusDate = new Date(status.date).toLocaleDateString("pl-PL", { day: "2-digit", month: "2-digit", year: "numeric" });
                         return statusDate === formatted;
                     }
-                )?.status || "Brak";
-
+                )?.status || "";
                 return (
                     <Select
                         value={dayStatus}
@@ -167,11 +167,32 @@ const TableAttendance: React.FC<TableAttendanceProps> = ({
                                     return status;
                                 }),
                             };
-                             onEditAttendance(updatedAttendance);
+
+
+                            if (!dayStatus) {
+                                console.log('formatted', formatted);
+
+                                const [day, month, year] = formatted.split('.');
+                                const correctDate = new Date(`${year}-${month}-${day}`);
+
+                                onChangeSelectValue({
+                                    user_id: attendance.user_id,
+                                    attendances: [{
+                                        status: StatusTypes[value as keyof typeof StatusTypes],
+                                        date: correctDate.toISOString().split('T')[0] // Using correct date here
+                                    }]
+                                });
+                            } else {
+                                onEditAttendance({ id: attendance.days.attendance_id, newStatus: value });
+                            }
+
+
+
+
                         }}
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder="Status" />
+                            <SelectValue placeholder="" />
                         </SelectTrigger>
                         <SelectContent>
                             {Object.keys(statusMap).map((status) => (

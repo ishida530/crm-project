@@ -32,10 +32,9 @@ const EditAttendanceDialog: React.FC<EditAttendanceDialogProps> = ({
   const form = useForm<AttendanceFormValues>({
     resolver: zodResolver(attendanceSchema),
     defaultValues: initialValues || {
-      user_id: 0,
       user_name: '',
       attendances: [
-        { date: '', status: Status.PRESENT }, // Domyślne wartości
+        { date: '', status: Status.PRESENT }, // Default values
       ],
     },
   });
@@ -47,6 +46,11 @@ const EditAttendanceDialog: React.FC<EditAttendanceDialogProps> = ({
     }
     onSave(data);
     onClose();
+  };
+
+  const handleDeleteAttendance = (index: number) => {
+    const updatedAttendances = form.getValues('attendances').filter((_, i) => i !== index);
+    form.setValue('attendances', updatedAttendances, { shouldValidate: true });
   };
 
   return (
@@ -91,19 +95,20 @@ const EditAttendanceDialog: React.FC<EditAttendanceDialogProps> = ({
                         <Input
                           type="date"
                           value={attendance.date || ''}
-                          onChange={(e) =>
-                            form.setValue(`attendances.${index}.date`, e.target.value, {
-                              shouldValidate: true,
-                            })
-                          }
+                          onChange={(e) => {
+                            const updatedAttendances = [...field.value];
+                            updatedAttendances[index].date = e.target.value;
+                            form.setValue('attendances', updatedAttendances, { shouldValidate: true });
+                          }}
                         />
 
+                        {/* Status Select */}
                         <Select
-                          onValueChange={(value) =>
-                            form.setValue(`attendances.${index}.status`, value as Status, {
-                              shouldValidate: true,
-                            })
-                          }
+                          onValueChange={(value) => {
+                            const updatedAttendances = [...field.value];
+                            updatedAttendances[index].status = value as Status;
+                            form.setValue('attendances', updatedAttendances, { shouldValidate: true });
+                          }}
                           value={attendance.status || ''}
                         >
                           <SelectTrigger>
@@ -117,6 +122,15 @@ const EditAttendanceDialog: React.FC<EditAttendanceDialogProps> = ({
                             <SelectItem value={Status.ABSENT}>Absent</SelectItem>
                           </SelectContent>
                         </Select>
+
+                        {/* Delete Button */}
+                        <Button
+                          type="button"
+                          onClick={() => handleDeleteAttendance(index)}
+                          className="text-red-500"
+                        >
+                          Delete
+                        </Button>
                       </div>
                     </div>
                   ))}

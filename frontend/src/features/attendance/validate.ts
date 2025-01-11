@@ -2,7 +2,6 @@ import { z } from "zod";
 import { Status } from "./types";
 
 export const attendanceSchema = z.object({
-    user_id: z.number().nonnegative(),
     user_name: z.string().min(1, 'Name is required'),
     attendances: z
       .array(

@@ -28,12 +28,7 @@ const AttendancePage = () => {
     };
 
     const handleUpdate = (updatedAttendance: Attendance) => {
-        if (isEdit && selectedAttendance) {
-            updateAttendance({ attendanceId: selectedAttendance.id, attendanceData: updatedAttendance });
-        } else {
-            createAttendance(updatedAttendance);
-        }
-
+        createAttendance(updatedAttendance);
         setIsOpenEditModal(false);
         setIsEdit(false);
         setSelectedAttendance(null);
@@ -64,8 +59,9 @@ const AttendancePage = () => {
         <div>
             <TableAttendance
                 // attendances={attendances}
+                onChangeSelectValue={createAttendance}
                 onAddAttendance={handleCreateAttendance}
-                onEditAttendance={handleEditAttendance}
+                onEditAttendance={updateAttendance}
                 onDeleteAttendance={handleDeleteAttendance}
             />
             {isOpenEditModal && (
