@@ -30,10 +30,10 @@ const TaskCard = ({ task, onDelete, onEdit }: TaskCardProps) => {
             <CardContent className="mt-4">
                 <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-4">
                     <p className="text-sm text-gray-500">
-                        <span className="font-semibold">Data:</span> {new Date(task.date).toLocaleDateString("pl-PL")}
+                        <span className="font-semibold">Data:</span> {new Date(task.start_date).toLocaleDateString("pl-PL")}
                     </p>
                     <p className="text-sm text-gray-500">
-                        <span className="font-semibold">Autor:</span> {task.author}
+                        <span className="font-semibold">Autor:</span> {task.author_name}
                     </p>
                 </div>
             </CardContent>
@@ -59,7 +59,7 @@ const TaskCard = ({ task, onDelete, onEdit }: TaskCardProps) => {
                 </div>
 
                 {/* Przycisk Usuń */}
-                <Button variant="destructive" className="w-full sm:w-48 lg:w-48" onClick={() => onDelete(task?.id)}>
+                <Button variant="destructive" className="w-full sm:w-48 lg:w-48" onClick={() => onDelete(task.id)}>
                     Usuń
                 </Button>
             </div>

@@ -15,8 +15,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { formSchemaTask } from '../projects/validate';
 import { Task, TaskStatus } from '../projects/types';
 
-
-
 interface TaskFormProps {
     initialValues?: Task | null;
     onSave: (data: Task) => void;
@@ -27,17 +25,30 @@ interface TaskFormProps {
 const TaskFormModal = ({ initialValues, onSave, isOpen, onClose }: TaskFormProps) => {
     const form = useForm<Task>({
         resolver: zodResolver(formSchemaTask),
-        defaultValues: initialValues || { description: '', status: TaskStatus.TO_DO, start_date: '', name: '' }
+        defaultValues: {
+            ...initialValues,
+            start_date: initialValues?.start_date
+                ? new Date(initialValues.start_date).toISOString().split('T')[0] // Format for date input
+                : '', // Ensure it's empty if no initial value
+        },
     });
+
     const onSubmit = (data: Task) => {
-        console.log('Form submitted with data:', data);
+        // Ensure start_date is in the correct format (if necessary)
+        const formattedData = {
+            ...data,
+            start_date: new Date(data.start_date).toISOString().split('T')[0], // Format to YYYY-MM-DD
+        };
+
+        console.log('Form submitted with data:', formattedData);
         console.log('Form errors:', form.formState.errors);
 
         if (Object.keys(form.formState.errors).length > 0) {
             console.error('Form errors:', form.formState.errors);
             return;
         }
-        onSave(data);
+
+        onSave(formattedData); // Call the save function with formatted data
         onClose();
     };
 
@@ -110,7 +121,12 @@ const TaskFormModal = ({ initialValues, onSave, isOpen, onClose }: TaskFormProps
                                 <FormItem>
                                     <FormLabel>Data</FormLabel>
                                     <FormControl>
-                                        <Input type="date" {...field} />
+                                        <Input
+                                            type="date"
+                                            {...field}
+                                            value={field.value || ""}
+                                            onChange={(e) => field.onChange(e.target.value)}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

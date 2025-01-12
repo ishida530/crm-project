@@ -12,8 +12,8 @@ export interface Task {
     description: string;
     status?: TaskStatus;
     author?: User | number;
-    start_date: Date;
-    end_date?: Date;
+    start_date: Date | string;
+    end_date?: Date | string;
     name: string;
     project?: number;
     nothification_sent?: number;
@@ -23,7 +23,7 @@ export interface Task {
 export type Project = {
     id?: number;
     name: string;
-    deadline: string;
+    deadline: Date;
     investor_representative: string;
     project_manager: string;
     tasks?: Task[];

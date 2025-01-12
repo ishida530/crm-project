@@ -26,12 +26,13 @@ const ProjectTable = ({ data, onEditProject, onDeleteProject, onAddProject }: Pr
     const [sorting, setSorting] = useState<SortingState>([]); // State to track sorting
 
     const filteredData = useMemo(() => {
+        if (!data) return [];
         return data.filter((project) => {
             const matchesSearch =
                 !searchInput ||
                 project.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-                project.investorRepresentative.toLowerCase().includes(searchInput.toLowerCase()) ||
-                project.projectManager.toLowerCase().includes(searchInput.toLowerCase());
+                project.investor_representative.toLowerCase().includes(searchInput.toLowerCase()) ||
+                project.project_manager.toLowerCase().includes(searchInput.toLowerCase());
 
             return matchesSearch;
         });

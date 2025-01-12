@@ -9,7 +9,7 @@ import DeleteProjectAlertDialog from "./DeleteProjectAlertDialog";
 import { useEditProject } from "./hooks/useEditProject";
 
 const ProjectsPage = () => {
-    const { projects, error, isLoading } = useGetProjects(); 
+    const { projects, error, isLoading } = useGetProjects();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
     const [projectId, setProjectId] = useState<number>();
@@ -19,6 +19,7 @@ const ProjectsPage = () => {
     const { mutate: editProject } = useEditProject()
 
     const handleAddProject = () => {
+        console.log('?')
         setIsFormOpen(true);
         setProjectToEdit(null);
     };
@@ -32,7 +33,8 @@ const ProjectsPage = () => {
             console.log("Updated project", projectData);
             editProject({ id: projectToEdit.id, ...projectData })
         } else {
-            createProject(projectData); 
+            console.log('projectData', projectData)
+            createProject(projectData);
         }
         setProjectToEdit(null)
         handleCloseForm();
@@ -76,14 +78,14 @@ const ProjectsPage = () => {
     return (
         <div>
             <h1 className="text-xl font-bold mb-4">Projects</h1>
-            {projects && (
-                <ProjectTable
-                    data={projects}
-                    onAddProject={handleAddProject}
-                    onEditProject={handleEditProject}
-                    onDeleteProject={handleDeleteProject}
-                />
-            )}
+
+            <ProjectTable
+                data={projects}
+                onAddProject={handleAddProject}
+                onEditProject={handleEditProject}
+                onDeleteProject={handleDeleteProject}
+            />
+
             {isFormOpen && (
                 <ProjectFormModal
                     onClose={handleCloseForm}

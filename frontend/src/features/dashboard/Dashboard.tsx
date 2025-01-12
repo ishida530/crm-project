@@ -21,22 +21,24 @@ const Dashboard = () => {
 
   const handleOpenModal = (selectInfo: DateSelectArg) => {
     setIsEdit(false);
+    console.log('selectInfo', selectInfo)
     setCurrentEvent({
-      name: '',
-      start_date: selectInfo.start,
-      end_date: selectInfo.end,
-      description: '',
+      name: selectInfo.title,
+      startDate: selectInfo.start,
+      endDate: selectInfo.end,
+      description: selectInfo.description,
     });
     setIsModalOpen(true);
   };
 
   const handleEdit = (clickInfo: EventClickArg) => {
+    console.log('handleEdit clickInfo', clickInfo)
     setIsEdit(true);
     setCurrentEvent({
-      name: clickInfo.event.name,
-      start_date: clickInfo.event.start_date || new Date(),
-      end_date: clickInfo.event.end || undefined,
-      description: clickInfo.event.extendedProps.description || '',
+      name: clickInfo.event.title,
+      startDate: clickInfo.event.start || new Date(),
+      endDate: clickInfo.event.end || undefined,
+      description: clickInfo.event.extendedProps.description, // Jeśli `description` jest w standardowej właściwości
       id: Number(clickInfo.event.id)
     });
     setIsModalOpen(true);
@@ -47,13 +49,14 @@ const Dashboard = () => {
   };
 
   const handleSaveEvent = (eventData: EventType) => {
+    console.log('handleSaveEvent', eventData)
     const newEvent = {
       name: eventData.name,
       description: eventData.description,
-      start_date: eventData.start_date.toISOString(),
-      end_date: eventData.end_date?.toISOString(),
+      start_date: eventData.start_date,
+      end_date: eventData.end_date,
       id: currentEvent?.id,
-      author: Number(localStorage.getItem('userId')),
+      author: localStorage.getItem('userId'),
       nothificationSent: 0
     };
     if (isEdit) {
@@ -90,7 +93,7 @@ const Dashboard = () => {
       />
       {isModalOpen && (
         <EventFormModal
-          initialValues={currentEvent || { name: '', start_date: new Date(), end_date: new Date(), description: '' }}
+          initialValues={currentEvent || { name: '', start_date: new Date().toISOString, end_date: new Date().toISOString, description: '' }}
           onSave={handleSaveEvent}
           isOpen={isModalOpen}
           onClose={handleCloseModal}

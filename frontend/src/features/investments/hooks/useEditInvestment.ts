@@ -14,8 +14,8 @@ export const useEditInvestment = () => {
         mutationFn: editInvestment,
         onSuccess: (data) => {
             console.log('Investment updated successfully:', data);
-            queryClient.invalidateQueries({ queryKey: ['getAllInvestments'] });
-        },
+            queryClient.invalidateQueries({ queryKey: ['getAllInvestments'] })
+            queryClient.refetchQueries({ queryKey: ['getAllInvestments'] });        },
         onError: (error) => {
             console.error('Error updating investment:', error);
         },

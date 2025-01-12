@@ -7,6 +7,7 @@ export const useCreateProject = () => {
     const queryClient = useQueryClient()
 
     const createProject = async (projectData: Project): Promise<CreateProjectResponse> => {
+        console.log(projectData)
         const response = await axiosInstance.post('/projects', projectData);
         return response.data;
     };

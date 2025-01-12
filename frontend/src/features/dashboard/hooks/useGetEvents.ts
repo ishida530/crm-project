@@ -18,12 +18,6 @@ const useGetAllEvents = () => {
         staleTime: 300000,
     });
 
-
-    const formatDate = (date: Date) => {
-        const d = new Date(date);
-        return d.toISOString();
-    }
-
     useEffect(() => {
         if (data) {
             const formattedEvents = data.map((task) => {
@@ -32,9 +26,9 @@ const useGetAllEvents = () => {
 
                 return {
                     ...task,
-                    start_date: start, 
-                    end_date: end,      
-                    title: task.name, 
+                    start_date: start,  // Używamy obiektu Date
+                    end_date: end,      // Używamy obiektu Date
+                    title: task.name,
                 };
             });
             setEvents(formattedEvents as EventType[]);
@@ -42,10 +36,10 @@ const useGetAllEvents = () => {
     }, [data]);
 
     return {
-        events,
+        events:data,
         error,
         isLoading,
-    };
+};
 };
 
 export default useGetAllEvents;

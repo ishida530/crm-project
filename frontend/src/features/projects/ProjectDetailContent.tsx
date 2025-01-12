@@ -26,15 +26,21 @@ const ProjectDetailContent = ({ project }: ProjectDetailContentProps) => {
     const { mutate: createTask } = useCreateTask();
     const { mutate: editTask } = useEditTask();
     const { mutate: deleteTask } = useDeleteTask();
-    
+
     const { deadline, investor_representative, name, project_manager, id } = project || {};
-    
+
     const { data: tasks } = useGetTasksProjects(id)
     const handleAddTask = () => {
         setInitialTaskData(undefined);
         setIsTaskFormOpen(true);
     };
 
+    const formatDateTime = (date: Date) => {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const day = date.getDate().toString().padStart(2, "0");
+        return new Date(`${year}-${month}-${day}`);
+    };
     const handleSaveTask = (taskData: Task) => {
         const userId = Number(localStorage.getItem('userId'));
         if (userId === null) {
@@ -59,6 +65,11 @@ const ProjectDetailContent = ({ project }: ProjectDetailContentProps) => {
     };
 
     const handleEditTask = (task: Task, status?: TaskStatus) => {
+        console.log('1111', task)
+        
+        task.start_date= formatDateTime(new Date(task.start_date))
+        
+        console.log('222', task)
         if (status) {
             editTask({ ...task, status });
         } else {

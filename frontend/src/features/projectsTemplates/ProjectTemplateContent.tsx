@@ -41,7 +41,7 @@ const ProjectTemplateContent: React.FC<ProjectTemplateContentProps> = ({ project
             };
             editTask(updatedTask);
         } else {
-            createTask({ project_template_id: id, ...taskData });
+            createTask({ project_template_id: id, author: Number(localStorage.getItem('userId')), ...taskData });
         }
         setInitialTaskData(undefined);
         setIsTaskFormOpen(false);

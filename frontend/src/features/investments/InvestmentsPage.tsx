@@ -69,7 +69,7 @@ const InvestmentsPage = () => {
                 <InvestmentTable
                     data={investments}
                     onAddInvestment={handleAddInvestment}
-                    onEditInvestment={handleEditInvestment}
+                    onEditInvestment={editInvestment}
                     onDeleteInvestment={handleDeleteInvestment}
                 />
             )}

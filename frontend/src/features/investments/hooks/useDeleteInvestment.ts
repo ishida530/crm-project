@@ -14,7 +14,7 @@ export const useDeleteInvestment = () => {
         mutationFn: deleteInvestment,
         onSuccess: (data) => {
             console.log('Investment deleted successfully:', data);
-            queryClient.invalidateQueries({ queryKey: ['getAllInvestments'] });
+            queryClient.invalidateQueries({ queryKey: ['getAllInvestments'], refetchType: 'active' });
         },
         onError: (error) => {
             console.error('Error deleting investment:', error);

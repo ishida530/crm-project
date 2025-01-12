@@ -9,9 +9,8 @@ const useGetInvestments = () => {
     };
 
     const { data, error, isLoading } = useQuery<InvestmentsResponse, Error>({
-        queryKey: ["getAllInvestments"],
+        queryKey: ['getAllInvestments'],
         queryFn: fetchInvestments,
-        staleTime: 300000, // Data stays fresh for 5 minutes
     });
 
     return {
