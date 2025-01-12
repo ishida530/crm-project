@@ -23,7 +23,7 @@ public class TaskController {
     }
 
     @GetMapping()
-    public List<Task> getAllTasks() {
+    public List<TaskDTO> getAllTasks() {
         return taskService.getAllTasks();
     }
 
@@ -52,6 +52,7 @@ public class TaskController {
     @PostMapping()
     public ResponseEntity<Task> createTask(@RequestBody TaskDTO task) {
         System.out.println("/projects/tasks");
+        System.out.println("task" + task);
         return ResponseEntity.ok(taskService.createTask(task));
     }
 

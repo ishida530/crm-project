@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -33,10 +34,26 @@ public class TaskService {
         this.usersRepository = usersRepository;
     }
 
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+    public List<TaskDTO> getAllTasks() {
+        return taskRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
+    private TaskDTO convertToDTO(Task task) {
+        TaskDTO dto = new TaskDTO();
+        dto.setId(task.getId());
+        dto.setName(task.getName());
+        dto.setDescription(task.getDescription());
+        dto.setStatus(task.getStatus());
+        dto.setAuthor(task.getAuthor().getId());
+        dto.setAuthor_name(task.getAuthorName());
+        dto.setStart_date(task.getStart_date());
+        dto.setEnd_date(task.getEnd_date());
+        dto.setProject(task.getProject() != null ? task.getProject().getId() : null);
+        dto.setProject_template_id(task.getProjectTemplate() != null ? task.getProjectTemplate().getId() : null);
+        return dto;
+    }
     public Optional<Task> getTaskById(int id) {
         return taskRepository.findById(id);
     }
@@ -81,7 +98,7 @@ public class TaskService {
         if (taskDTO == null) {
             throw new IllegalArgumentException("Task data cannot be null");
         }
-
+System.out.println("taskDTO" + taskDTO);
         Task task = new Task();
         task.setName(taskDTO.getName());
         task.setDescription(taskDTO.getDescription());
@@ -96,23 +113,24 @@ public class TaskService {
         User author = usersRepository.findById(taskDTO.getAuthor())
                 .orElseThrow(() -> new IllegalArgumentException("Author with ID " + taskDTO.getAuthor() + " not found"));
         task.setAuthor(author); // Set the full User object, not just its ID
+        System.out.println(taskDTO.getStart_date());
 
-        task.setStart_date(taskDTO.getStartDate());
-        task.setEnd_date(taskDTO.getEndDate());
+        task.setStart_date(taskDTO.getStart_date());
+        System.out.println(task);
+
+        task.setEnd_date(taskDTO.getEnd_date());
         // Obsługuje przypisanie projektu, jeśli zostało podane
         if (taskDTO.getProject() != null) {
             Project project = projectsRepository.findById(taskDTO.getProject())
                     .orElseThrow(() -> new IllegalArgumentException("Project with ID " + taskDTO.getProject() + " not found"));
             task.setProject(project);
         }
-
         // Obsługuje przypisanie szablonu projektu, jeśli zostało podane
-        if (taskDTO.getProjectTemplateId() != null) {
-            ProjectTemplate projectTemplate = projectTemplateRepository.findById(taskDTO.getProjectTemplateId())
-                    .orElseThrow(() -> new IllegalArgumentException("Project Template with ID " + taskDTO.getProjectTemplateId() + " not found"));
+        if (taskDTO.getProject_template_id() != null) {
+            ProjectTemplate projectTemplate = projectTemplateRepository.findById(taskDTO.getProject_template_id())
+                    .orElseThrow(() -> new IllegalArgumentException("Project Template with ID " + taskDTO.getProject_template_id() + " not found"));
             task.setProjectTemplate(projectTemplate);
         }
-System.out.println(task);
         // Zapisujemy zadanie do bazy danych
         return taskRepository.save(task);
     }
@@ -124,6 +142,8 @@ System.out.println(task);
                     task.setName(taskDetails.getName());
                     task.setDescription(taskDetails.getDescription());
                     task.setStatus(taskDetails.getStatus());
+                    task.setStart_date(taskDetails.getStart_date());
+                    task.setEnd_date(taskDetails.getEnd_date());
 
                     if (taskDetails.getAuthor() == null) {
                         throw new IllegalArgumentException("Author must be provided");
@@ -133,9 +153,9 @@ System.out.println(task);
                             .orElseThrow(() -> new IllegalArgumentException("Author with ID " + taskDetails.getAuthor() + " not found"));
                     task.setAuthor(author);
 
-                    if (taskDetails.getProjectTemplateId() != null) {
-                        ProjectTemplate projectTemplate = projectTemplateRepository.findById(taskDetails.getProjectTemplateId())
-                                .orElseThrow(() -> new IllegalArgumentException("Project Template with ID " + taskDetails.getProjectTemplateId() + " not found"));
+                    if (taskDetails.getProject_template_id() != null) {
+                        ProjectTemplate projectTemplate = projectTemplateRepository.findById(taskDetails.getProject_template_id())
+                                .orElseThrow(() -> new IllegalArgumentException("Project Template with ID " + taskDetails.getProject_template_id() + " not found"));
                         task.setProjectTemplate(projectTemplate);
                     }
 

@@ -1,12 +1,15 @@
 package com.elemer.crm.entity;
 
 import com.elemer.crm.enums.TaskStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.type.DateTime;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
@@ -41,8 +44,8 @@ public class Task {
     @JsonProperty("author")
     private User author;
 
-    private Date start_date;
-    private Date end_date;
+    private Timestamp start_date;
+    private Timestamp end_date;
 
     @JsonIgnore
     private Integer notificationSent;

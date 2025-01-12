@@ -18,7 +18,7 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Email
+
     @NotNull(message = "Project name cannot be null")
     private String name;
 
