@@ -40,7 +40,9 @@ public class ScheduleTask {
             System.out.println(task.getName() + " - " + task.getStart_date());
 
             task.setNotificationSent(1);
+            System.out.println("wysyla wiadaomosc...");
             notificationSender.sendNotification(task.getAuthor().getId(),task);
+            System.out.println("wiadomosc zostala wyslana");
             taskRepository.save(task);
         }
     }

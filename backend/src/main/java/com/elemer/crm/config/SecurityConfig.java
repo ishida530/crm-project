@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/auth/login", "/public/**").permitAll()
-                        .requestMatchers("/users/**").hasAuthority("ADMIN")
+                        .requestMatchers("/users/**","/auth/register").hasAuthority("ADMIN")
                         .requestMatchers("/tokenfcm/**").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE","INVOICE_CLERK")
                         .requestMatchers("/clients/**").hasAnyAuthority("ADMIN", "INVOICE_CLERK")
                         .requestMatchers("/warehouses/**").hasAnyAuthority("ADMIN", "MANAGER")
