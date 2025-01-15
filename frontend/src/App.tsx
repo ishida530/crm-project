@@ -15,21 +15,6 @@ const App = () => {
   const { isAuthenticated } = useAuth();
   const { mutate: saveTokenFcm } = useSaveFcmToken()
   const navigate = useNavigate();
-  // Funkcja do uzyskiwania uprawnień i subskrybowania powiadomień
-  // Funkcja do uzyskiwania uprawnień i subskrybowania powiadomień
-
-  // if ('serviceWorker' in navigator) {
-  //   navigator.serviceWorker.register('/firebase-messaging-sw.js')
-  //     .then(function (registration) {
-  //       console.log('Service Worker zarejestrowany pomyślnie: ', registration);
-
-
-
-  //     })
-  //     .catch(function (error) {
-  //       console.error('Rejestracja Service Workera nie powiodła się: ', error);
-  //     });
-  // }
 
   async function requestPermission() {
     //requesting permission using Notification API
