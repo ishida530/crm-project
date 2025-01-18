@@ -43,7 +43,7 @@ public class User implements UserDetails {
     private List<Task> tasks;
 
     @OneToMany(mappedBy = "user")
-    @JsonManagedReference  // Serializujemy attendances w User, ale nie cyklicznie
+    @JsonManagedReference
     private Set<AttendanceStatus> attendances;
 
     @Override

@@ -74,6 +74,7 @@ const Dashboard = () => {
       console.error("No event selected for deletion.");
     }
     setIsDeleteModalOpen(false);
+    handleCloseModal()
   };
 
   if (isLoading) {

@@ -22,7 +22,7 @@ const App = () => {
 
     if (permission === "granted") {
       const token = await getToken(messaging, {
-        vapidKey: "BAXNXcSy0a0SZyDW_BG19vY4RPwfGOj58aXI_pO6Kn5oVJBxW0vDhgdHMU182DqIX7q6RqSjaI9XZFga0e0FxeE",
+        vapidKey: "BFnc_MC0es0u_AOzFDz1M2GAp2DDbRGIdReLAF69E0m0MR9wTor1tGYcFmIFWYMzm93RCI7ns30dUF986XN4U9M",
       });
 
 

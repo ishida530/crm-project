@@ -20,6 +20,7 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
 
     List<Task> findByAuthor(User author);
 
-    @Query(value = "select * from tasks where start_date < date_add(now(), interval 30 minute) and notification_sent != 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM tasks WHERE start_date < DATE_ADD(NOW(), INTERVAL :minutes MINUTE) AND (notification_sent != 1 OR notification_sent IS NULL)", nativeQuery = true)
     List<Task> findAllStartingWithinMinutes(@Param("minutes") int minutes);
+
 }

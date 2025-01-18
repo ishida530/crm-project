@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
     baseURL: "http://localhost:1010/",
+    // baseURL: "https://crm.elemer.pl/api/",
     headers: {
         'Content-Type': 'application/json'
     },

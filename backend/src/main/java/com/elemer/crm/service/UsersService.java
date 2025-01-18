@@ -81,7 +81,6 @@ public class UsersService {
         int length = 10;
 
         String chars = dotenv.get("STRING_PASSWORD");
-        System.out.println("Wygenerowane hasło: " +chars);
 
         StringBuilder password = new StringBuilder();
         for (int i = 0; i < length; i++) {

@@ -98,7 +98,6 @@ public class TaskService {
         if (taskDTO == null) {
             throw new IllegalArgumentException("Task data cannot be null");
         }
-System.out.println("taskDTO" + taskDTO);
         Task task = new Task();
         task.setName(taskDTO.getName());
         task.setDescription(taskDTO.getDescription());
@@ -113,10 +112,8 @@ System.out.println("taskDTO" + taskDTO);
         User author = usersRepository.findById(taskDTO.getAuthor())
                 .orElseThrow(() -> new IllegalArgumentException("Author with ID " + taskDTO.getAuthor() + " not found"));
         task.setAuthor(author); // Set the full User object, not just its ID
-        System.out.println(taskDTO.getStart_date());
 
         task.setStart_date(taskDTO.getStart_date());
-        System.out.println(task);
 
         task.setEnd_date(taskDTO.getEnd_date());
         // Obsługuje przypisanie projektu, jeśli zostało podane

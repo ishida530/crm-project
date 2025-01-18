@@ -37,12 +37,12 @@ public class ScheduleTask {
 
         System.out.println("Zadania zaczynające się za 30 minut lub mniej:");
         for (Task task : tasks) {
-            System.out.println(task.getName() + " - " + task.getStart_date());
-
-            task.setNotificationSent(1);
-            System.out.println("wysyla wiadaomosc...");
+            System.out.println("wysyla powiadomienie wiadaomosc...");
             notificationSender.sendNotification(task.getAuthor().getId(),task);
             System.out.println("wiadomosc zostala wyslana");
+            task.setNotificationSent(1);
+            System.out.println("zmieniono w bazie");
+
             taskRepository.save(task);
         }
     }

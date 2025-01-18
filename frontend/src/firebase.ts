@@ -9,7 +9,7 @@ const firebaseConfig = {
     messagingSenderId: "679934953765",
     appId: "1:679934953765:web:df951f42d89b0a137f72cc",
     measurementId: "G-TNY99QHMN3",
-    vapidKey: "BGQuZkwmFXmudPjn-k545IcQq8syG6PFNfe5OfeEKZfNr1xaxDB5ZO4mulxthS8uX4W5I-lgzDrp_IqJ78Awl24"
+    vapidKey: "BFnc_MC0es0u_AOzFDz1M2GAp2DDbRGIdReLAF69E0m0MR9wTor1tGYcFmIFWYMzm93RCI7ns30dUF986XN4U9M"
 };
 
 
