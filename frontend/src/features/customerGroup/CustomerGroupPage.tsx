@@ -8,6 +8,7 @@ import { useDeleteCustomerGroup } from './hooks/useDeleteCustomerGroup';
 import useGetAllCustomersGroup from './hooks/useGetAllCustomerGroup';
 import EditCustomerGroupDialog from './EditCustomerGroupDialog';
 import DeleteCustomerGroupAlertDialog from './DeleteCustomerGroupAlertDialog';
+import { Loader } from '@/components/ui/loader';
 
 const CustomerGroupPage = () => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -57,7 +58,9 @@ const CustomerGroupPage = () => {
         setIsOpenEditModal(true);
     };
 
-    if (isLoading) return <div>Loading customer groups...</div>;
+    if (isLoading) {
+        return <Loader isVisible />;
+    } 
     if (error) return <div>Error loading customer groups: {error.message}</div>;
 
     return (

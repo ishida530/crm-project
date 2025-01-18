@@ -7,6 +7,7 @@ import useGetAllCustomers from './hooks/useGetAllCustomers';
 import TableCustomers from './CustomersTable';
 import EditCustomerDialog from './EditCustomerDialog';
 import DeleteCustomerAlertDialog from './DeleteUserAlertDialog';
+import { Loader } from '@/components/ui/loader';
 
 const CustomersPage = () => {
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -57,8 +58,9 @@ const CustomersPage = () => {
     setIsOpenEditModal(true);
   };
 
-  if (isLoading) return <div>Loading customers...</div>;
-  if (error) return <div>Error loading customers: {error.message}</div>;
+  if (isLoading) {
+    return <Loader isVisible />;
+  } if (error) return <div>Error loading customers: {error.message}</div>;
 
   return (
     <div>

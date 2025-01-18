@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import useGetFilteredAttendances from "./hooks/useGetFilteredAttendances";
 import { Attendance, Status as StatusTypes } from "./types";
+import { Loader } from "@/components/ui/loader";
 
 
 interface TableAttendanceProps {
@@ -218,7 +219,9 @@ const TableAttendance: React.FC<TableAttendanceProps> = ({
         columns,
         getCoreRowModel: getCoreRowModel(),
     });
-
+    if (isLoading) {
+        return <Loader isVisible />;
+    }
     return (
         <div className="w-full">
             <div className="flex items-center justify-between py-4">

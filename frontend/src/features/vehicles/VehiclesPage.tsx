@@ -7,6 +7,7 @@ import { useCreateVehicle } from './hooks/useCreateVehicle';
 import EditVehicleDialog from './EditVehicleDialog';
 import DeleteVehicleAlertDialog from './DeleteVehicleAlertDialog';
 import { Vehicle } from './types';
+import { Loader } from '@/components/ui/loader';
 
 const VehiclesPage = () => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -16,7 +17,7 @@ const VehiclesPage = () => {
     const [vehicleId, setVehicleId] = useState<number | null>(null);
 
     const { vehicles, error, isLoading } = useGetAllVehicles();
-    const { mutate: updateVehicle } = useUpdateVehicle();
+    const { mutate: updateVehicle} = useUpdateVehicle();
     const { mutate: deleteVehicle } = useDeleteVehicle();
     const { mutate: createVehicle } = useCreateVehicle();
 
@@ -56,7 +57,9 @@ const VehiclesPage = () => {
         setIsOpenEditModal(true);
     };
 
-    if (isLoading) return <div>Loading vehicles...</div>;
+    if (isLoading) {
+        return <Loader isVisible />;
+    }
     if (error) return <div>Error loading vehicles: {error.message}</div>;
 
     return (

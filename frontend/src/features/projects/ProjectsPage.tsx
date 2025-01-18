@@ -7,6 +7,7 @@ import { Project } from "./types";
 import { useDeleteProject } from "./hooks/useDeleteProject";
 import DeleteProjectAlertDialog from "./DeleteProjectAlertDialog";
 import { useEditProject } from "./hooks/useEditProject";
+import { Loader } from "@/components/ui/loader";
 
 const ProjectsPage = () => {
     const { projects, error, isLoading } = useGetProjects();
@@ -68,7 +69,7 @@ const ProjectsPage = () => {
     };
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <Loader isVisible />;
     }
 
     if (error) {

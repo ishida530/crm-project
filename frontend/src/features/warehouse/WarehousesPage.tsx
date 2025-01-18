@@ -7,6 +7,7 @@ import useGetAllWarehouses from './hooks/useGetAllWarehouses';
 import { useUpdateWarehouse } from './hooks/useUpdateWarehouse';
 import TableWarehouses from './TableWarehouses ';
 import { Warehouse } from './types';
+import { Loader } from '@/components/ui/loader';
 
 const WarehousesPage = () => {
     console.log('1????')
@@ -57,7 +58,9 @@ const WarehousesPage = () => {
         setIsOpenEditModal(true);
     };
 
-    if (isLoading) return <div>Loading warehouses...</div>;
+    if (isLoading) {
+        return <Loader isVisible />;
+    }
     if (error) return <div>Error loading warehouses: {error.message}</div>;
     console.log('?')
     return (

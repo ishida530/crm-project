@@ -8,6 +8,7 @@ import { useAuth } from "./features/auth/AuthProvier";
 import { useEffect } from "react";
 import { getToken, messaging } from './firebase'; // Zaimportuj Firebase Messaging
 import { useSaveFcmToken } from "./hooks/useSaveFcmToken";
+import { Loader } from "./components/ui/loader";
 
 
 const App = () => {
@@ -32,8 +33,8 @@ const App = () => {
 
       if (userId) {
         saveTokenFcm({
-          userId: Number(userId), 
-          token: token,            
+          userId: Number(userId),
+          token: token,
         });
       }
       // axiosInstance.post(`notification/send?token=${token}`, {

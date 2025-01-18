@@ -9,6 +9,7 @@ import TableProjectTemplates from './TableProjectTemplates';
 import EditProjectTemplateDialog from './EditProjectTemplateDialog';
 import DeleteProjectTemplateAlertDialog from './DeleteProjectTemplateAlertDialog';
 import useGetAllProjectTemplates from './hooks/useGetAllProjectTemplates';
+import { Loader } from '@/components/ui/loader';
 
 const ProjectTemplatesPage = () => {
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -58,7 +59,9 @@ const ProjectTemplatesPage = () => {
     setIsOpenEditModal(true);
   };
 
-  if (isLoading) return <div>Loading project templates...</div>;
+  if (isLoading) {
+    return <Loader isVisible />;
+  }
   if (error) return <div>Error loading project templates: {error.message}</div>;
 
   return (

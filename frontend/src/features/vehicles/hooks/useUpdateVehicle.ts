@@ -20,6 +20,7 @@ export const useUpdateVehicle = () => {
         onError: (error) => {
             console.error('Error updating vehicle:', error);
         },
+        
     });
 
     return {

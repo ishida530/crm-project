@@ -7,6 +7,7 @@ import InvestmentFormModal from "./InvestmentFormModal";
 import { useDeleteInvestment } from "./hooks/useDeleteInvestment";
 import { useCreateInvestment } from "./hooks/useCreateInvestment";
 import { Investment } from "./types";
+import { Loader } from "@/components/ui/loader";
 
 const InvestmentsPage = () => {
     const { investments, error, isLoading } = useGetInvestments();
@@ -55,7 +56,7 @@ const InvestmentsPage = () => {
     };
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <Loader isVisible />;
     }
 
     if (error) {

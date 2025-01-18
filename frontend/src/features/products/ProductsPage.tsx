@@ -7,6 +7,7 @@ import { useUpdateProduct } from './hooks/useUpdateProduct';
 import TableProducts from './TableProducts';
 import { Product } from './types';
 import useGetAllProducts from './hooks/useGetAllProducts';
+import { Loader } from '@/components/ui/loader';
 
 
 const ProductsPage = () => {
@@ -57,8 +58,10 @@ const ProductsPage = () => {
         setIsOpenEditModal(true);
     };
 
-    if (isLoading) return <div>Loading products...</div>;
-    if (error) return <div>Error loading products: {error.message}</div>;
+    if (isLoading) {
+        return <Loader isVisible />;
+    }
+     if (error) return <div>Error loading products: {error.message}</div>;
 
     return (
         <div>

@@ -8,6 +8,7 @@ import { useDeleteUser } from './hooks/useDeleteUser';
 import { Button } from '@/components/ui/button';
 import { useCreateUser } from './hooks/useCreateUser';
 import useGetAllUsers from './hooks/useGetAllUsers';
+import { Loader } from '@/components/ui/loader';
 
 const UsersPage = () => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -56,7 +57,7 @@ const UsersPage = () => {
         setIsOpenEditModal(true);
     };
 
-    if (isLoading) return <div>Loading users...</div>;
+    if (isLoading) return <Loader isVisible />
     if (error) return <div>Error loading users: {error.message}</div>;
     console.log(users)
     return (

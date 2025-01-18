@@ -8,6 +8,7 @@ import { formSchema } from './validate';
 import { LoginCredentials } from './types';
 import useAuthLogin from './useAuthLogin';
 import { Link } from 'react-router-dom';
+import { Loader } from '@/components/ui/loader';
 
 const LoginPage: React.FC = () => {
     const { handleLogin, isPending, error, data: responseData } = useAuthLogin();
@@ -60,8 +61,9 @@ const LoginPage: React.FC = () => {
                                 </FormItem>
                             )}
                         />
+                        
                         <Button type="submit" className="w-full" disabled={isPending}>
-                            {isPending ? 'Logowanie...' : 'Zaloguj się'}
+                            {isPending ? <Loader isVisible /> : 'Zaloguj się'}
                         </Button>
                         <Link to={"/login/reset-password"}>Zresetuj hasło</Link>
                     </form>

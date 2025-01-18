@@ -52,8 +52,7 @@ const AttendancePage = () => {
         setIsOpenEditModal(true);
     };
 
-    // if (isLoading) return <div>Loading attendance...</div>;
-    // if (error) return <div>Error loading attendance: {error.message}</div>;
+
 
     return (
         <div>

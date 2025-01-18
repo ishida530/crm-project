@@ -8,6 +8,7 @@ import { DateSelectArg, EventClickArg } from '@fullcalendar/core/index.js';
 import { useEditEvent } from './hooks/useEditEvent';
 import { useDeleteEvent } from './hooks/useDeleteEvent';
 import DeleteEventAlertDialog from './DeleteEventAlertDialog';
+import { Loader } from '@/components/ui/loader';
 
 const Dashboard = () => {
   const { events, isLoading, error } = useGetAllEvents();
@@ -78,7 +79,7 @@ const Dashboard = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loader isVisible/>;
   }
 
   if (error) {
