@@ -20,6 +20,8 @@ import ProductsPage from '@/features/products/ProductsPage';
 import InvestmentsPage from '@/features/investments/InvestmentsPage';
 import VehiclesPage from '@/features/vehicles/VehiclesPage';
 import AttendancePage from '@/features/attendance/AttendancePage';
+import ResetPasswordPage from '@/features/auth/ResetPasswordPage';
+import ChangePasswordPage from '@/features/auth/ChangePasswordPage';
 
 
 const router = createBrowserRouter([
@@ -39,6 +41,15 @@ const router = createBrowserRouter([
                 path: 'login',
                 element: <LoginPage />,
             },
+            {
+                path: 'login/reset-password',
+                element: <ResetPasswordPage />,
+            },
+            {
+                path: 'change-password',
+                element: <ChangePasswordPage />,
+            },
+
             {
                 path: 'clients',
                 element: (
@@ -150,6 +161,7 @@ const router = createBrowserRouter([
 
 const ReactRouterProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
     return (
+        // @ts-expect-error
         <RouterProvider router={router}>
             {children}
         </RouterProvider>
