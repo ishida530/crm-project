@@ -12,20 +12,20 @@ export const resetPasswordSchema = z.object({
 
 
 export const changePasswordSchema = z.object({
-    currentPassword: z
+    current_password: z
         .string()
         .min(6, { message: 'Obecne hasło musi mieć co najmniej 6 znaków.' })
         .max(50, { message: 'Obecne hasło nie może mieć więcej niż 50 znaków.' }),
-    newPassword: z
+    new_password: z
         .string()
         .min(6, { message: 'Nowe hasło musi mieć co najmniej 6 znaków.' })
         .max(50, { message: 'Nowe hasło nie może mieć więcej niż 50 znaków.' }),
-    confirmPassword: z
+    confirm_password: z
         .string()
         .min(6, { message: 'Potwierdzenie hasła musi mieć co najmniej 6 znaków.' })
         .max(50, { message: 'Potwierdzenie hasła nie może mieć więcej niż 50 znaków.' }),
 }).superRefine((data, ctx) => {
-    if (data.newPassword !== data.confirmPassword) {
+    if (data.new_password !== data.confirm_password) {
         ctx.addIssue({
             path: ['confirmPassword'],
             message: 'Potwierdzenie hasła musi pasować do nowego hasła.',

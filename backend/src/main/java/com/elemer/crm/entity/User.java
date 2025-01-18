@@ -38,11 +38,13 @@ public class User implements UserDetails {
 
     private String tokenFcm;
 
+    private Integer firstLogin;
+
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Task> tasks;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private Set<AttendanceStatus> attendances;
 

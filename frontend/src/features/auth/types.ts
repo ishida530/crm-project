@@ -11,7 +11,8 @@ export type LoginResponseType = {
     refresh_token: string;
     expiration_time: string;
     role: string;
-    user_id: string
+    user_id: string;
+    first_login:number
 }
 
 export interface ResetPasswordRequest {
@@ -23,12 +24,12 @@ export interface ResetPasswordResponse {
     statusCode: number;
 }
 export interface ChangePasswordRequest {
-    currentPassword:string,
-    newPassword: string;
-    confirmPassword: string;
-    userId:number
+    current_password:string,
+    new_password: string;
+    confirm_password: string;
 }
 
 export interface ChangePasswordResponse {
+    statusCode: number;
     message: string; 
 }

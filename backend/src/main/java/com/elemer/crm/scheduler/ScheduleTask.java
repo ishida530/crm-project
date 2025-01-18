@@ -40,7 +40,7 @@ public class ScheduleTask {
             System.out.println("wysyla powiadomienie wiadaomosc...");
             notificationSender.sendNotification(task.getAuthor().getId(),task);
             System.out.println("wiadomosc zostala wyslana");
-            task.setNotificationSent(1);
+            task.setNotification_sent(1);
             System.out.println("zmieniono w bazie");
 
             taskRepository.save(task);

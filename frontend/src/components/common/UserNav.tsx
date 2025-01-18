@@ -61,13 +61,10 @@ export function UserNav() {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                    <DropdownMenuItem className="hover:cursor-pointer" onClick={() => navigate('/')}>
-                        <LayoutGrid className="w-4 h-4 mr-3 text-muted-foreground" />
-                        Dashboard
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="hover:cursor-pointer" onClick={() => navigate('/account')}>
+
+                    <DropdownMenuItem className="hover:cursor-pointer" onClick={() => navigate('/login/change-password')}>
                         <User className="w-4 h-4 mr-3 text-muted-foreground" />
-                        Account
+                        Zmień hasło
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />

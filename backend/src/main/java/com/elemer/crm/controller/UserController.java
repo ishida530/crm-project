@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @GetMapping("/admin/get-all-users")
-    public ResponseEntity<HttpResponse> getAllUsers(){
+    public ResponseEntity<HttpResponse> getAllUsers() {
         return ResponseEntity.ok(usersService.getAllUsers());
     }
 
@@ -49,7 +49,7 @@ public class UserController {
 
     @PutMapping("/admin/update/{userId}")
     public ResponseEntity<HttpResponse> updateUser(@PathVariable Integer userId, @RequestBody User request) {
-        return ResponseEntity.ok(usersService.updateUser(userId,request));
+        return ResponseEntity.ok(usersService.updateUser(userId, request));
     }
 
     @GetMapping("/adminuser/get-profile")
@@ -71,10 +71,12 @@ public class UserController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PostMapping("/auth/change-password")
-    public ResponseEntity<HttpResponse> changePassword(@RequestBody ChangePasswordRequestDTO request) {
-        System.out.println(request);
-        HttpResponse response = usersService.changePassword(request.getUserId(), request);
-        return ResponseEntity.status(response.getStatusCode()).body(response);
+    @PutMapping("/change-password/{userId}")
+    public ResponseEntity<HttpResponse> changePassword(@PathVariable Integer userId, @RequestBody ChangePasswordRequestDTO data) {
+        System.out.println("Dane z requesta: " + data);
+        System.out.println("Dane z userId: " + userId);
+
+        return ResponseEntity.ok(usersService.changePassword(userId,data));
+
     }
 }

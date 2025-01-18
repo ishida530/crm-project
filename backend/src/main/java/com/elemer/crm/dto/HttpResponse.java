@@ -32,5 +32,6 @@ public class HttpResponse {
     private List<Investment> investments;
     private Project project;
     private Boolean success;
+    private Integer firstLogin;
 
 }

@@ -118,6 +118,15 @@ public class UsersService {
             response.setMessage("Successfully logged in");
             response.setSuccess(true);
             response.setUserId(user.getId());
+            response.setUserId(user.getId());
+
+
+            if(user.getFirstLogin() != 1){
+                response.setFirstLogin(1);
+                user.setFirstLogin(1);
+                usersRepository.save(user);
+            }
+            response.setFirstLogin(user.getFirstLogin());
 
 
         } catch (Exception e) {
@@ -317,8 +326,6 @@ public class UsersService {
             email = email.trim().toLowerCase();
 
             Optional<User> userOptional = usersRepository.findByEmail(email);
-            System.out.println("Result from DB: " + userOptional);
-            System.out.println("userOptional" + userOptional);
 
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
@@ -328,6 +335,7 @@ public class UsersService {
 
                 // Zaktualizuj hasło użytkownika
                 user.setPassword(passwordEncoder.encode(newPassword));
+                user.setFirstLogin(0);
                 usersRepository.save(user);
 
                 // Wyślij e-mail z nowym hasłem
@@ -350,21 +358,18 @@ public class UsersService {
         return response;
     }
 
-    public HttpResponse changePassword(Integer userId, ChangePasswordRequestDTO request) {
+    public HttpResponse changePassword(Integer userId , ChangePasswordRequestDTO request) {
         HttpResponse response = new HttpResponse();
-
         try {
             User user = usersRepository.findById(userId).orElseThrow(() -> new RuntimeException("Użytkownik nie znaleziony"));
-
-            // Weryfikacja obecnego hasła i porównanie nowych haseł
-            if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            if (!passwordEncoder.matches(request.getCurrent_password(), user.getPassword())) {
                 response.setStatusCode(400);
                 response.setMessage("Bieżące hasło jest niepoprawne.");
-            } else if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            } else if (!request.getNew_password().equals(request.getConfirm_password())) {
                 response.setStatusCode(400);
                 response.setMessage("Nowe hasło i potwierdzenie hasła nie pasują.");
             } else {
-                user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+                user.setPassword(passwordEncoder.encode(request.getNew_password()));
                 usersRepository.save(user);
                 response.setStatusCode(200);
                 response.setMessage("Hasło zostało pomyślnie zaktualizowane.");

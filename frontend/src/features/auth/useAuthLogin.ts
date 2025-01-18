@@ -18,13 +18,19 @@ const useAuthLogin = () => {
 
     const { mutate: handleLogin, data, isPending, error } = useMutation({
         mutationFn: loginReuest,
-        onSuccess: ({ token, role, user_id }) => {
+        onSuccess: ({ token, role, user_id, first_login}) => {
             if (role) {
                 localStorage.setItem('token', token)
                 localStorage.setItem('role', role)
                 localStorage.setItem('userId', user_id)
                 login()
-                navigate('/')
+
+                console.log('data', data)
+                console.log('first_login', first_login)
+                return first_login !== 1 ?
+                    navigate('/login/change-password') :
+                    navigate('/')
+
             } else {
                 throw new Error('Logowanie nieudane. Spróbuj ponownie.');
 

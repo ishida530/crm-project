@@ -10,25 +10,27 @@ import { useChangePassword } from './hooks/useChangePassword';
 
 // Zaktualizowana struktura formularza
 const ChangePasswordPage: React.FC = () => {
-    const { mutate: handleChangePassword, isPending, error, success } = useChangePassword();
+    const { mutate: handleChangePassword, isPending, error, isSuccess,data } = useChangePassword();
 
     const form = useForm<ChangePasswordRequest>({
         resolver: zodResolver(changePasswordSchema),
         defaultValues: {
-            currentPassword: '',
-            newPassword: '',
-            confirmPassword: '',
+            current_password: '',
+            new_password: '',
+            confirm_password: '',
         },
     });
 
     // Funkcja obsługi przesyłania formularza
     const onSubmit = async (data: ChangePasswordRequest) => {
         const requestData = {
-            currentPassword: data.currentPassword,
-            newPassword: data.newPassword,
-            confirmPassword: data.confirmPassword,
-            userId: Number(localStorage.getItem('userId'))
-        };
+            userId: Number(localStorage.getItem('userId')), // Pobranie userId z localStorage
+            data: {
+                current_password: data.current_password,
+                new_password: data.new_password,
+                confirm_password: data.confirm_password
+            }
+        }
 
         handleChangePassword(requestData);
     };
@@ -45,7 +47,7 @@ const ChangePasswordPage: React.FC = () => {
                         {/* Obecne hasło */}
                         <FormField
                             control={form.control}
-                            name="currentPassword"
+                            name="current_password"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Obecne hasło</FormLabel>
@@ -60,7 +62,7 @@ const ChangePasswordPage: React.FC = () => {
                         {/* Nowe hasło */}
                         <FormField
                             control={form.control}
-                            name="newPassword"
+                            name="new_password"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Nowe hasło</FormLabel>
@@ -75,7 +77,7 @@ const ChangePasswordPage: React.FC = () => {
                         {/* Potwierdź hasło */}
                         <FormField
                             control={form.control}
-                            name="confirmPassword"
+                            name="confirm_password"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Potwierdź hasło</FormLabel>
@@ -100,7 +102,7 @@ const ChangePasswordPage: React.FC = () => {
 
                 {/* Komunikaty o błędach i sukcesach */}
                 {error && <p className="text-red-500 mt-2">{error.message}</p>}
-                {success && (
+                {isSuccess&& data?.statusCode !== 500 && (
                     <p className="text-green-500 mt-2">
                         Twoje hasło zostało pomyślnie zmienione.
                     </p>
