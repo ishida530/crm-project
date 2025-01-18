@@ -70,7 +70,7 @@ export function UserNav() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="hover:cursor-pointer" onClick={handleSignOut}>
                     <LogOut className="w-4 h-4 mr-3 text-muted-foreground" />
-                    Sign out
+                    Wyloguj
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
