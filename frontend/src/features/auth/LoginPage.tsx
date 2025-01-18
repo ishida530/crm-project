@@ -7,7 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { formSchema } from './validate';
 import { LoginCredentials } from './types';
 import useAuthLogin from './useAuthLogin';
-
+import { Link } from 'react-router-dom';
 
 const LoginPage: React.FC = () => {
     const { handleLogin, isPending, error, data: responseData } = useAuthLogin();
@@ -22,13 +22,15 @@ const LoginPage: React.FC = () => {
 
     const onSubmit = async (data: LoginCredentials) => {
         await handleLogin(data);
-        console.log('responseData', responseData)
+        console.log('responseData', responseData);
     };
 
     return (
-        <div className={`grow w-100 flex items-center justify-center  transition-all `}>
+        <div className={`grow w-100 flex items-center justify-center transition-all`}>
             <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full dark:bg-gray-800">
-                <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-gray-200">Log in</h2>
+                <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-gray-200">
+                    Zaloguj się
+                </h2>
 
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -39,7 +41,7 @@ const LoginPage: React.FC = () => {
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Email" {...field} />
+                                        <Input placeholder="Wpisz swój adres email" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -50,22 +52,22 @@ const LoginPage: React.FC = () => {
                             name="password"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Password</FormLabel>
+                                    <FormLabel>Hasło</FormLabel>
                                     <FormControl>
-                                        <Input type="password" placeholder="Password" {...field} />
+                                        <Input type="password" placeholder="Wpisz swoje hasło" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
                         <Button type="submit" className="w-full" disabled={isPending}>
-                            {isPending ? 'Logging in...' : 'Login'}
+                            {isPending ? 'Logowanie...' : 'Zaloguj się'}
                         </Button>
+                        <Link to={"/login/reset-password"}>Zresetuj hasło</Link>
                     </form>
                 </Form>
 
                 {error && <p className="text-red-500 mt-2">{error.message}</p>}
-
             </div>
         </div>
     );

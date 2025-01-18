@@ -32,9 +32,10 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/login", "/public/**").permitAll()
-                        .requestMatchers("/users/**","/auth/register").hasAuthority("ADMIN")
-                        .requestMatchers("/tokenfcm/**").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE","INVOICE_CLERK")
+                        .requestMatchers("/auth/login","/auth/reset-password", "/public/**").permitAll()
+                        .requestMatchers("/auth/change-password").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE","INVOICE_CLERK","DESIGNER","ENGINEER")
+                        .requestMatchers("/users/**").hasAuthority("ADMIN")
+                        .requestMatchers("/tokenfcm/**").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE","INVOICE_CLERK","DESIGNER","ENGINEER")
                         .requestMatchers("/clients/**").hasAnyAuthority("ADMIN", "INVOICE_CLERK")
                         .requestMatchers("/warehouses/**").hasAnyAuthority("ADMIN", "MANAGER")
                         .requestMatchers("/sales/**").hasAnyAuthority("ADMIN", "INVOICE_CLERK")

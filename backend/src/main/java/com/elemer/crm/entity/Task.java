@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import javax.annotation.Nullable;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -48,7 +49,7 @@ public class Task {
     private Timestamp end_date;
 
     @JsonIgnore
-    private Integer notificationSent;
+    private int notification_sent;
 
     // Metoda pomocnicza do pobrania imienia autora
     public String getAuthorName() {

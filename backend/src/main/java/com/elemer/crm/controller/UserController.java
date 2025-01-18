@@ -1,5 +1,6 @@
 package com.elemer.crm.controller;
 
+import com.elemer.crm.dto.ChangePasswordRequestDTO;
 import com.elemer.crm.dto.LoginRequest;
 import com.elemer.crm.dto.HttpResponse;
 import com.elemer.crm.entity.User;
@@ -62,5 +63,18 @@ public class UserController {
     @DeleteMapping("/admin/delete/{userId}")
     public ResponseEntity<HttpResponse> deleteUser(@PathVariable Integer userId) {
         return ResponseEntity.ok(usersService.deleteUser(userId));
+    }
+
+    @PostMapping("/auth/reset-password")
+    public ResponseEntity<HttpResponse> resetPassword(@RequestBody HttpResponse data) {
+        HttpResponse response = usersService.resetPassword(data.getEmail());
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @PostMapping("/auth/change-password")
+    public ResponseEntity<HttpResponse> changePassword(@RequestBody ChangePasswordRequestDTO request) {
+        System.out.println(request);
+        HttpResponse response = usersService.changePassword(request.getUserId(), request);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 }

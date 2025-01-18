@@ -1,5 +1,6 @@
 package com.elemer.crm.service;
 
+import com.elemer.crm.dto.ChangePasswordRequestDTO;
 import com.elemer.crm.dto.LoginRequest;
 import com.elemer.crm.dto.HttpResponse;
 import com.elemer.crm.entity.AttendanceStatus;
@@ -40,6 +41,7 @@ public class UsersService {
 
     @Autowired
     private EmailService emailService;
+
     public HttpResponse register(HttpResponse registrationRequest) {
         HttpResponse response = new HttpResponse();
         try {
@@ -135,11 +137,9 @@ public class UsersService {
     }
 
 
-
-
-    public HttpResponse refreshToken(HttpResponse refreshTokenReqiest){
+    public HttpResponse refreshToken(HttpResponse refreshTokenReqiest) {
         HttpResponse response = new HttpResponse();
-        try{
+        try {
             String ourEmail = jwtUtils.extractUsername(refreshTokenReqiest.getToken());
             User users = usersRepository.findByEmail(ourEmail).orElseThrow();
             if (jwtUtils.isTokenValid(refreshTokenReqiest.getToken(), users)) {
@@ -153,7 +153,7 @@ public class UsersService {
             response.setStatusCode(200);
             return response;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             response.setStatusCode(500);
             response.setMessage(e.getMessage());
             return response;
@@ -256,7 +256,7 @@ public class UsersService {
     }
 
 
-    public HttpResponse getMyInfo(String email){
+    public HttpResponse getMyInfo(String email) {
         HttpResponse httpResponse = new HttpResponse();
         try {
             Optional<User> userOptional = usersRepository.findByEmail(email);
@@ -269,13 +269,14 @@ public class UsersService {
                 httpResponse.setMessage("User not found for update");
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             httpResponse.setStatusCode(500);
             httpResponse.setMessage("Error occurred while getting user info: " + e.getMessage());
         }
         return httpResponse;
 
     }
+
     public HttpResponse saveTokenFcm(Integer userId, String token) {
         HttpResponse httpResponse = new HttpResponse();
 
@@ -307,5 +308,72 @@ public class UsersService {
         return httpResponse;
     }
 
+    public HttpResponse resetPassword(String email) {
+        HttpResponse response = new HttpResponse();
+        try {
+            // Znajdź użytkownika po adresie e-mail
+
+            System.out.println("Searching for email: '" + email + "'");
+            email = email.trim().toLowerCase();
+
+            Optional<User> userOptional = usersRepository.findByEmail(email);
+            System.out.println("Result from DB: " + userOptional);
+            System.out.println("userOptional" + userOptional);
+
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+
+                // Wygeneruj nowe hasło
+                String newPassword = generateRandomPassword();
+
+                // Zaktualizuj hasło użytkownika
+                user.setPassword(passwordEncoder.encode(newPassword));
+                usersRepository.save(user);
+
+                // Wyślij e-mail z nowym hasłem
+                String emailContent = "Hello " + user.getName() + ",\n\n"
+                        + "Your password has been reset successfully.\n\n"
+                        + "New Password: " + newPassword + "\n\n"
+                        + "Please change your password after logging in.";
+                emailService.sendSimpleEmail(user.getEmail(), "Password Reset", emailContent);
+
+                response.setStatusCode(200);
+                response.setMessage("Password reset successfully. New password sent to email.");
+            } else {
+                response.setStatusCode(404);
+                response.setMessage("User with this email not found.");
+            }
+        } catch (Exception e) {
+            response.setStatusCode(500);
+            response.setMessage("Error occurred while resetting password: " + e.getMessage());
+        }
+        return response;
+    }
+
+    public HttpResponse changePassword(Integer userId, ChangePasswordRequestDTO request) {
+        HttpResponse response = new HttpResponse();
+
+        try {
+            User user = usersRepository.findById(userId).orElseThrow(() -> new RuntimeException("Użytkownik nie znaleziony"));
+
+            // Weryfikacja obecnego hasła i porównanie nowych haseł
+            if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+                response.setStatusCode(400);
+                response.setMessage("Bieżące hasło jest niepoprawne.");
+            } else if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+                response.setStatusCode(400);
+                response.setMessage("Nowe hasło i potwierdzenie hasła nie pasują.");
+            } else {
+                user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+                usersRepository.save(user);
+                response.setStatusCode(200);
+                response.setMessage("Hasło zostało pomyślnie zaktualizowane.");
+            }
+        } catch (Exception e) {
+            response.setStatusCode(500);
+            response.setMessage("Błąd podczas zmiany hasła: " + e.getMessage());
+        }
+        return response;
+    }
 
 }

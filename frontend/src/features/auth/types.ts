@@ -12,4 +12,23 @@ export type LoginResponseType = {
     expiration_time: string;
     role: string;
     user_id: string
-}            
+}
+
+export interface ResetPasswordRequest {
+    email: string;
+}
+
+export interface ResetPasswordResponse {
+    message: string;
+    statusCode: number;
+}
+export interface ChangePasswordRequest {
+    currentPassword:string,
+    newPassword: string;
+    confirmPassword: string;
+    userId:number
+}
+
+export interface ChangePasswordResponse {
+    message: string; 
+}
