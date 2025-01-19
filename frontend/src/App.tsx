@@ -6,47 +6,26 @@ import { useStore } from "./hooks/use-store";
 import { Navbar } from "./components/common/Header";
 import { useAuth } from "./features/auth/AuthProvier";
 import { useEffect } from "react";
-import { getToken, messaging } from './firebase'; // Zaimportuj Firebase Messaging
-import { useSaveFcmToken } from "./hooks/useSaveFcmToken";
-import { Loader } from "./components/ui/loader";
+import { useWebPush } from "./hooks/useWebPush";
 
 
 const App = () => {
   const sidebar = useStore(useSidebar, (x) => x);
   const { isAuthenticated } = useAuth();
-  const { mutate: saveTokenFcm } = useSaveFcmToken()
+
+  const { subscribeFunction, unsubscribeFunction } = useWebPush(isAuthenticated)
   const navigate = useNavigate();
 
   async function requestPermission() {
-    //requesting permission using Notification API
     const permission = await Notification.requestPermission();
+    const userId = localStorage.getItem('userId');
 
     if (permission === "granted") {
-      const token = await getToken(messaging, {
-        vapidKey: "BFnc_MC0es0u_AOzFDz1M2GAp2DDbRGIdReLAF69E0m0MR9wTor1tGYcFmIFWYMzm93RCI7ns30dUF986XN4U9M",
-      });
-
-
-      //We can send token to server
-      console.log("Token generated : ", token);
-      const userId = localStorage.getItem('userId');
-
       if (userId) {
-        saveTokenFcm({
-          userId: Number(userId),
-          token: token,
-        });
+        await subscribeFunction()
       }
-      // axiosInstance.post(`notification/send?token=${token}`, {
-      //   title: "Nowe powiadomienie",
-      //   body: "Masz nowe wiadomości w aplikacji!"
-      // }).then(res => {
-      //   console.log('response: ', res)
-
-      // })
     } else if (permission === "denied") {
-      //notifications are blocked
-      alert("You denied for the notification");
+      await unsubscribeFunction(Number(userId))
     }
   }
 
@@ -77,6 +56,7 @@ const App = () => {
           {isAuthenticated && <Navbar title="Elemer" isAuthenticated={isAuthenticated} />}
 
           <main className="flex-grow p-10 overflow-y-auto">
+
             <Outlet />
           </main>
           <footer className="p-6 md:py-0 border-t border-border/40">

@@ -33,3 +33,4 @@ build/
 .vscode/
 .env
 firebase-config.json
+application.properties

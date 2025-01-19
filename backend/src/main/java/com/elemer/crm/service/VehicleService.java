@@ -14,18 +14,15 @@ public class VehicleService {
     @Autowired
     private VehicleRepository vehicleRepository;
 
-    // Get all vehicles
     public List<Vehicle> getAllVehicles() {
         return vehicleRepository.findAll();
     }
 
-    // Get a vehicle by its ID
     public Vehicle getVehicleById(Integer id) {
         return vehicleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Vehicle not found"));
     }
 
-    // Create a new vehicle
     public Vehicle createVehicle(VehicleDTO vehicleDTO) {
         Vehicle vehicle = new Vehicle();
         vehicle.setBrand(vehicleDTO.getBrand());
@@ -42,7 +39,6 @@ public class VehicleService {
         return vehicleRepository.save(vehicle);
     }
 
-    // Update an existing vehicle
     public Vehicle updateVehicle(Integer id, VehicleDTO vehicleDTO) {
         Vehicle vehicle = getVehicleById(id);
 
@@ -60,7 +56,6 @@ public class VehicleService {
         return vehicleRepository.save(vehicle);
     }
 
-    // Delete a vehicle
     public void deleteVehicle(Integer id) {
         vehicleRepository.deleteById(id);
     }

@@ -22,7 +22,6 @@ interface CalendarProps {
 
 export default function Calendar({ eventsData, onAddEvent, onEditEvent }: CalendarProps) {
   const calendarRef = useRef<FullCalendar | null>(null);
-  console.log('eventsData w calendar', eventsData)
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString('pl-PL', {
       hour: '2-digit',
@@ -40,7 +39,6 @@ export default function Calendar({ eventsData, onAddEvent, onEditEvent }: Calend
         right: 'dayGridMonth,timeGridWeek,timeGridDay',
       }}
       events={eventsData.map(event => {
-        console.log('event', event)
         return ({
           title: event.name,
           start: event.start_date,
@@ -54,7 +52,6 @@ export default function Calendar({ eventsData, onAddEvent, onEditEvent }: Calend
       selectable={true}
       select={(e) => onAddEvent(e)}
       eventContent={(eventInfo) => {
-        console.log('eventInfo w event content:', eventInfo)
         return (
           <TooltipProvider>
             <Tooltip>
