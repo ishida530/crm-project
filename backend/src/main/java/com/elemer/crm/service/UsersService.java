@@ -95,7 +95,6 @@ public class UsersService {
 
     public HttpResponse login(LoginRequest loginRequest) {
         HttpResponse response = new HttpResponse();
-
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -117,7 +116,6 @@ public class UsersService {
             response.setExpirationTime("24Hrs");
             response.setMessage("Successfully logged in");
             response.setSuccess(true);
-            response.setUserId(user.getId());
             response.setUserId(user.getId());
             response.setName(user.getName());
             response.setFirstLogin(user.getFirstLogin());

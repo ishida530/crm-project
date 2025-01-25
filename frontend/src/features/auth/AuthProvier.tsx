@@ -10,14 +10,33 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const isTokenExpired = (token: string): boolean => {
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1])); // Dekoduj część payload (środkową część JWT)
+        const expiration = payload.exp * 1000; // Token `exp` jest w sekundach, więc zamieniamy na milisekundy
+        return Date.now() > expiration; // Sprawdź, czy token wygasł
+    } catch (error) {
+        console.error('Błąd podczas sprawdzania tokena:', error);
+        return true; // Jeśli token jest nieprawidłowy, traktuj go jako wygasły
+    }
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useLocalStorage<boolean>('isAuthenticated', false);
     const [userRole, setUserRole] = useState<string | null>(null);
 
     useEffect(() => {
+        const token = localStorage.getItem('token');
         const role = localStorage.getItem('role');
-        setUserRole(role); // Read role from localStorage
-    }, []); // Runs once on mount to check the role
+
+        if (token && !isTokenExpired(token)) {
+            setIsAuthenticated(true);
+            setUserRole(role);
+        } else {
+            setIsAuthenticated(false);
+            setUserRole(null);
+        }
+    }, []); // Runs once on mount to check the token and role
 
     const login = () => {
         setIsAuthenticated(true);

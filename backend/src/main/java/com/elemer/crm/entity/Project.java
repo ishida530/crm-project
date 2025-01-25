@@ -3,7 +3,6 @@ package com.elemer.crm.entity;
 import com.elemer.crm.dto.ProjectDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -28,6 +27,10 @@ public class Project {
     private String investor_representative;
 
     private String project_manager;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private ProjectGroup group;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore

@@ -2,9 +2,12 @@ package com.elemer.crm.service;
 
 import com.elemer.crm.dto.HttpResponse;
 import com.elemer.crm.dto.ProjectDTO;
+import com.elemer.crm.dto.ProjectGroupDTO;
 import com.elemer.crm.entity.Project;
+import com.elemer.crm.entity.ProjectGroup;
 import com.elemer.crm.entity.ProjectTemplate;
 import com.elemer.crm.entity.Task;
+import com.elemer.crm.repository.ProjectGroupRepository;
 import com.elemer.crm.repository.ProjectTemplateRepository;
 import com.elemer.crm.repository.ProjectsRepository;
 import com.elemer.crm.util.EncryptionUtil;
@@ -22,6 +25,31 @@ public class ProjectsService {
     @Autowired
     private ProjectTemplateRepository projectTemplateRepository;
 
+    @Autowired
+    private  ProjectGroupRepository projectGroupRepository;
+
+    public HttpResponse assignProjectToGroup(Integer projectId, Integer groupId) {
+        HttpResponse httpResponse = new HttpResponse();
+        try {
+            Project project = projectsRepository.findById(projectId)
+                    .orElseThrow(() -> new RuntimeException("Project with ID " + projectId + " not found"));
+
+            ProjectGroup group = projectGroupRepository.findById(groupId)
+                    .orElseThrow(() -> new RuntimeException("Group with ID " + groupId + " not found"));
+
+            project.setGroup(group);
+
+            projectsRepository.save(project);
+
+            httpResponse.setProject(project);
+            httpResponse.setStatusCode(200);
+            httpResponse.setMessage("Project assigned to group successfully");
+        } catch (Exception e) {
+            httpResponse.setStatusCode(500);
+            httpResponse.setMessage("Error occurred: " + e.getMessage());
+        }
+        return httpResponse;
+    }
     public HttpResponse getAllProjects() {
         HttpResponse httpResponse = new HttpResponse();
         try {
