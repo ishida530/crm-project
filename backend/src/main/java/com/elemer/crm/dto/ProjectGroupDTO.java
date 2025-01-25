@@ -10,4 +10,6 @@ import java.util.List;
 public class ProjectGroupDTO {
     private String name;
     private List<ProjectDTO> projects;
+    private Integer project_template_id;
+    private ProjectTemplateDTO projectTemplate;
 }

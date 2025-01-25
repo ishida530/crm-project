@@ -23,6 +23,10 @@ public class ProjectGroup {
     @JsonIgnore
     private List<Project> projects;
 
+    @ManyToOne
+    @JoinColumn(name = "project_template_id")
+    private ProjectTemplate projectTemplate;
+
     @Override
     public String toString() {
         return "ProjectGroup{id=" + id + ", name='" + name + "'}";

@@ -1,5 +1,6 @@
 package com.elemer.crm.dto;
 
+import com.elemer.crm.entity.User;
 import com.elemer.crm.enums.TaskStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -36,4 +37,9 @@ public class TaskDTO {
     private int statusCode;
     private String error;
     private String message;
+
+    public TaskDTO(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }
