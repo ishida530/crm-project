@@ -103,6 +103,7 @@ public class ProjectGroupService {
         ProjectGroup group = projectGroupRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Group with ID " + id + " not found"));
         group.setName(groupDTO.getName());
+        group.setId(groupDTO.getId());
 
         if (groupDTO.getProjectTemplate() != null) {
             ProjectTemplate template = projectTemplateRepository.findById(groupDTO.getProjectTemplate().getId())
@@ -125,6 +126,7 @@ public class ProjectGroupService {
     private ProjectGroupDTO convertToDTO(ProjectGroup group) {
         ProjectGroupDTO dto = new ProjectGroupDTO();
         dto.setName(group.getName());
+        dto.setId(group.getId());
 
         // Przypisanie pełnych danych szablonu, jeśli istnieje
         if (group.getProjectTemplate() != null) {

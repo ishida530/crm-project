@@ -1,0 +1,134 @@
+import React, { useState, useMemo } from "react";
+import {
+    useReactTable,
+    getCoreRowModel,
+    getSortedRowModel,
+    flexRender,
+} from "@tanstack/react-table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ProjectGroup } from "./types"; // Zmiana typu na ProjectGroup
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { MoreHorizontal } from "lucide-react";
+
+interface ProjectGroupTableProps {
+    onEditGroup: (group: ProjectGroup) => void; // Zmiana typu na ProjectGroup
+    onDeleteGroup: (groupId: number) => void;
+    onAddGroup: () => void;
+    projectGroups: ProjectGroup[]; // Zmiana typu na ProjectGroup[]
+}
+
+const ProjectGroupTable = ({ projectGroups = [], onEditGroup, onDeleteGroup, onAddGroup }: ProjectGroupTableProps) => {
+    const [searchInput, setSearchInput] = useState<string>("");
+
+    const filteredData = useMemo(() => {
+        if (!searchInput) return projectGroups;
+        return projectGroups.filter(
+            (group) =>
+                group.name.toLowerCase().includes(searchInput.toLowerCase()) 
+        );
+    }, [searchInput, projectGroups]);
+
+    const columns = useMemo(() => [
+        {
+            accessorKey: "id",
+            header: "ID",
+        },
+        {
+            accessorKey: "name",
+            header: "Nazwa grupy projektów", // Zmiana nagłówka na "Grupa projektów"
+        },
+        {
+            id: "actions",
+            header: "Akcje",
+            cell: ({ row }) => {
+                const projectGroup = row.original;
+                return (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                                <span className="sr-only">Otwórz menu</span>
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Akcje</DropdownMenuLabel>
+                            <DropdownMenuItem onClick={() => onEditGroup(projectGroup)}>
+                                Edytuj grupę projektów
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => onDeleteGroup(projectGroup.id)}
+                                className="text-red-600"
+                            >
+                                Usuń grupę projektów
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                );
+            },
+        },
+    ], [onEditGroup, onDeleteGroup]);
+
+    const table = useReactTable({
+        data: filteredData,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+    });
+
+    return (
+        <div className="w-full">
+            <div className="flex items-center justify-between py-4">
+                <Input
+                    placeholder="Filtruj grupy projektów..."
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    className="max-w-sm"
+                />
+                <Button variant="outline" onClick={onAddGroup} className="ml-4">
+                    Dodaj grupę projektów
+                </Button>
+            </div>
+
+            <div className="overflow-x-auto rounded-md border">
+                <Table>
+                    <TableHeader>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => (
+                                    <TableHead key={header.id}>
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(header.column.columnDef.header, header.getContext())}
+                                    </TableHead>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow key={row.id}>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={columns.length} className="text-center">
+                                    Brak danych.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+        </div>
+    );
+};
+
+export default ProjectGroupTable;

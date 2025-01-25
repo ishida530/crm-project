@@ -98,6 +98,11 @@ export function getMenuList(userRole: UserRole): Menu[] {
                     href: "/projects/templates",
                     label: "Szablony projektów",
                     allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER],  // Allowed roles for this submenu
+                },
+                {
+                    href: "/projects/groups",
+                    label: "Grupy projektów",
+                    allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER],  // Allowed roles for this submenu
                 }
             ],
             allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE, UserRole.DESIGNER],  // Allowed roles for this menu

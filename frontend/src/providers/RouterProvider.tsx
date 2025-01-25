@@ -22,6 +22,7 @@ import VehiclesPage from '@/features/vehicles/VehiclesPage';
 import AttendancePage from '@/features/attendance/AttendancePage';
 import ResetPasswordPage from '@/features/auth/ResetPasswordPage';
 import ChangePasswordPage from '@/features/auth/ChangePasswordPage';
+import ProjectGroupPage from '@/features/projectGroup/ProjectGroupPage';
 
 
 const router = createBrowserRouter([
@@ -137,6 +138,22 @@ const router = createBrowserRouter([
                     <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER]}>
                         <ProjectDetailPage getProject={useGetProjectTemplateDetails} />
                     </PrivateRoute>
+                ),
+            },
+            {
+                path: 'projects/groups',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER]}>
+                        <ProjectGroupPage  />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: 'projects/groups/:id',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER]}>
+                        <ProjectGroupPage  />
+                        </PrivateRoute>
                 ),
             },
             {
