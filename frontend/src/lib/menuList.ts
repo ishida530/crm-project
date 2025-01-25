@@ -59,7 +59,7 @@ export function getMenuList(userRole: UserRole): Menu[] {
             label: "Inwestycje",
             icon: DollarSign,
             submenus: [],
-            allowedRoles: [UserRole.ADMIN],  // Allowed roles for this menu
+            allowedRoles: [UserRole.ADMIN, UserRole.ENGINEER],  // Allowed roles for this menu
         },
         // Clients Menu with Submenu
         {
@@ -97,10 +97,10 @@ export function getMenuList(userRole: UserRole): Menu[] {
                 {
                     href: "/projects/templates",
                     label: "Szablony projektów",
-                    allowedRoles: [UserRole.ADMIN, UserRole.MANAGER],  // Allowed roles for this submenu
+                    allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER],  // Allowed roles for this submenu
                 }
             ],
-            allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE],  // Allowed roles for this menu
+            allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE, UserRole.DESIGNER],  // Allowed roles for this menu
         },
         // Users Menu
         {

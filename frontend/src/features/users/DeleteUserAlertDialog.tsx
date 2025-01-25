@@ -20,22 +20,23 @@ const DeleteUserAlertDialog = ({ isOpen, onClose, onSave }: DeleteUserDialogProp
         <AlertDialog open={isOpen} onOpenChange={() => onClose()}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogTitle>Czy jesteś absolutnie pewny?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete the user
-                        and remove their data from our servers.
+                        Tej akcji nie można cofnąć. To trwale usunie użytkownika
+                        i usunie jego dane z naszych serwerów.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={onClose}>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel onClick={onClose}>Anuluj</AlertDialogCancel>
                     <AlertDialogAction
                         onClick={() => onSave()}
                     >
-                        Continue
+                        Kontynuuj
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
+
     );
 };
 

@@ -33,7 +33,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Dodajemy CORS
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Apply CORS configuration
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/auth/login", "/auth/reset-password", "/public/**").permitAll()
@@ -43,9 +43,9 @@ public class SecurityConfig {
                         .requestMatchers("/clients/**").hasAnyAuthority("ADMIN", "INVOICE_CLERK")
                         .requestMatchers("/warehouses/**").hasAnyAuthority("ADMIN", "MANAGER")
                         .requestMatchers("/sales/**").hasAnyAuthority("ADMIN", "INVOICE_CLERK")
-                        .requestMatchers("/projects/**", "/projects/tasks/**").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
+                        .requestMatchers("/projects/**", "/projects/tasks/**", "/projects/templates/*").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE", "DESIGNER")
                         .requestMatchers("/products/**").hasAuthority("ADMIN")
-                        .requestMatchers("/investments/**").hasAuthority("ADMIN")
+                        .requestMatchers("/investments/**").hasAnyAuthority("ADMIN","ENGINEER")
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
@@ -71,15 +71,18 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:5173"); // Określenie dopuszczalnego origin (Twój frontend)
-        configuration.addAllowedMethod("*"); // Zezwól na wszystkie metody
-        configuration.addAllowedHeader("*"); // Zezwól na wszystkie nagłówki
-        configuration.setAllowCredentials(true); // Zezwól na przesyłanie ciasteczek (jeśli to wymagane)
+        configuration.addAllowedOrigin("http://localhost:5173"); // Add frontend origin
+        configuration.addAllowedOrigin("https://crm.elemer.pl"); // Add frontend origin
+
+        configuration.addAllowedMethod("*"); // Allow all HTTP methods
+        configuration.addAllowedHeader("*"); // Allow all headers
+        configuration.setAllowCredentials(true); // Allow sending credentials
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Zastosuj CORS do wszystkich endpointów
+        source.registerCorsConfiguration("/**", configuration); // Apply CORS to all endpoints
         return source;
     }
 }

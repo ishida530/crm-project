@@ -9,6 +9,7 @@ import { useDeleteTask } from '../tasks/hooks/useDeleteTask';
 import TaskCard from '../tasks/TaskCard';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 type ProjectTemplateContentProps = {
     projectTemplate: Project | ProjectTemplate | undefined;
@@ -95,19 +96,21 @@ const ProjectTemplateContent: React.FC<ProjectTemplateContentProps> = ({ project
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div>
                     <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                        <span className="inline-block bg-blue-100 text-blue-600 px-2 py-1 rounded-lg">Todo</span>
+                        <h2 className="text-xl mb-2"><Badge variant="outline">Do zrobienia</Badge></h2>
+
                     </h2>
                     <div>{renderTasks(TaskStatus.TO_DO)}</div>
                 </div>
                 <div>
                     <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                        <span className="inline-block bg-yellow-100 text-yellow-600 px-2 py-1 rounded-lg">In Progress</span>
+                        <h2 className="text-xl mb-2"><Badge variant="outline">W trkacie</Badge></h2>
+
                     </h2>
                     <div>{renderTasks(TaskStatus.IN_PROGRESS)}</div>
                 </div>
                 <div>
                     <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                        <span className="inline-block bg-green-100 text-green-600 px-2 py-1 rounded-lg">Complete</span>
+                    <h2 className="text-xl mb-2"><Badge variant="outline">Zakończone</Badge></h2>
                     </h2>
                     <div>{renderTasks(TaskStatus.COMPLETED)}</div>
                 </div>

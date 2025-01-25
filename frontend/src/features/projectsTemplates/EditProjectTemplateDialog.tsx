@@ -15,8 +15,8 @@ import { ProjectTemplate } from './types';
 import { formSchema } from './validate';
 
 interface EditProjectTemplateDialogProps {
-    initialValues?: ProjectTemplate | null;  
-    onSave: (updatedTemplate: ProjectTemplate) => void; 
+    initialValues?: ProjectTemplate | null;
+    onSave: (updatedTemplate: ProjectTemplate) => void;
     isOpen: boolean;
     onClose: () => void;
 }
@@ -56,7 +56,7 @@ const EditProjectTemplateDialog = ({ initialValues, onSave, isOpen, onClose }: E
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Template Name</FormLabel>
+                                    <FormLabel>Nazwa szablonu</FormLabel>
                                     <FormControl>
                                         <Input placeholder="Template Name" {...field} />
                                     </FormControl>
@@ -69,7 +69,7 @@ const EditProjectTemplateDialog = ({ initialValues, onSave, isOpen, onClose }: E
                             name="description"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Description</FormLabel>
+                                    <FormLabel>Opis</FormLabel>
                                     <FormControl>
                                         <Input placeholder="Description" {...field} />
                                     </FormControl>
@@ -77,10 +77,10 @@ const EditProjectTemplateDialog = ({ initialValues, onSave, isOpen, onClose }: E
                                 </FormItem>
                             )}
                         />
-                       
+
                         <DialogFooter>
                             <Button type="submit" className="w-full">
-                                Save Changes
+                                Zapisz zmiany
                             </Button>
                         </DialogFooter>
                     </form>

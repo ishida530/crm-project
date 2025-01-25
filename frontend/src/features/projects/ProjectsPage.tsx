@@ -78,7 +78,7 @@ const ProjectsPage = () => {
 
     return (
         <div>
-            <h1 className="text-xl font-bold mb-4">Projects</h1>
+            <h1 className="text-xl font-bold mb-4">Projekty</h1>
 
             <ProjectTable
                 data={projects}

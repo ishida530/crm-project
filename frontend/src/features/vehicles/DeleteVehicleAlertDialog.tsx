@@ -20,18 +20,18 @@ const DeleteVehicleAlertDialog = ({ isOpen, onClose, onSave }: DeleteVehicleDial
         <AlertDialog open={isOpen} onOpenChange={() => onClose()}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogTitle>Czy jesteś absolutnie pewny?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete the vehicle
-                        and remove its data from our system.
+                        Tej akcji nie można cofnąć. To trwale usunie pojazd
+                        i usunie jego dane z naszego systemu.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={onClose}>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel onClick={onClose}>Anuluj</AlertDialogCancel>
                     <AlertDialogAction
                         onClick={() => onSave()}
                     >
-                        Continue
+                        Kontynuuj
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

@@ -10,7 +10,6 @@ import { Warehouse } from './types';
 import { Loader } from '@/components/ui/loader';
 
 const WarehousesPage = () => {
-    console.log('1????')
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);

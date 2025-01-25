@@ -51,7 +51,7 @@ const TaskCard = ({ task, onDelete, onEdit }: TaskCardProps) => {
                             <span>Zmień status</span>
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value={TaskStatus.TO_DO}>Oczekujące</SelectItem>
+                            <SelectItem value={TaskStatus.TO_DO}>Do zrobienia</SelectItem>
                             <SelectItem value={TaskStatus.IN_PROGRESS}>W trakcie</SelectItem>
                             <SelectItem value={TaskStatus.COMPLETED}>Zakończone</SelectItem>
                         </SelectContent>

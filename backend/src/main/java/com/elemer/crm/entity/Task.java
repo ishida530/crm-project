@@ -49,7 +49,7 @@ public class Task {
     private Timestamp end_date;
 
     @JsonIgnore
-    private int notification_sent;
+    private Integer notification_sent;
 
     // Metoda pomocnicza do pobrania imienia autora
     public String getAuthorName() {

@@ -54,13 +54,13 @@ public class UsersService {
             String generatedPassword = generateRandomPassword();
             user.setPassword(passwordEncoder.encode(generatedPassword));
 
-            String emailContent = "Hello " + registrationRequest.getName() + ",\n\n"
-                    + "Your account has been created successfully.\n\n"
+            String emailContent = "Witaj " + registrationRequest.getName() + ",\n\n"
+                    + "Twoje konto zostało pomyślnie utworzone.\n\n"
                     + "Login: " + registrationRequest.getEmail() + "\n"
-                    + "Password: " + generatedPassword + "\n\n"
-                    + "Please change your password after logging in.";
+                    + "Hasło: " + generatedPassword + "\n\n"
+                    + "Prosimy o zmianę hasła po zalogowaniu.";
 
-            emailService.sendSimpleEmail(registrationRequest.getEmail(), "Welcome to CRM", emailContent);
+            emailService.sendSimpleEmail(registrationRequest.getEmail(), "Witaj w CRM-Elemer", emailContent);
             System.out.println(user);
 
             User userResult = usersRepository.save(user);
@@ -119,14 +119,9 @@ public class UsersService {
             response.setSuccess(true);
             response.setUserId(user.getId());
             response.setUserId(user.getId());
-
-
-            if(user.getFirstLogin() != 1){
-                response.setFirstLogin(1);
-                user.setFirstLogin(1);
-                usersRepository.save(user);
-            }
+            response.setName(user.getName());
             response.setFirstLogin(user.getFirstLogin());
+            response.setEmail(user.getEmail());
 
 
         } catch (Exception e) {
@@ -339,11 +334,12 @@ public class UsersService {
                 usersRepository.save(user);
 
                 // Wyślij e-mail z nowym hasłem
-                String emailContent = "Hello " + user.getName() + ",\n\n"
-                        + "Your password has been reset successfully.\n\n"
-                        + "New Password: " + newPassword + "\n\n"
-                        + "Please change your password after logging in.";
-                emailService.sendSimpleEmail(user.getEmail(), "Password Reset", emailContent);
+                String emailContent = "Witaj " + user.getName() + ",\n\n"
+                        + "Twoje hasło zostało pomyślnie zresetowane.\n\n"
+                        + "Nowe hasło: " + newPassword + "\n\n"
+                        + "Prosimy o zmianę hasła po zalogowaniu.";
+                emailService.sendSimpleEmail(user.getEmail(), "Reset hasła", emailContent);
+
 
                 response.setStatusCode(200);
                 response.setMessage("Password reset successfully. New password sent to email.");
@@ -370,6 +366,7 @@ public class UsersService {
                 response.setMessage("Nowe hasło i potwierdzenie hasła nie pasują.");
             } else {
                 user.setPassword(passwordEncoder.encode(request.getNew_password()));
+                user.setFirstLogin(1);
                 usersRepository.save(user);
                 response.setStatusCode(200);
                 response.setMessage("Hasło zostało pomyślnie zaktualizowane.");

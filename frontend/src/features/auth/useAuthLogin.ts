@@ -18,11 +18,13 @@ const useAuthLogin = () => {
 
     const { mutate: handleLogin, data, isPending, error } = useMutation({
         mutationFn: loginReuest,
-        onSuccess: ({ token, role, user_id, first_login}) => {
+        onSuccess: ({ token, role, user_id, first_login, name, email }) => {
             if (role) {
                 localStorage.setItem('token', token)
                 localStorage.setItem('role', role)
                 localStorage.setItem('userId', user_id)
+                localStorage.setItem('name', name)
+                localStorage.setItem('email', email)
                 login()
 
                 console.log('data', data)

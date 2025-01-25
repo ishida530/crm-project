@@ -110,7 +110,7 @@ const router = createBrowserRouter([
             {
                 path: 'projects',
                 element: (
-                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE]}>
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE, UserRole.DESIGNER]}>
                         <ProjectsPage />
                     </PrivateRoute>
                 ),
@@ -118,7 +118,7 @@ const router = createBrowserRouter([
             {
                 path: 'projects/:id',
                 element: (
-                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE]}>
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE, UserRole.DESIGNER]}>
                         <ProjectDetailPage getProject={useGetProjectDetails} />
                     </PrivateRoute>
                 ),
@@ -126,7 +126,7 @@ const router = createBrowserRouter([
             {
                 path: 'projects/templates',
                 element: (
-                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER]}>
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER]}>
                         <ProjectTemplatesPage />
                     </PrivateRoute>
                 ),
@@ -134,7 +134,7 @@ const router = createBrowserRouter([
             {
                 path: 'projects/templates/:id',
                 element: (
-                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER]}>
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER]}>
                         <ProjectDetailPage getProject={useGetProjectTemplateDetails} />
                     </PrivateRoute>
                 ),
@@ -142,7 +142,7 @@ const router = createBrowserRouter([
             {
                 path: 'investments',
                 element: (
-                    <PrivateRoute allowedRoles={[UserRole.ADMIN]}>
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN,UserRole.ENGINEER]}>
                         <InvestmentsPage />
                     </PrivateRoute>
                 ),

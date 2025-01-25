@@ -20,21 +20,22 @@ const DeleteTaskAlertDialog = ({ isOpen, onClose, onSave }: DeleteTaskDialogProp
         <AlertDialog open={isOpen} onOpenChange={() => onClose()}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogTitle>Czy jesteś absolutnie pewny?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete the task and remove all associated data.
+                        Tej akcji nie można cofnąć. To trwale usunie zadanie i wszystkie powiązane dane.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={onClose}>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel onClick={onClose}>Anuluj</AlertDialogCancel>
                     <AlertDialogAction
                         onClick={() => onSave()}
                     >
-                        Continue
+                        Kontynuuj
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
+
     );
 };
 

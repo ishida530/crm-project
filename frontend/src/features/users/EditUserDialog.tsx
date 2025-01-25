@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { formSchema } from './validate';
-import { User,  UserRole,  userRoles } from './types'; 
+import { User, UserRole, userRoles } from './types'; 
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -32,7 +32,7 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
 
     const onSubmit = (data: User) => {
         if (Object.keys(form.formState.errors).length != 0) {
-            console.error('Form errors:  tuu', form.formState.errors);
+            console.error('Błędy formularza: ', form.formState.errors);
             return;
         }
         onSave(data);
@@ -43,9 +43,9 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>{initialValues ? "Edit User" : "Create User"}</DialogTitle>
+                    <DialogTitle>{initialValues ? "Edytuj Użytkownika" : "Utwórz Użytkownika"}</DialogTitle>
                     <DialogDescription>
-                        {initialValues ? "Make changes to the user's profile." : "Fill in the details to create a new user."}
+                        {initialValues ? "Wprowadź zmiany w profilu użytkownika." : "Wypełnij dane, aby utworzyć nowego użytkownika."}
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
@@ -55,9 +55,9 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Name</FormLabel>
+                                    <FormLabel>Imię i nazwisko</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Name" {...field} />
+                                        <Input placeholder="Imię i nazwisko" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -68,9 +68,9 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
                             name="email"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Email</FormLabel>
+                                    <FormLabel>Adres e-mail</FormLabel>
                                     <FormControl>
-                                        <Input type="email" placeholder="Email" {...field} />
+                                        <Input type="email" placeholder="Adres e-mail" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -81,9 +81,9 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
                             name="phoneNumber"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Phone Number</FormLabel>
+                                    <FormLabel>Numer telefonu</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Phone Number" {...field} />
+                                        <Input placeholder="Numer telefonu" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -94,11 +94,11 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
                             name="role"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Role</FormLabel>
+                                    <FormLabel>Rola</FormLabel>
                                     <FormControl>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Select role" />
+                                                <SelectValue placeholder="Wybierz rolę" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {userRoles.map(({ role, title }) => (
@@ -115,7 +115,7 @@ const EditUserDialog = ({ initialValues, onSave, isOpen, onClose }: EditUserDial
                         />
                         <DialogFooter>
                             <Button type="submit" className="w-full">
-                                Save Changes
+                                Zapisz zmiany
                             </Button>
                         </DialogFooter>
                     </form>

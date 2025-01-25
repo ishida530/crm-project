@@ -177,6 +177,7 @@ const InvestmentFormModal = ({
                                                 ) : isCheckboxField ? (
                                                     <>
                                                         <Checkbox
+                                                        className="ml-2"
                                                             checked={!!field.value}
                                                             onCheckedChange={(checked) =>
                                                                 field.onChange(checked ? "1" : "")

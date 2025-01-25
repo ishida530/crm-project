@@ -74,14 +74,14 @@ const WarehouseDetailsPage = () => {
 
     return (
         <div>
-            <h1>Warehouse Details</h1>
+            <h1>Szczegóły magazynu</h1>
             {warehouse ? (
                 <div>
                     <h2>{warehouse.name}</h2>
-                    <p><strong>Location:</strong> {warehouse.address}</p>
+                    <p><strong>Lokalizacja:</strong> {warehouse.address}</p>
 
 
-                    <h3>Products in Warehouse</h3>
+                    <h3>Produkty w magazynie</h3>
 
                     <TableProducts
                         products={warehouse.products}
