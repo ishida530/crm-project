@@ -8,27 +8,31 @@ import {
     DollarSign,
     Car,
 } from "lucide-react";
+import useStore from "@/lib/store"; // Importujemy store z pliku store.ts
 
 // Submenu type definition
 type Submenu = {
-    href: string;
+    href: string; // ensure href is required for submenus
     label: string;
     active?: boolean;
     allowedRoles?: UserRole[];
+    submenus?: Submenu[]; // this supports nested submenus
 };
 
 // Menu type definition
 type Menu = {
-    href: string;
+    href: string; // href is required for menus
     label: string;
     active?: boolean;
     icon: LucideIcon;
-    submenus?: Submenu[];
+    submenus?: Submenu[]; // nested submenus supported
     allowedRoles?: UserRole[];
 };
 
 // Function to filter and return menus based on user role
 export function getMenuList(userRole: UserRole): Menu[] {
+    const state = useStore.getState();  // Pobieramy stan store
+    const projectGroups = state.projectGroups;
     return [
         // Dashboard Menu
         {
@@ -36,7 +40,7 @@ export function getMenuList(userRole: UserRole): Menu[] {
             label: "Dashboard",
             icon: LayoutGrid,
             submenus: [],
-            allowedRoles: [UserRole.ADMIN],  // Allowed roles for this menu
+            allowedRoles: [UserRole.ADMIN, UserRole.MANAGER],  // Allowed roles for this menu
         },
         // Users Menu
         {
@@ -44,7 +48,7 @@ export function getMenuList(userRole: UserRole): Menu[] {
             label: "Użytkownicy",
             icon: Users,
             submenus: [],
-            allowedRoles: [UserRole.ADMIN],  // Allowed roles for this menu
+            allowedRoles: [UserRole.ADMIN, UserRole.MANAGER],  // Allowed roles for this menu
         },
         {
             href: "/users/attendance",
@@ -59,14 +63,18 @@ export function getMenuList(userRole: UserRole): Menu[] {
             label: "Inwestycje",
             icon: DollarSign,
             submenus: [],
-            allowedRoles: [UserRole.ADMIN, UserRole.ENGINEER],  // Allowed roles for this menu
+            allowedRoles: [UserRole.ADMIN, UserRole.ENGINEER, UserRole.MANAGER],  // Allowed roles for this menu
         },
         // Clients Menu with Submenu
         {
-            href: "/clients",
             label: "Klienci",
             icon: Users,
             submenus: [
+                {
+                    href: "/clients",
+                    label: "Klienci",
+                    allowedRoles: [UserRole.ADMIN, UserRole.INVOICE_CLERK],  // Allowed roles for this submenu
+                },
                 {
                     href: "/clients/groups",
                     label: "Grupy Klientów",
@@ -77,10 +85,14 @@ export function getMenuList(userRole: UserRole): Menu[] {
         },
         // Warehouses Menu
         {
-            href: "/warehouses",
             label: "Magazyn",
             icon: Folder,
             submenus: [
+                {
+                    href: "/warehouses",
+                    label: "Magazyn",
+                    allowedRoles: [UserRole.ADMIN, UserRole.INVOICE_CLERK],  // Allowed roles for this submenu
+                },
                 {
                     href: "/warehouses/products",
                     label: "Produkty",
@@ -90,24 +102,31 @@ export function getMenuList(userRole: UserRole): Menu[] {
         },
         // Projects Menu with Submenu
         {
-            href: "/projects",
             label: "Projekty",
             icon: SquarePen,
             submenus: [
                 {
-                    href: "/projects/templates",
-                    label: "Szablony projektów",
+                    href: "/projects",
+                    label: "Projekty",
                     allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER],  // Allowed roles for this submenu
                 },
                 {
+                    href: "/projects/templates",
+                    label: "Szablony",
+                    allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER],
+                },
+                {
                     href: "/projects/groups",
-                    label: "Grupy projektów",
-                    allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER],  // Allowed roles for this submenu
+                    label: "Grupy",
+                    allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER],
+                    submenus: projectGroups?.map(group => ({
+                        href: `/projects/groups/${group.id}`,  // Poprawny sposób dołączenia zmiennej do stringa
+                        label: group.name,
+                    }))
                 }
             ],
-            allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE, UserRole.DESIGNER],  // Allowed roles for this menu
+            allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE, UserRole.DESIGNER],
         },
-        // Users Menu
         {
             href: "/vehicles",
             label: "Flota samochodowa",
@@ -115,7 +134,6 @@ export function getMenuList(userRole: UserRole): Menu[] {
             submenus: [],
             allowedRoles: [UserRole.ADMIN],  // Allowed roles for this menu
         },
-
     ]
         .filter(menu =>
             // Filter main menus based on allowed roles

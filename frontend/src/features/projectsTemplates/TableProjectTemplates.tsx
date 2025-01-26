@@ -74,12 +74,15 @@ const TableProjectTemplates = ({ projectTemplates = [], onEditProjectTemplate, o
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Akcje</DropdownMenuLabel>
-                            <Link
-                                to={`/projects/templates/${projectTemplate.id}`}
-                            >
-                                Szczegóły szablonu
-                            </Link>
+                            <DropdownMenuItem>
 
+                                <Link
+                                    to={`/projects/templates/${projectTemplate.id}`}
+                                >
+                                    Szczegóły szablonu
+                                </Link>
+
+                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => onEditProjectTemplate(projectTemplate)}>
                                 Edytuj szablon
                             </DropdownMenuItem>

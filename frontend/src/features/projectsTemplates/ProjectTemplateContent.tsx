@@ -85,7 +85,7 @@ const ProjectTemplateContent: React.FC<ProjectTemplateContentProps> = ({ project
                     <h1 className="text-3xl font-semibold mb-4 text-gray-800">{name}</h1>
 
                     <p className="text-gray-700 mb-4">
-                        <strong>Kierownik Projektu:</strong> {description}
+                        <strong>Opis szablonu:</strong> {description}
                     </p>
                 </Card>
             </div>
@@ -110,7 +110,7 @@ const ProjectTemplateContent: React.FC<ProjectTemplateContentProps> = ({ project
                 </div>
                 <div>
                     <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                    <h2 className="text-xl mb-2"><Badge variant="outline">Zakończone</Badge></h2>
+                        <h2 className="text-xl mb-2"><Badge variant="outline">Zakończone</Badge></h2>
                     </h2>
                     <div>{renderTasks(TaskStatus.COMPLETED)}</div>
                 </div>
@@ -119,6 +119,7 @@ const ProjectTemplateContent: React.FC<ProjectTemplateContentProps> = ({ project
             {/* Task Form Modal */}
             {isTaskFormOpen && (
                 <TaskFormModal
+                    isTemplate={true}
                     initialValues={initialTaskData}
                     onClose={() => setIsTaskFormOpen(false)}
                     onSave={handleSaveTask}

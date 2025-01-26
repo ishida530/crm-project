@@ -1,16 +1,17 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axiosInstance from '@/api/api';
-import { RegisterProjectGroup, UpdateProjectGroupResponse } from '../types'; // Dostosuj do typu grupy projektów
+import { ProjectGroup } from '../types';
 
 export const useCreateProjectGroup = () => {
     const queryClient = useQueryClient();
 
-    const createProjectGroup = async (groupData: RegisterProjectGroup): Promise<UpdateProjectGroupResponse> => {
-        const response = await axiosInstance.post('project-groups', groupData); // Zmieniono endpoint na 'project-group'
+    const createProjectGroup = async (groupData: ProjectGroup): Promise<ProjectGroup> => {
+
+        const response = await axiosInstance.post('project-groups', groupData);
         return response.data;
     };
 
-    return useMutation<UpdateProjectGroupResponse, Error, RegisterProjectGroup>({
+    return useMutation<ProjectGroup, Error, ProjectGroup>({
         mutationFn: createProjectGroup,
         onSuccess: (data) => {
             console.log('Grupa projektów utworzona pomyślnie:', data); // Komunikat w języku polskim

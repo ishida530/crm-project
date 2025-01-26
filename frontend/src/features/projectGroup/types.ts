@@ -14,8 +14,9 @@ export interface TaskDTO {
 
 
 export interface ProjectGroup {
+    id:number;
     name: string;
-    projects: Project[];
+    projects?: Project[];
     project_template_id?: number;
     projectTemplate?: ProjectTemplate;
 }
@@ -24,11 +25,14 @@ export interface ProjectGroup {
 
 export interface RegisterProjectGroup {
     name: string;
+    project_template_id:number
+
 }
 
 export interface UpdateProjectGroupResponse {
     id: number;
     name: string;
+    project_template_id:number
     // Można dodać inne pola odpowiedzi w zależności od tego, co API zwraca po aktualizacji
 }
 

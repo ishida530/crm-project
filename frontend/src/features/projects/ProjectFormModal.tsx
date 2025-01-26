@@ -16,6 +16,8 @@ import { Project } from './types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import useGetAllProjectTemplates from '../projectsTemplates/hooks/useGetAllProjectTemplates';
 import { ProjectTemplate } from '../projectsTemplates/types';
+import useGetAllProjectGroups from '../projectGroup/hooks/useGetAllProjectGroups';
+import { ProjectGroup } from '../projectGroup/types';
 
 
 
@@ -29,10 +31,11 @@ interface ProjectFormProps {
 const ProjectFormModal = ({ initialValues, onSave, isOpen, onClose }: ProjectFormProps) => {
 
 
-    const { projectTemplates, isLoading, } = useGetAllProjectTemplates()
+    const { projectTemplates, isLoading: isLoadingTemplates, } = useGetAllProjectTemplates()
+    const { projectGroups, isLoading: isLoadingGroup } = useGetAllProjectGroups()
     const form = useForm<Project>({
         resolver: zodResolver(formSchemaProject),
-        defaultValues: initialValues || { id: 0, name: '', deadline: '', investor_representative: '', project_manager: '', project_template_id: "" },
+        defaultValues: initialValues || { id: 0, name: '', deadline: '', investor_representative: '', project_manager: '', project_template_id: "", group_id: 0 },
     });
     const onSubmit = (data: Project) => {
         console.log('Form submitted with data:', data);
@@ -106,7 +109,7 @@ const ProjectFormModal = ({ initialValues, onSave, isOpen, onClose }: ProjectFor
                             )}
                         />
                         {
-                            !initialValues && !isLoading &&
+                            !initialValues && !isLoadingTemplates &&
                             <FormField
                                 control={form.control}
                                 name="project_template_id"
@@ -140,6 +143,42 @@ const ProjectFormModal = ({ initialValues, onSave, isOpen, onClose }: ProjectFor
 
 
                         }
+                        {
+                            !initialValues && !isLoadingGroup &&
+                            <FormField
+                                control={form.control}
+                                name="group_id"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Grupa projektu</FormLabel>
+                                        <FormControl>
+                                            <Select
+                                                onValueChange={(value) => field.onChange(value)}
+                                                value={field.value?.toString() || ""}
+                                            >
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="Wybierz grupe projektu" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {projectGroups.map((projectGroup: ProjectGroup) => (
+                                                        <SelectItem
+                                                            key={projectGroup.id}
+                                                            value={String(projectGroup.id)}
+                                                        >
+                                                            {projectGroup.name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+
+                        }
+
 
                         <DialogFooter>
                             <Button type="submit" className="w-full">

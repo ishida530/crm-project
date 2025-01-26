@@ -53,7 +53,7 @@ const TableUsers = ({ users, onEditUser, onDeleteUser, onAddUser }: TableUsersPr
             header: "Name",
         },
         {
-            accessorKey: "phoneNumber",
+            accessorKey: "phone_number",
             header: "Phone Number",
         },
         {

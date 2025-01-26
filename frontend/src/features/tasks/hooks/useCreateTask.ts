@@ -21,7 +21,9 @@ export const useCreateTask = () => {
 
     const createTask = async (taskData: Task): Promise<Task> => {
         // Format start_date to 'yyyy-MM-dd HH:mm:ss' string format
-        taskData.start_date = formatDateTime(new Date(taskData.start_date));
+        if (!pathname.includes('templates')) {
+            taskData.start_date = formatDateTime(new Date(taskData.start_date));
+        }
 
         const response = await axiosInstance.post('/projects/tasks', taskData);
         return response.data;

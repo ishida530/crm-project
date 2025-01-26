@@ -20,9 +20,10 @@ interface TaskFormProps {
     onSave: (data: Task) => void;
     isOpen: boolean;
     onClose: () => void;
+    isTemplate: boolean
 }
 
-const TaskFormModal = ({ initialValues, onSave, isOpen, onClose }: TaskFormProps) => {
+const TaskFormModal = ({ isTemplate = false, initialValues, onSave, isOpen, onClose }: TaskFormProps) => {
     const form = useForm<Task>({
         resolver: zodResolver(formSchemaTask),
         defaultValues: {
@@ -37,7 +38,8 @@ const TaskFormModal = ({ initialValues, onSave, isOpen, onClose }: TaskFormProps
         // Ensure start_date is in the correct format (if necessary)
         const formattedData = {
             ...data,
-            start_date: new Date(data.start_date).toISOString().split('T')[0], // Format to YYYY-MM-DD
+            status: isTemplate ? TaskStatus.TO_DO : data.status,
+            start_date: isTemplate ? null : new Date(data?.start_date).toISOString().split('T')[0], // Format to YYYY-MM-DD
         };
 
         console.log('Form submitted with data:', formattedData);
@@ -89,32 +91,34 @@ const TaskFormModal = ({ initialValues, onSave, isOpen, onClose }: TaskFormProps
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name="status"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Status</FormLabel>
-                                    <FormControl>
-                                        <Select
-                                            onValueChange={(value) => field.onChange(value as TaskStatus)}
-                                            value={field.value}
-                                        >
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Wybierz status" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value={TaskStatus.TO_DO}>Do Zrobienia</SelectItem>
-                                                <SelectItem value={TaskStatus.IN_PROGRESS}>W Trakcie</SelectItem>
-                                                <SelectItem value={TaskStatus.COMPLETED}>Zakończone</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
+                        {!isTemplate &&
+                            <FormField
+                                control={form.control}
+                                name="status"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Status</FormLabel>
+                                        <FormControl>
+                                            <Select
+                                                onValueChange={(value) => field.onChange(value as TaskStatus)}
+                                                value={field.value}
+                                            >
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="Wybierz status" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value={TaskStatus.TO_DO}>Do Zrobienia</SelectItem>
+                                                    <SelectItem value={TaskStatus.IN_PROGRESS}>W Trakcie</SelectItem>
+                                                    <SelectItem value={TaskStatus.COMPLETED}>Zakończone</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        }
+                        {!isTemplate && <FormField
                             control={form.control}
                             name="start_date"
                             render={({ field }) => (
@@ -131,7 +135,7 @@ const TaskFormModal = ({ initialValues, onSave, isOpen, onClose }: TaskFormProps
                                     <FormMessage />
                                 </FormItem>
                             )}
-                        />
+                        />}
                         <DialogFooter>
                             <Button type="submit" className="w-full">
                                 {initialValues ? "Zapisz zmiany" : "Dodaj Zadanie"}

@@ -38,8 +38,9 @@ public class TaskDTO {
     private String error;
     private String message;
 
-    public TaskDTO(Integer id, String name) {
+    public TaskDTO(Integer id, String name,TaskStatus status) {
         this.id = id;
         this.name = name;
+        this.status = status;
     }
 }

@@ -10,4 +10,7 @@ public interface ProjectsRepository extends JpaRepository<Project, Integer> {
 
 
     Optional<Project> findById(int id);
+
+    Optional<Project> findByTemplate(int id);
+
 }

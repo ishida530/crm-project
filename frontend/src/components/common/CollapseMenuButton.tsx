@@ -22,12 +22,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useLocation, Link } from "react-router-dom";
 import { DropdownMenuArrow } from "@radix-ui/react-dropdown-menu";
+import { UserRole } from "@/features/users/types";
 
 type Submenu = {
   href: string;
   label: string;
   active?: boolean;
+  submenus?: Submenu[]; // This allows nested submenus
 };
+
 
 interface CollapseMenuButtonProps {
   icon: React.ElementType;
@@ -51,12 +54,42 @@ export function CollapseMenuButton({
   );
   const [isCollapsed, setIsCollapsed] = useState<boolean>(isSubmenuActive);
 
+  // Recursive function to render submenus
+  const renderSubmenus = (submenus: Submenu[]) => {
+    return submenus.map(({ href, label, active, submenus }, index) => (
+      <div key={index}>
+        <Link to={href}>
+          <Button
+            variant={
+              (active === undefined && location.pathname === href) || active
+                ? "secondary"
+                : "ghost"
+            }
+            className="w-full justify-start h-10 mb-1 w100"
+          >
+            <span className="mr-4 ml-2">
+              <Dot size={18} />
+            </span>
+            <p
+              className={`max-w-[170px] truncate ${isOpen ? "translate-x-0 opacity-100" : "-translate-x-96 opacity-0"}`}
+            >
+              {label}
+            </p>
+          </Button>
+        </Link>
+        {/* Render nested submenus recursively */}
+        {submenus && submenus.length > 0 && (
+          <div className="pl-4">
+            {renderSubmenus(submenus)}
+          </div>
+        )}
+      </div>
+    )
+    );
+  };
+
   return isOpen ? (
-    <Collapsible
-      open={isCollapsed}
-      onOpenChange={setIsCollapsed}
-      className="w-full"
-    >
+    <Collapsible open={isCollapsed} onOpenChange={setIsCollapsed} className="w-full">
       <CollapsibleTrigger
         className="[&[data-state=open]>div>div>svg]:rotate-180 mb-1"
         asChild
@@ -84,27 +117,7 @@ export function CollapseMenuButton({
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
-        {submenus.map(({ href, label, active }, index) => (
-          <div key={index}>
-            <Link to={href}>
-              <Button
-                variant={
-                  (active === undefined && location.pathname === href) || active
-                    ? "secondary"
-                    : "ghost"
-                }
-                className="w-full justify-start h-10 mb-1"
-              >
-                <span className="mr-4 ml-2">
-                  <Dot size={18} />
-                </span>
-                <p className={`max-w-[170px] truncate ${isOpen ? "translate-x-0 opacity-100" : "-translate-x-96 opacity-0"}`}>
-                  {label}
-                </p>
-              </Button>
-            </Link>
-          </div>
-        ))}
+        {renderSubmenus(submenus)}
       </CollapsibleContent>
     </Collapsible>
   ) : (
@@ -136,21 +149,9 @@ export function CollapseMenuButton({
         </Tooltip>
       </TooltipProvider>
       <DropdownMenuContent side="right" sideOffset={25} align="start">
-        <DropdownMenuLabel className="max-w-[190px] truncate">
-          {label}
-        </DropdownMenuLabel>
+        <DropdownMenuLabel className="max-w-[190px] truncate">{label}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {submenus.map(({ href, label, active }, index) => (
-          <DropdownMenuItem key={index} asChild>
-            <Link
-              className={`cursor-pointer ${((active === undefined && location.pathname === href) || active) && "bg-secondary"
-                }`}
-              to={href}
-            >
-              <p className="max-w-[180px] truncate">{label}</p>
-            </Link>
-          </DropdownMenuItem>
-        ))}
+        {renderSubmenus(submenus)} {/* Render nested submenus here */}
         <DropdownMenuArrow className="fill-border" />
       </DropdownMenuContent>
     </DropdownMenu>

@@ -12,7 +12,7 @@ export interface Task {
     description: string;
     status?: TaskStatus;
     author?: User | number;
-    start_date: Date | string;
+    start_date?: Date | string;
     end_date?: Date | string;
     name: string;
     project?: number;
@@ -28,6 +28,7 @@ export type Project = {
     project_manager: string;
     tasks?: Task[];
     project_template_id?: number;
+    group_id?:number
 };
 
 export type ProjectsResponse = {

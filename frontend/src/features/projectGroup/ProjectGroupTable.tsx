@@ -29,7 +29,6 @@ const ProjectGroupTable = ({ projectGroups = [], onEditGroup, onDeleteGroup, onA
                 group.name.toLowerCase().includes(searchInput.toLowerCase()) 
         );
     }, [searchInput, projectGroups]);
-
     const columns = useMemo(() => [
         {
             accessorKey: "id",

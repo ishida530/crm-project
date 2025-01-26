@@ -1,12 +1,15 @@
 package com.elemer.crm.service;
 
+import com.elemer.crm.dto.ProjectDTO;
 import com.elemer.crm.dto.ProjectGroupDTO;
 import com.elemer.crm.dto.ProjectTemplateDTO;
 import com.elemer.crm.dto.TaskDTO;
+import com.elemer.crm.entity.Project;
 import com.elemer.crm.entity.ProjectGroup;
 import com.elemer.crm.entity.ProjectTemplate;
 import com.elemer.crm.repository.ProjectGroupRepository;
 import com.elemer.crm.repository.ProjectTemplateRepository;
+import com.elemer.crm.util.EncryptionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +35,9 @@ public class ProjectGroupService {
         ProjectGroup group = projectGroupRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Group with ID " + id + " not found"));
 
+        // Decrypt project data
+        group.getProjects().forEach(this::decryptProjectData);
+
         // Tworzymy ProjectTemplateDTO z zadaniami
         ProjectTemplateDTO templateDTO = null;
         if (group.getProjectTemplate() != null) {
@@ -40,20 +46,73 @@ public class ProjectGroupService {
             templateDTO.setName(group.getProjectTemplate().getName());
             templateDTO.setDescription(group.getProjectTemplate().getDescription());
 
-            // Dodanie zadań z szablonu, mapując tylko nazwę zadania
+            // Dodanie zadań z szablonu, mapując wszystkie właściwości zadania
             if (group.getProjectTemplate().getTasks() != null) {
                 List<TaskDTO> taskDTOs = group.getProjectTemplate().getTasks().stream()
-                        .map(task -> new TaskDTO(
-                                task.getId(),
-                                task.getName()
-                        ))
+                        .map(task -> {
+                            // Korzystamy z istniejącego konstruktora i ustawiamy wszystkie właściwości
+                            TaskDTO taskDTO = new TaskDTO(task.getId(), task.getName(), task.getStatus());
+                            taskDTO.setDescription(task.getDescription());
+                            taskDTO.setStart_date(task.getStart_date());
+                            taskDTO.setEnd_date(task.getEnd_date());
+
+                            // Ustawiamy autora zadania, jeśli dostępny
+                            if (task.getAuthor() != null) {
+                                taskDTO.setAuthor(task.getAuthor().getId()); // Założenie: Author ma metodę getId()
+                                taskDTO.setAuthor_name(task.getAuthor().getName()); // Przypisujemy imię autora
+                            }
+
+                            // Jeśli istnieje projekt szablonu przypisany do zadania, ustawiamy projekt szablonu
+                            if (task.getProjectTemplate() != null) {
+                                taskDTO.setProject_template_id(task.getProjectTemplate().getId());
+                            }
+
+                            return taskDTO;
+                        })
                         .collect(Collectors.toList());
                 templateDTO.setTasks(taskDTOs); // Ustawiamy zadania w szablonie
             }
         }
 
+        // Tworzymy wynikowy ProjectGroupDTO
         ProjectGroupDTO resultDTO = convertToDTO(group);
         resultDTO.setProjectTemplate(templateDTO); // Dodajemy pełne dane szablonu do odpowiedzi
+
+        // Mapujemy projekty przypisane do grupy
+        if (group.getProjects() != null) {
+            List<ProjectDTO> projectDTOs = group.getProjects().stream()
+                    .map(project -> {
+                        ProjectDTO projectDTO = new ProjectDTO();
+                        projectDTO.setId(project.getId());
+                        projectDTO.setName(project.getName());
+                        projectDTO.setDeadline(project.getDeadline());
+                        projectDTO.setInvestor_representative(project.getInvestor_representative());
+                        projectDTO.setProject_manager(project.getProject_manager());
+
+                        // Mapujemy zadania przypisane do projektu
+                        if (project.getTasks() != null) {
+                            List<TaskDTO> projectTaskDTOs = project.getTasks().stream()
+                                    .map(task -> {
+                                        // Korzystamy z istniejącego konstruktora i ustawiamy wszystkie właściwości
+                                        TaskDTO taskDTO = new TaskDTO(task.getId(), task.getName(), task.getStatus());
+                                        taskDTO.setDescription(task.getDescription());
+                                        taskDTO.setStart_date(task.getStart_date());
+                                        taskDTO.setEnd_date(task.getEnd_date());
+                                        taskDTO.setAuthor(task.getAuthor() != null ? task.getAuthor().getId() : null);
+                                        taskDTO.setAuthor_name(task.getAuthor() != null ? task.getAuthor().getName() : null);
+                                        taskDTO.setProject_template_id(task.getProjectTemplate() != null ? task.getProjectTemplate().getId() : null);
+                                        return taskDTO;
+                                    })
+                                    .collect(Collectors.toList());
+                            projectDTO.setTasks(projectTaskDTOs); // Dodajemy zadania do projektu
+                        }
+
+                        return projectDTO;
+                    })
+                    .collect(Collectors.toList());
+            resultDTO.setProjects(projectDTOs); // Dodajemy projekty do odpowiedzi
+        }
+
         return resultDTO;
     }
 
@@ -71,6 +130,12 @@ public class ProjectGroupService {
 
         ProjectGroup savedGroup = projectGroupRepository.save(group);
 
+        // Sprawdzamy, czy lista projektów nie jest nullem
+        if (savedGroup.getProjects() != null) {
+            // Decrypt project data
+            savedGroup.getProjects().forEach(this::decryptProjectData);
+        }
+
         // Tworzenie ProjectTemplateDTO do pełnych danych szablonu
         ProjectTemplateDTO templateDTO = null;
         if (savedGroup.getProjectTemplate() != null) {
@@ -78,24 +143,18 @@ public class ProjectGroupService {
             templateDTO.setId(savedGroup.getProjectTemplate().getId());
             templateDTO.setName(savedGroup.getProjectTemplate().getName());
             templateDTO.setDescription(savedGroup.getProjectTemplate().getDescription());
-
-            // Dodanie zadań z szablonu, mapując tylko nazwę zadania
-            if (savedGroup.getProjectTemplate().getTasks() != null) {
-                List<TaskDTO> taskDTOs = savedGroup.getProjectTemplate().getTasks().stream()
-                        .map(task -> new TaskDTO(
-                                task.getId(),
-                                task.getName()
-                        ))
-                        .collect(Collectors.toList());
-                templateDTO.setTasks(taskDTOs); // Ustawiamy zadania w szablonie
-            }
+            // Dodaj inne pola szablonu, które chcesz przekazać w DTO
         }
 
-        // Zwracamy grupę wraz z pełnym obiektem szablonu i zadaniami
-        ProjectGroupDTO resultDTO = convertToDTO(savedGroup);
-        resultDTO.setProjectTemplate(templateDTO);  // Dodajemy pełne dane szablonu do odpowiedzi
+        // Mapowanie grupy do DTO
+        ProjectGroupDTO savedGroupDTO = new ProjectGroupDTO();
+        savedGroupDTO.setId(savedGroup.getId());
+        savedGroupDTO.setName(savedGroup.getName());
+        savedGroupDTO.setProjectTemplate(templateDTO);
 
-        return resultDTO;
+        // Możesz dodać inne pola, które chcesz zwrócić w DTO
+
+        return savedGroupDTO;
     }
 
     @Transactional
@@ -112,6 +171,10 @@ public class ProjectGroupService {
         }
 
         ProjectGroup updatedGroup = projectGroupRepository.save(group);
+
+        // Decrypt project data
+        updatedGroup.getProjects().forEach(this::decryptProjectData);
+
         return convertToDTO(updatedGroup);
     }
 
@@ -126,7 +189,7 @@ public class ProjectGroupService {
     private ProjectGroupDTO convertToDTO(ProjectGroup group) {
         ProjectGroupDTO dto = new ProjectGroupDTO();
         dto.setName(group.getName());
-        dto.setId(group.getId());
+        dto.setId(group.getId()); // Dodajemy przypisanie ID grupy
 
         // Przypisanie pełnych danych szablonu, jeśli istnieje
         if (group.getProjectTemplate() != null) {
@@ -138,5 +201,12 @@ public class ProjectGroupService {
         }
 
         return dto;
+    }
+
+    // Method to decrypt project data
+    private void decryptProjectData(Project project) {
+        project.setName(EncryptionUtil.decrypt(project.getName()));
+        project.setProject_manager(EncryptionUtil.decrypt(project.getProject_manager()));
+        project.setInvestor_representative(EncryptionUtil.decrypt(project.getInvestor_representative()));
     }
 }

@@ -80,6 +80,14 @@ public class ProjectsService {
             newProject.setDeadline(projectRequest.getDeadline());
             newProject.setInvestor_representative(EncryptionUtil.encrypt(projectRequest.getInvestor_representative()));
 
+            // Obsługa opcjonalnej grupy projektów
+            if (projectRequest.getGroupId() != null) {
+                Integer groupId = projectRequest.getGroupId();
+                ProjectGroup projectGroup = projectGroupRepository.findById(groupId)
+                        .orElseThrow(() -> new IllegalArgumentException("Project Group with ID " + groupId + " not found"));
+                newProject.setGroup(projectGroup);
+            }
+
             if (projectRequest.getProject_template_id() != null) {
                 Integer templateId = projectRequest.getProject_template_id();
                 ProjectTemplate template = projectTemplateRepository.findById(templateId)

@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { TaskStatus } from './types';
 
+import { z } from "zod";
+
 export const formSchemaTask = z.object({
     name: z
         .string()
@@ -13,26 +15,17 @@ export const formSchemaTask = z.object({
         .max(500, { message: "Opis nie może przekraczać 500 znaków" }),
 
     status: z
-        .union([
-            z.literal(TaskStatus.TO_DO),
-            z.literal(TaskStatus.IN_PROGRESS),
-            z.literal(TaskStatus.COMPLETED)
-        ])
-        .refine(value => Object.values(TaskStatus).includes(value), {
-            message: "Status jest wymagany",
-        }),
-
+        .string()
+        .optional(),  // Ensure it's an optional string
 
     start_date: z
         .string()
-        .min(1, { message: "Data jest wymagana" })
-        .refine((date) => {
-            const parsedDate = new Date(date);
-            return !isNaN(parsedDate.getTime());
-        }, {
-            message: "Nieprawidłowa data",
-        }),
+        .refine((val) => !val || !isNaN(Date.parse(val)), {
+            message: "Start date must be a valid date",
+        })
+        .optional(),  // Make start_date optional, but validate if provided
 });
+
 
 export const formSchemaProject = z.object({
     id: z.number().optional(),
@@ -62,4 +55,7 @@ export const formSchemaProject = z.object({
         .max(100, { message: "Kierownik projektu nie może przekraczać 100 znaków" }),
     project_template_id: z
         .string().optional(),
+    group_id: z
+        .number()
+        .optional(),
 });

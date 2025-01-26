@@ -23,6 +23,7 @@ import AttendancePage from '@/features/attendance/AttendancePage';
 import ResetPasswordPage from '@/features/auth/ResetPasswordPage';
 import ChangePasswordPage from '@/features/auth/ChangePasswordPage';
 import ProjectGroupPage from '@/features/projectGroup/ProjectGroupPage';
+import ProjectGroupDetailsPage from '@/features/projectGroup/ProjectGroupDetailsPage';
 
 
 const router = createBrowserRouter([
@@ -33,7 +34,7 @@ const router = createBrowserRouter([
             {
                 path: '/dashboard',
                 element: (
-                    <PrivateRoute allowedRoles={[UserRole.ADMIN]}>
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER]}>
                         <Dashboard />
                     </PrivateRoute>
                 ),
@@ -95,7 +96,7 @@ const router = createBrowserRouter([
             {
                 path: 'users',
                 element: (
-                    <PrivateRoute allowedRoles={[UserRole.ADMIN]}>
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER]}>
                         <UsersPage />
                     </PrivateRoute>
                 ),
@@ -144,7 +145,7 @@ const router = createBrowserRouter([
                 path: 'projects/groups',
                 element: (
                     <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER]}>
-                        <ProjectGroupPage  />
+                        <ProjectGroupPage />
                     </PrivateRoute>
                 ),
             },
@@ -152,14 +153,14 @@ const router = createBrowserRouter([
                 path: 'projects/groups/:id',
                 element: (
                     <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER]}>
-                        <ProjectGroupPage  />
-                        </PrivateRoute>
+                        <ProjectGroupDetailsPage />
+                    </PrivateRoute>
                 ),
             },
             {
                 path: 'investments',
                 element: (
-                    <PrivateRoute allowedRoles={[UserRole.ADMIN,UserRole.ENGINEER]}>
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.ENGINEER, UserRole.MANAGER]}>
                         <InvestmentsPage />
                     </PrivateRoute>
                 ),

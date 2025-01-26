@@ -29,9 +29,9 @@ const TaskCard = ({ task, onDelete, onEdit }: TaskCardProps) => {
 
             <CardContent className="mt-4">
                 <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-4">
-                    <p className="text-sm text-gray-500">
+                    {task.start_date && <p className="text-sm text-gray-500">
                         <span className="font-semibold">Data:</span> {new Date(task.start_date).toLocaleDateString("pl-PL")}
-                    </p>
+                    </p>}
                     <p className="text-sm text-gray-500">
                         <span className="font-semibold">Autor:</span> {task.author_name}
                     </p>

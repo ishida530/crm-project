@@ -29,7 +29,7 @@ public class Project {
     private String project_manager;
 
     @ManyToOne
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "group_id", nullable = true) // Opcjonalna grupa projektów
     private ProjectGroup group;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
