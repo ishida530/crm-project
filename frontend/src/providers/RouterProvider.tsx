@@ -134,6 +134,14 @@ const router = createBrowserRouter([
                 ),
             },
             {
+                path: '/projects/archived',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER]}>
+                        <ProjectsPage includeArchived={false} />
+                    </PrivateRoute>
+                ),
+            },
+            {
                 path: 'projects/templates/:id',
                 element: (
                     <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER]}>

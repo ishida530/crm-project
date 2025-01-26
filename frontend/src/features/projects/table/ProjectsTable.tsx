@@ -13,17 +13,20 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { MoreHorizontal } from "lucide-react";
 import { Project } from "../types";
 import { Link } from "react-router-dom";
+import { useToggleArchiveProject } from "../hooks/useToggleArchiveProject";
 
 interface ProjectTableProps {
     data: Project[];
     onEditProject: (project: Project) => void;
     onDeleteProject: (projectId: number) => void;
     onAddProject: () => void;
+    includeArchived: boolean;
 }
 
-const ProjectTable = ({ data, onEditProject, onDeleteProject, onAddProject }: ProjectTableProps) => {
+const ProjectTable = ({ data, onEditProject, onDeleteProject, onAddProject,includeArchived }: ProjectTableProps) => {
     const [searchInput, setSearchInput] = useState<string>("");
-    const [sorting, setSorting] = useState<SortingState>([]); // State to track sorting
+    const [sorting, setSorting] = useState<SortingState>([]);
+    const { mutate: toggleArchive } = useToggleArchiveProject();
 
     const filteredData = useMemo(() => {
         if (!data) return [];
@@ -79,6 +82,15 @@ const ProjectTable = ({ data, onEditProject, onDeleteProject, onAddProject }: Pr
                                 <Link to={`/projects/${project.id}`}>Szczegóły projektu</Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => onEditProject(project)}>Edytuj projekt</DropdownMenuItem>
+
+                            {
+
+                            }
+
+
+                            <DropdownMenuItem onClick={() => toggleArchive({ projectId: project.id, isArchived: includeArchived ? 0 : 1 })}>
+                                {includeArchived ? "Dodaj do archiwum" : "Usuń z archiwum"}
+                            </DropdownMenuItem>
                             <DropdownMenuItem
                                 onClick={() => onDeleteProject(project.id)}
                                 className="text-red-600"
@@ -86,7 +98,7 @@ const ProjectTable = ({ data, onEditProject, onDeleteProject, onAddProject }: Pr
                                 Usuń projekt
                             </DropdownMenuItem>
                         </DropdownMenuContent>
-                    </DropdownMenu>
+                    </DropdownMenu >
                 );
             },
         },

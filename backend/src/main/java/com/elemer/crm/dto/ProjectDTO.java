@@ -23,6 +23,7 @@ public class ProjectDTO {
     private int statusCode;
     private String error;
 
+    private Integer archived = 0;
     private Integer project_template_id;
     private List<TaskDTO> tasks; // Dodajemy listę zadań
     private Integer groupId;

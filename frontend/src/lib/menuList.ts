@@ -116,6 +116,11 @@ export function getMenuList(userRole: UserRole): Menu[] {
                     allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER],
                 },
                 {
+                    href: "/projects/archived",
+                    label: "Archiwum",
+                    allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER],
+                },
+                {
                     href: "/projects/groups",
                     label: "Grupy",
                     allowedRoles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.DESIGNER],

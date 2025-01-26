@@ -28,6 +28,9 @@ public class Project {
 
     private String project_manager;
 
+    @Column(columnDefinition = "int default 0")
+    private Integer archived = 0;
+
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = true) // Opcjonalna grupa projektów
     private ProjectGroup group;
@@ -39,5 +42,13 @@ public class Project {
     @Override
     public String toString() {
         return "Project{id=" + id + ", name='" + name + "'}";
+    }
+
+
+    @PrePersist
+    private void setDefaultArchived() {
+        if (archived == null) {
+            archived = 0;
+        }
     }
 }

@@ -50,10 +50,12 @@ public class ProjectsService {
         }
         return httpResponse;
     }
-    public HttpResponse getAllProjects() {
+    public HttpResponse getAllProjects(Boolean includeArchived) {
         HttpResponse httpResponse = new HttpResponse();
         try {
-            List<Project> projectList = projectsRepository.findAll();
+            List<Project> projectList = includeArchived
+                    ? projectsRepository.getAllUnArchived()
+                    : projectsRepository.getAllArchived();
             if (!projectList.isEmpty()) {
                 projectList.forEach(this::decryptProjectData);
                 httpResponse.setProjects(projectList);
@@ -183,4 +185,44 @@ public class ProjectsService {
         project.setProject_manager(EncryptionUtil.decrypt(project.getProject_manager()));
         project.setInvestor_representative(EncryptionUtil.decrypt(project.getInvestor_representative()));
     }
+
+    public HttpResponse archiveProject(Integer id) {
+        HttpResponse httpResponse = new HttpResponse();
+        try {
+            Project project = projectsRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Project not found"));
+
+            project.setArchived(1);
+            projectsRepository.save(project);
+
+            httpResponse.setStatusCode(200);
+            httpResponse.setMessage("Project archived successfully");
+            httpResponse.setProject(project);
+        } catch (Exception e) {
+            httpResponse.setStatusCode(500);
+            httpResponse.setMessage("Error occurred: " + e.getMessage());
+        }
+        return httpResponse;
+    }
+
+    public HttpResponse unarchiveProject(Integer id) {
+        HttpResponse httpResponse = new HttpResponse();
+        try {
+            Project project = projectsRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Project not found"));
+
+            project.setArchived(0);
+            projectsRepository.save(project);
+
+            httpResponse.setStatusCode(200);
+            httpResponse.setMessage("Project unarchived successfully");
+            httpResponse.setProject(project);
+        } catch (Exception e) {
+            httpResponse.setStatusCode(500);
+            httpResponse.setMessage("Error occurred: " + e.getMessage());
+        }
+        return httpResponse;
+    }
+
+
 }

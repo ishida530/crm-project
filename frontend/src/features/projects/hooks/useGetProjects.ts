@@ -4,15 +4,15 @@ import { ProjectsResponse } from '../types';
 
 
 
-const useGetProjects = () => {
+const useGetProjects = (includeArchived: boolean) => {
 
     const fetchProjects = async (): Promise<ProjectsResponse> => {
-        const response = await axiosInstance.get('projects');
+        const response = await axiosInstance.get(`projects?includeArchived=${includeArchived}`);
         return response.data;
     }
 
     const { data, error, isLoading } = useQuery<ProjectsResponse, Error>({
-        queryKey: ['getAllProjects'],
+        queryKey: ['getAllProjects', includeArchived],
         queryFn: fetchProjects,
 
 

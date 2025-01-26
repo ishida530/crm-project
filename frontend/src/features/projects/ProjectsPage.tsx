@@ -9,8 +9,14 @@ import DeleteProjectAlertDialog from "./DeleteProjectAlertDialog";
 import { useEditProject } from "./hooks/useEditProject";
 import { Loader } from "@/components/ui/loader";
 
-const ProjectsPage = () => {
-    const { projects, error, isLoading } = useGetProjects();
+
+
+interface ProjectPageProps {
+    includeArchived: boolean
+}
+const ProjectsPage = ({ includeArchived = true }: ProjectPageProps) => {
+
+    const { projects, error, isLoading } = useGetProjects(includeArchived);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
     const [projectId, setProjectId] = useState<number>();
@@ -85,6 +91,7 @@ const ProjectsPage = () => {
                 onAddProject={handleAddProject}
                 onEditProject={handleEditProject}
                 onDeleteProject={handleDeleteProject}
+                includeArchived={includeArchived}
             />
 
             {isFormOpen && (
